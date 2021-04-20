@@ -199,16 +199,16 @@ public class GameManager : MonoBehaviour
     {
         await _speechOut.Speak("Congratulations.");
 
-        // if (!GetComponent<DualPantoSync>().debug)
-        // {
+        if (!GetComponent<DualPantoSync>().debug)
+        {
             await _speechOut.Speak($"You achieved a score of {_gameScore}.");
             await _speechOut.Speak("Please enter your name to submit your highscore.");
 
             await uiManager.GameOver(_gameScore, (int)_totalTime, trophyScore);
-        // } else
-        // {
-        //     await _speechOut.Speak($"You achieved a score of {_gameScore} in debug mode.");
-        // }
+        } else
+        {
+            await _speechOut.Speak($"You achieved a score of {_gameScore} in debug mode.");
+        }
 
         await _speechOut.Speak("Thanks for playing DuelPanto. Say quit when you're done.");
         await _speechIn.Listen(new Dictionary<string, KeyCode>() { { "quit", KeyCode.Escape } });
