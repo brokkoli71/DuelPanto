@@ -63,8 +63,7 @@ public class UIManager : MonoBehaviour
         leaderBoard.highScores = "";
         if (gameScore >= trophyScore)
         {
-            // TODO: Return trophy/proof of beating trophy score
-            leaderBoard.AddScore(enteredName, gameScore, totalTime, "trophy");
+            leaderBoard.AddScore(enteredName, gameScore, totalTime, "Awesome");
         }
         else
         {

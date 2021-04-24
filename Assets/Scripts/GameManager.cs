@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using SpeechIO;
 using UnityEngine;
 using System.Collections.Generic;
@@ -7,8 +8,7 @@ using System.Linq;
 using DualPantoFramework;
 public class GameManager : MonoBehaviour
 {
-    public float spawnSpeed = 1f;
-    public bool introduceLevel = true;
+    public bool introduceGame = true;
     public GameObject player;
     public GameObject enemy;
     public EnemyConfig[] enemyConfigs;
@@ -17,6 +17,12 @@ public class GameManager : MonoBehaviour
     public int level = 0;
     public int trophyScore = 10000;
     public UIManager uiManager;
+
+    public AudioClip defaultClip;
+    public AudioClip wallClip;
+    public AudioClip hitClip;
+    public AudioClip heartbeatClip;
+    private AudioSource _audioSource;
 
     private UpperHandle _upperHandle;
     private LowerHandle _lowerHandle;
@@ -36,6 +42,10 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        // Ensure these are disabled at the start of the game.
+        player.SetActive(false);
+        enemy.SetActive(false);
+        
         _speechIn = new SpeechIn(onRecognized, _commands.Keys.ToArray());
         _speechOut = new SpeechOut();
 
@@ -50,6 +60,7 @@ public class GameManager : MonoBehaviour
     {
         _upperHandle = GetComponent<UpperHandle>();
         _lowerHandle = GetComponent<LowerHandle>();
+        _audioSource = GetComponent<AudioSource>();
 
         uiManager.UpdateUI(_playerScore, _enemyScore, _gameScore);
 
@@ -58,19 +69,60 @@ public class GameManager : MonoBehaviour
 
     async void Introduction()
     {
-        await _speechOut.Speak("Welcome to Quake Panto Edition");
-        // TODO: 1. Introduce obstacles in level 2 (aka 1)
+        await _speechOut.Speak("Welcome to Duel Panto");
         await Task.Delay(1000);
         RegisterColliders();
 
-        if (introduceLevel)
+        if (introduceGame)
         {
+            await IntroducePlayers();
+            await IntroduceLaser();
+            await IntroduceHealth();
             await IntroduceLevel();
         }
 
         await _speechOut.Speak("Introduction finished, game starts.");
 
-        await ResetGame();
+        await ResetRound();
+    }
+
+    async Task IntroducePlayers()
+    {
+        await _speechOut.Speak("This is you.");
+        await _upperHandle.SwitchTo(playerSpawn.gameObject, 5f);
+        
+        await _speechOut.Speak("This is your enemy.");
+        await _lowerHandle.SwitchTo(enemySpawn.gameObject, 5f);
+    }
+
+    async Task IntroduceLaser()
+    {
+        await _speechOut.Speak("In this game you shoot your opponent with a laser.");
+
+        await _speechOut.Speak("When you hear this sound");
+        await PlayClipSync(hitClip);
+        await _speechOut.Speak("It means you hit your opponent.");
+        
+        await _speechOut.Speak("When you hear this.");
+        await PlayClipSync(wallClip);
+        await _speechOut.Speak("You hit the wall.");
+        
+        await _speechOut.Speak("And for this.");
+        await PlayClipSync(defaultClip);
+        await _speechOut.Speak("You hit nothing.");
+    }
+
+    
+
+    async Task IntroduceHealth()
+    {
+        await _speechOut.Speak("You take damage when the enemies laser hits you.");
+        await _speechOut.Speak("The more health you lose, the faster this heartbeat sound.");
+        
+        await PlayClipSync(heartbeatClip);
+        await PlayClipSync(heartbeatClip, 100);
+        await _speechOut.Speak("will go faster and faster");
+
     }
 
     async Task IntroduceLevel()
@@ -79,30 +131,15 @@ public class GameManager : MonoBehaviour
         Level level = GetComponent<Level>();
         await level.PlayIntroduction();
 
-        // TODO: 2. Explain enemy and player with weapons by wiggling and playing shooting sound
-
+        _upperHandle.Free();
         await _speechOut.Speak("Feel for yourself. Say yes or done when you're ready.");
-        //string response = await speechIn.Listen(commands);
         await _speechIn.Listen(new Dictionary<string, KeyCode>() { { "yes", KeyCode.Y }, { "done", KeyCode.D } });
-
-        //if (response == "yes")
-        //{
-        //    await RoomExploration();
-        //}
     }
-
-    [System.Obsolete]
-    async Task RoomExploration()
+    
+    private async Task PlayClipSync(AudioClip clip, int delay = 0)
     {
-        while (true)
-        {
-            await _speechOut.Speak("Say done when you're ready.");
-            string response = await _speechIn.Listen(_commands);
-            if (response == "done")
-            {
-                return;
-            }
-        }
+        _audioSource.PlayOneShot(clip);
+        await Task.Delay(Mathf.RoundToInt(clip.length * 1000) + Math.Abs(delay)); // convert sec in ms
     }
 
     void RegisterColliders() {
@@ -119,16 +156,16 @@ public class GameManager : MonoBehaviour
     /// Starts a new round.
     /// </summary>
     /// <returns></returns>
-    async Task ResetGame()
+    async Task ResetRound()
     {
         await _speechOut.Speak("Spawning player");
         player.transform.position = playerSpawn.position;
-        await _upperHandle.SwitchTo(player, 0.2f);
+        await _upperHandle.SwitchTo(player, 5f);
 
         await _speechOut.Speak("Spawning enemy");
         enemy.transform.position = enemySpawn.position;
         enemy.transform.rotation = enemySpawn.rotation;
-        await _lowerHandle.SwitchTo(enemy, 0.2f);
+        await _lowerHandle.SwitchTo(enemy, 5f);
         if (level >= enemyConfigs.Length)
             Debug.LogError($"Level {level} is over number of enemies {enemyConfigs.Length}");
         enemy.GetComponent<EnemyLogic>().config = enemyConfigs[level];
@@ -184,10 +221,9 @@ public class GameManager : MonoBehaviour
             await GameOver();
         } else
         {
-            // TODO: Evaluate the players performance with game score
             await _speechOut.Speak($"Current score is {_gameScore}");
             await _speechOut.Speak($"Continuing with level {level + 1}");
-            await ResetGame();
+            await ResetRound();
         }
     }
 
