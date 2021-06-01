@@ -89,10 +89,12 @@ public class GameManager : MonoBehaviour
     async Task IntroducePlayers()
     {
         await _speechOut.Speak("This is you.");
-        await _upperHandle.SwitchTo(playerSpawn.gameObject, 5f);
-        
+        await _upperHandle.MoveToPosition(playerSpawn.position, 5f);
+        _upperHandle.Freeze();
+
         await _speechOut.Speak("This is your enemy.");
-        await _lowerHandle.SwitchTo(enemySpawn.gameObject, 5f);
+        await _lowerHandle.MoveToPosition(enemySpawn.position, 5f);
+        _lowerHandle.Freeze();
     }
 
     async Task IntroduceLaser()
@@ -117,7 +119,7 @@ public class GameManager : MonoBehaviour
     async Task IntroduceHealth()
     {
         await _speechOut.Speak("You take damage when the enemies laser hits you.");
-        await _speechOut.Speak("The more health you lose, the faster this heartbeat sound.");
+        await _speechOut.Speak("The more health you lose, this heartbeat sound.");
         
         await PlayClipSync(heartbeatClip);
         await PlayClipSync(heartbeatClip, 100);
@@ -128,6 +130,7 @@ public class GameManager : MonoBehaviour
     async Task IntroduceLevel()
     {
         await _speechOut.Speak("There are two obstacles.");
+        _lowerHandle.Free(); // we free this here, so that level can introduce "objects of interest"
         Level level = GetComponent<Level>();
         await level.PlayIntroduction();
 
