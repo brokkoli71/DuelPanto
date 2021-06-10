@@ -28,6 +28,8 @@ public class PlayerLogic : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         soundEffects = GetComponent<PlayerSoundEffect>();
 
+
+
         bpmCoefficient = (endBPM - startBPM) / Mathf.Pow(health.maxHealth, 2);
     }
     void FixedUpdate()
