@@ -84,4 +84,25 @@ public class PlayerLogic : MonoBehaviour
             }
         }
     }
+    void OnTriggerEnter(Collider other)
+    {
+        print("triggerd something");
+        if (other.CompareTag("Goal"))
+        {
+            print("You reached the goal!");
+            soundEffects.stopBackgroundMusic();
+        }
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        print("collided with something");
+        if (other.gameObject.CompareTag("Goal"))
+        {
+            print("You reached the goal!");
+            soundEffects.stopBackgroundMusic();
+        }
+
+
+    }
 }
