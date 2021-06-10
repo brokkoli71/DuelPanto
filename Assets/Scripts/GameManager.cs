@@ -75,10 +75,10 @@ public class GameManager : MonoBehaviour
 
         if (introduceGame)
         {
-            await IntroducePlayers();
-            await IntroduceLaser();
-            await IntroduceHealth();
-            await IntroduceLevel();
+            //await IntroducePlayers();
+            //await IntroduceLaser();
+            //await IntroduceHealth();
+            //await IntroduceLevel();
         }
 
         await _speechOut.Speak("Introduction finished, game starts.");
