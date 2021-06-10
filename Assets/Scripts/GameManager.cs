@@ -8,6 +8,7 @@ using System.Linq;
 using DualPantoFramework;
 public class GameManager : MonoBehaviour
 {
+
     public bool introduceGame = true;
     public GameObject player;
     public GameObject enemy;
@@ -45,7 +46,7 @@ public class GameManager : MonoBehaviour
         // Ensure these are disabled at the start of the game.
         player.SetActive(false);
         enemy.SetActive(false);
-        
+
         _speechIn = new SpeechIn(onRecognized, _commands.Keys.ToArray());
         _speechOut = new SpeechOut();
 
@@ -69,8 +70,8 @@ public class GameManager : MonoBehaviour
 
     async void Introduction()
     {
-        await _speechOut.Speak("Welcome to Duel Panto");
-        await Task.Delay(1000);
+        //await _speechOut.Speak("Welcome to Duel Panto");
+        //await Task.Delay(1000);
         RegisterColliders();
 
         if (introduceGame)
@@ -104,23 +105,23 @@ public class GameManager : MonoBehaviour
         await _speechOut.Speak("When you hear this sound");
         await PlayClipSync(hitClip);
         await _speechOut.Speak("It means you hit your opponent.");
-        
+
         await _speechOut.Speak("When you hear this.");
         await PlayClipSync(wallClip);
         await _speechOut.Speak("You hit the wall.");
-        
+
         await _speechOut.Speak("And for this.");
         await PlayClipSync(defaultClip);
         await _speechOut.Speak("You hit nothing.");
     }
 
-    
+
 
     async Task IntroduceHealth()
     {
         await _speechOut.Speak("You take damage when the enemies laser hits you.");
         await _speechOut.Speak("The more health you lose, this heartbeat sound.");
-        
+
         await PlayClipSync(heartbeatClip);
         await PlayClipSync(heartbeatClip, 100);
         await _speechOut.Speak("will go faster and faster");
@@ -138,14 +139,15 @@ public class GameManager : MonoBehaviour
         await _speechOut.Speak("Feel for yourself. Say yes or done when you're ready.");
         await _speechIn.Listen(new Dictionary<string, KeyCode>() { { "yes", KeyCode.Y }, { "done", KeyCode.D } });
     }
-    
+
     private async Task PlayClipSync(AudioClip clip, int delay = 0)
     {
         _audioSource.PlayOneShot(clip);
         await Task.Delay(Mathf.RoundToInt(clip.length * 1000) + Math.Abs(delay)); // convert sec in ms
     }
 
-    void RegisterColliders() {
+    void RegisterColliders()
+    {
         PantoCollider[] colliders = FindObjectsOfType<PantoCollider>();
         foreach (PantoCollider collider in colliders)
         {
@@ -161,11 +163,11 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     async Task ResetRound()
     {
-        await _speechOut.Speak("Spawning player");
+        //await _speechOut.Speak("Spawning player");
         player.transform.position = playerSpawn.position;
         await _upperHandle.SwitchTo(player, 5f);
 
-        await _speechOut.Speak("Spawning enemy");
+        //await _speechOut.Speak("Spawning enemy");
         enemy.transform.position = enemySpawn.position;
         enemy.transform.rotation = enemySpawn.rotation;
         await _lowerHandle.SwitchTo(enemy, 5f);
@@ -175,8 +177,13 @@ public class GameManager : MonoBehaviour
 
         _upperHandle.Free();
 
+
         player.SetActive(true);
         enemy.SetActive(true);
+
+
+
+
         _levelStartTime = Time.time;
     }
 
@@ -222,7 +229,8 @@ public class GameManager : MonoBehaviour
         if (level >= enemyConfigs.Length)
         {
             await GameOver();
-        } else
+        }
+        else
         {
             await _speechOut.Speak($"Current score is {_gameScore}");
             await _speechOut.Speak($"Continuing with level {level + 1}");
@@ -244,7 +252,8 @@ public class GameManager : MonoBehaviour
             await _speechOut.Speak("Please enter your name to submit your highscore.");
 
             await uiManager.GameOver(_gameScore, (int)_totalTime, trophyScore);
-        } else
+        }
+        else
         {
             await _speechOut.Speak($"You achieved a score of {_gameScore} in debug mode.");
         }
@@ -273,10 +282,12 @@ public class GameManager : MonoBehaviour
         if (levelCompleteTime < 30)
         {
             timeMultiplier = 5;
-        } else if (levelCompleteTime < 45)
+        }
+        else if (levelCompleteTime < 45)
         {
             timeMultiplier = 3;
-        } else if (levelCompleteTime < 60)
+        }
+        else if (levelCompleteTime < 60)
         {
             timeMultiplier = 2;
         }
