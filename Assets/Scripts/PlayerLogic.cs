@@ -18,8 +18,9 @@ public class PlayerLogic : MonoBehaviour
 
     private AudioListener timeAudio;
     private PlayerSoundEffect soundEffects;
-    private bool tracking;
+    private bool tracking = false;
     private Vector3 position;
+
     void Start()
     {
         upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
@@ -31,41 +32,40 @@ public class PlayerLogic : MonoBehaviour
     }
     void FixedUpdate()
     {
-
+        if (!tracking)
+        {
+            tracking = true;
+            startTracking();
+        }
     }
 
     void trackActivity()
     {
         float distance = Vector3.Distance(position, gameObject.transform.position);
+        //print($"Activity: {distance}");
         if (distance != 0)
         {
-            soundEffects.pitchBackgroundMusic(1);
+            soundEffects.pitchBackgroundMusic(1f);
         }
         else
         {
             soundEffects.pitchBackgroundMusic(0.2f);
         }
-
         startTracking();
     }
 
     void startTracking()
     {
-        tracking = true;
-        if (gameObject.activeSelf)
+
+        if (gameObject.activeSelf || true)
         {
             position = gameObject.transform.position;
             Invoke("trackActivity", 0.2f);
         }
     }
+
     void Update()
     {
-        if (!tracking)
-        {
-            startTracking();
-        }
-
-
         // Simply connects the player to the upper handles position
         transform.position = upperHandle.HandlePosition(transform.position);
 

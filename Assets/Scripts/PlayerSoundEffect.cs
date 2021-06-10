@@ -10,30 +10,27 @@ public class PlayerSoundEffect : MonoBehaviour
     public float maxPitch = 1.2f;
     public float minPitch = 0.8f;
     private GameObject previousEnemy;
-    private AudioSource audioSource;
+    AudioSource audioSource;
     public SpeechOut speechOut = new SpeechOut();
 
     private bool bgMusic;
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-    }
-    public float PlayerFellDown()
-    {
-        audioSource.Stop();
-        audioSource.PlayOneShot(gameOverClip);
-        return gameOverClip.length;
+        audioSource.clip = backgroundMusic;
     }
 
     public void startBackgroundMusic()
     {
         bgMusic = true;
-        audioSource.PlayOneShot(backgroundMusic);
+        audioSource.Play();
     }
 
     public void pitchBackgroundMusic(float pitchValue)
     {
-        audioSource.pitch = pitchValue;
+        audioSource.Stop();
+
+        //audioSource.pitch = pitchValue;
 
     }
     public bool IsBackgroundMusicActive()
@@ -44,12 +41,9 @@ public class PlayerSoundEffect : MonoBehaviour
     public void stopBackgroundMusic()
     {
         bgMusic = false;
+        audioSource.Stop();
     }
 
-    public void pitchMusic(AudioSource music)
-    {
-
-    }
     public void PlayHit()
     {
         PlayClipPitched(collisionClip, minPitch, maxPitch);

@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     private int _gameScore = 0;
     private float _totalTime = 0;
     private float _levelStartTime = 0;
-
+    public bool playWithEnemy = true;
     private readonly Dictionary<string, KeyCode> _commands = new Dictionary<string, KeyCode>() {
         { "yes", KeyCode.Y },
         { "no", KeyCode.N },
@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
         if (level < 0 || level >= enemyConfigs.Length)
         {
             Debug.LogWarning($"Level value {level} < 0 or >= enemyConfigs.Length. Resetting to 0");
+
             level = 0;
         }
     }
@@ -168,19 +169,21 @@ public class GameManager : MonoBehaviour
         await _upperHandle.SwitchTo(player, 5f);
 
         //await _speechOut.Speak("Spawning enemy");
-        enemy.transform.position = enemySpawn.position;
-        enemy.transform.rotation = enemySpawn.rotation;
-        await _lowerHandle.SwitchTo(enemy, 5f);
-        if (level >= enemyConfigs.Length)
-            Debug.LogError($"Level {level} is over number of enemies {enemyConfigs.Length}");
-        enemy.GetComponent<EnemyLogic>().config = enemyConfigs[level];
+        if (playWithEnemy)
+        {
+            enemy.transform.position = enemySpawn.position;
+            enemy.transform.rotation = enemySpawn.rotation;
+            await _lowerHandle.SwitchTo(enemy, 5f);
+            if (level >= enemyConfigs.Length)
+                Debug.LogError($"Level {level} is over number of enemies {enemyConfigs.Length}");
+            enemy.GetComponent<EnemyLogic>().config = enemyConfigs[level];
+            enemy.SetActive(true);
+        }
 
         _upperHandle.Free();
 
 
         player.SetActive(true);
-        enemy.SetActive(true);
-
 
 
 

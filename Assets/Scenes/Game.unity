@@ -251,7 +251,7 @@ GameObject:
   - component: {fileID: 197161196}
   m_Layer: 0
   m_Name: Audio Listener
-  m_TagString: Untagged
+  m_TagString: timeAudio
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -271,9 +271,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 197161195}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10.76}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 10
@@ -506,6 +506,7 @@ GameObject:
   - component: {fileID: 605852844}
   - component: {fileID: 605852843}
   - component: {fileID: 605852846}
+  - component: {fileID: 605852847}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -873,8 +874,105 @@ MonoBehaviour:
   dropInClip: {fileID: 0}
   gameOverClip: {fileID: 0}
   collisionClip: {fileID: 0}
+  backgroundMusic: {fileID: 8300000, guid: d1ba7b350616a0c4eb0881f0942041a1, type: 3}
   maxPitch: 1.2
   minPitch: 0.8
+--- !u!82 &605852847
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605852836}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: d1ba7b350616a0c4eb0881f0942041a1, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.029
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 53
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &658382563
 GameObject:
   m_ObjectHideFlags: 0
@@ -1684,7 +1782,7 @@ MonoBehaviour:
     m_Bits: 320
   aimbotDistance: 10
   seekingDistance: 3
-  config: {fileID: 11400000, guid: 208eff900b552412aa87ec05faeab19d, type: 2}
+  config: {fileID: 11400000, guid: cc985994c53e84f6fae197a5aed96f0e, type: 2}
 --- !u!1001 &1968763685
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1702,7 +1800,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 199081147454446092, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: orthographic size
-      value: 12.930838
+      value: 12.948503
       objectReference: {fileID: 0}
     - target: {fileID: 826605487606422808, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: debug
@@ -3820,7 +3918,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 8839593422781233826}
   m_Direction: 2
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 4
   m_OnValueChanged:
     m_PersistentCalls:
