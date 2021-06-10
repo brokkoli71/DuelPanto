@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
 
         uiManager.UpdateUI(_playerScore, _enemyScore, _gameScore);
 
-        Introduction();
+        //Introduction();
     }
 
     async void Introduction()
