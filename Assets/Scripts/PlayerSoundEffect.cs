@@ -2,62 +2,41 @@
 using SpeechIO;
 public class PlayerSoundEffect : MonoBehaviour
 {
-    public AudioClip dropInClip;
-    public AudioClip gameOverClip;
-    public AudioClip collisionClip;
-
-    public float maxPitch = 1.2f;
-    public float minPitch = 0.8f;
-    private GameObject previousEnemy;
     public AudioSource backgroundSource;
-    public SpeechOut speechOut = new SpeechOut();
 
-    private bool bgMusic;
+    public AudioClip backgroundClip;
+    private bool backgroundClipIsActive = false;
     void Start()
     {
+        print("PlayerSoundEffect");
         backgroundSource = GetComponent<AudioSource>();
+        backgroundSource.clip = backgroundClip;
     }
 
-
-
     public void pitchBackgroundMusic(float pitchValue)
-
     {
-
         print("want to pitch the music");
-        backgroundSource.mute = true;
+        //backgroundSource.mute = true;
         //backgroundSource.pitch = pitchValue;
 
     }
 
     public void startBackgroundMusic()
     {
-        bgMusic = true;
-        //backgroundSource.Play();
+        print("startt m,ucis");
+        backgroundSource.Play();
+        backgroundClipIsActive = true;
     }
-    public bool IsBackgroundMusicActive()
+    public bool isBackgroundMusicActive()
     {
-        return bgMusic;
+        return backgroundClipIsActive;
     }
+
 
     public void stopBackgroundMusic()
     {
-        bgMusic = false;
         backgroundSource.Stop();
-    }
-
-    public void PlayHit()
-    {
-        PlayClipPitched(collisionClip, minPitch, maxPitch);
-    }
-    public void PlayDropIn()
-    {
-        backgroundSource.PlayOneShot(dropInClip);
-    }
-
-    public void StopPlayback()
-    {
-        backgroundSource.Stop();
+        backgroundClipIsActive = false;
     }
 
     public void PlayClipPitched(AudioClip clip, float minPitch, float maxPitch)

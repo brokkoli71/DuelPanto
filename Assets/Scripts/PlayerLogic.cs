@@ -6,8 +6,8 @@ public class PlayerLogic : MonoBehaviour
 {
     private PantoHandle upperHandle;
 
-    AudioSource audioSource;
-    public AudioClip heartbeatClip;
+    //AudioSource audioSource;
+    //public AudioClip heartbeatClip;
 
     public int startBPM = 60;
     public int endBPM = 220;
@@ -25,7 +25,7 @@ public class PlayerLogic : MonoBehaviour
     {
         upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
         health = GetComponent<Health>();
-        audioSource = GetComponent<AudioSource>();
+        //audioSource = GetComponent<AudioSource>();
         soundEffects = GetComponent<PlayerSoundEffect>();
 
 
@@ -66,8 +66,17 @@ public class PlayerLogic : MonoBehaviour
         }
     }
 
+
     void Update()
     {
+        if (gameObject.activeSelf && !soundEffects.isBackgroundMusicActive())
+        {
+            soundEffects.startBackgroundMusic();
+        }
+        else
+        {
+            soundEffects.stopBackgroundMusic();
+        }
         // Simply connects the player to the upper handles position
         transform.position = upperHandle.HandlePosition(transform.position);
 
@@ -77,7 +86,7 @@ public class PlayerLogic : MonoBehaviour
             {
                 float bpm = bpmCoefficient * Mathf.Pow(health.healthPoints - health.maxHealth, 2) + startBPM;
                 bps = 60f / bpm;
-                audioSource.PlayOneShot(heartbeatClip);
+                //audioSource.PlayOneShot(heartbeatClip);
                 nextHeartbeat = 0;
             }
             else
