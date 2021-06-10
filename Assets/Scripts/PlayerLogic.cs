@@ -45,4 +45,14 @@ public class PlayerLogic : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        print("triggered something!");
+        if (other.CompareTag("Goal"))
+        {
+            // TODO check if all enemies are dead; if so end round, else ignore
+            print("reached goal!");
+        }
+    }
 }
