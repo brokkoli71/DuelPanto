@@ -22,6 +22,7 @@ public class PlayerLogic : MonoBehaviour
     private bool tracking = false;
     private Vector3 position;
 
+    private bool goal_reached = false;
     void Start()
     {
         upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
@@ -73,7 +74,7 @@ public class PlayerLogic : MonoBehaviour
 
     void Update()
     {
-        if (gameObject.activeSelf && !soundEffects.isBackgroundMusicActive())
+        if (gameObject.activeSelf && !soundEffects.isBackgroundMusicActive() && !goal_reached)
         {
             soundEffects.startBackgroundMusic();
         }
@@ -99,23 +100,10 @@ public class PlayerLogic : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        print("triggerd something");
         if (other.CompareTag("Goal"))
         {
-            print("You reached the goal!");
             soundEffects.stopBackgroundMusic();
+            goal_reached = true;
         }
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        print("collided with something");
-        if (other.gameObject.CompareTag("Goal"))
-        {
-            print("You reached the goal!");
-            soundEffects.stopBackgroundMusic();
-        }
-
-
     }
 }
