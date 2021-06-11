@@ -15,7 +15,7 @@ public class PlayerSoundEffect : MonoBehaviour
 
     public void pitchBackgroundMusic(float pitchValue)
     {
-        backgroundSource.pitch = pitchValue;
+        backgroundSource.pitch = pitchValue > 1 ? 1 : pitchValue;
     }
 
     public void startBackgroundMusic()

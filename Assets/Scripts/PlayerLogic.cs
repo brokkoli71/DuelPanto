@@ -9,6 +9,7 @@ public class PlayerLogic : MonoBehaviour
     //AudioSource audioSource;
     //public AudioClip heartbeatClip;
 
+    public GameObject listener;
     public int startBPM = 60;
     public int endBPM = 220;
     float bpmCoefficient;
@@ -36,12 +37,13 @@ public class PlayerLogic : MonoBehaviour
             tracking = true;
             startTracking();
         }
+        listener.transform.position = gameObject.transform.position;
     }
 
     void trackActivity()
     {
         float distance = Vector3.Distance(position, gameObject.transform.position);
-        float distance_factor = 2;
+        float distance_factor = 3.5f;
         //print($"Activity: {distance}");
         if (distance * distance_factor > 1)
         {
