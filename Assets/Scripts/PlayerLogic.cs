@@ -25,10 +25,7 @@ public class PlayerLogic : MonoBehaviour
     {
         upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
         health = GetComponent<Health>();
-        //audioSource = GetComponent<AudioSource>();
         soundEffects = GetComponent<PlayerSoundEffect>();
-
-
 
         bpmCoefficient = (endBPM - startBPM) / Mathf.Pow(health.maxHealth, 2);
     }
@@ -44,14 +41,15 @@ public class PlayerLogic : MonoBehaviour
     void trackActivity()
     {
         float distance = Vector3.Distance(position, gameObject.transform.position);
+        float distance_factor = 2;
         //print($"Activity: {distance}");
-        if (distance != 0)
+        if (distance * distance_factor > 1)
         {
             soundEffects.pitchBackgroundMusic(1f);
         }
         else
         {
-            soundEffects.pitchBackgroundMusic(0.2f);
+            soundEffects.pitchBackgroundMusic(Mathf.Max(.6f, distance * distance_factor));
         }
         startTracking();
     }
@@ -66,6 +64,10 @@ public class PlayerLogic : MonoBehaviour
         }
     }
 
+    void onDisable()
+    {
+        soundEffects.stopBackgroundMusic();
+    }
 
     void Update()
     {
@@ -73,10 +75,8 @@ public class PlayerLogic : MonoBehaviour
         {
             soundEffects.startBackgroundMusic();
         }
-        else
-        {
-            soundEffects.stopBackgroundMusic();
-        }
+
+
         // Simply connects the player to the upper handles position
         transform.position = upperHandle.HandlePosition(transform.position);
 
