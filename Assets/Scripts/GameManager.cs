@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public GameObject enemy;
     public GameObject enemyPrefab;
     public int enemyCount = 0;
+    private List<GameObject> enemies;
 
     public EnemyConfig[] enemyConfigs;
     public Transform playerSpawn;
@@ -37,7 +38,9 @@ public class GameManager : MonoBehaviour
     private int _gameScore = 0;
     private float _totalTime = 0;
     private float _levelStartTime = 0;
+    private bool gameRunning = false;
     public bool playWithEnemy = true;
+    
     private readonly Dictionary<string, KeyCode> _commands = new Dictionary<string, KeyCode>() {
         { "yes", KeyCode.Y },
         { "no", KeyCode.N },
@@ -49,6 +52,9 @@ public class GameManager : MonoBehaviour
         // Ensure these are disabled at the start of the game.
         player.SetActive(false);
         enemy.SetActive(false);
+
+        enemies = new List<GameObject>();
+        enemies.Add(enemy);
 
         _speechIn = new SpeechIn(onRecognized, _commands.Keys.ToArray());
         _speechOut = new SpeechOut();
@@ -186,12 +192,22 @@ public class GameManager : MonoBehaviour
         _upperHandle.Free();
 
         player.SetActive(true);
+        gameRunning = true;
 
-        GameObject spwdEnemy = spawnEnemy(new Vector3(0, 0, -12.5f));
+        spawnEnemy(new Vector3(0, 0, -12.5f));
+
         //await _lowerHandle.SwitchTo(spwdEnemy, 5f);
 
         _levelStartTime = Time.time;
     }
+
+    async void FixedUpdate() {
+        if (gameRunning){
+           GameObject closedEnemy = GetClosestEnemy(enemies);
+           await _lowerHandle.SwitchTo(closedEnemy, 5f);
+        }
+    }
+
 
     async void onRecognized(string message)
     {
@@ -204,7 +220,7 @@ public class GameManager : MonoBehaviour
         _speechIn.StopListening(); // [macOS] do not delete this line!
     }
 
-    public GameObject spawnEnemy ( Vector3 position){
+    public void spawnEnemy ( Vector3 position){
         enemyCount++;
 
         GameObject newEnemy = Instantiate(enemyPrefab, position, enemyPrefab.transform.rotation);
@@ -215,7 +231,26 @@ public class GameManager : MonoBehaviour
         //newEnemy.GetComponent<Health>().notifyDefeat.
 
         newEnemy.SetActive(true);
-        return newEnemy;
+        enemies.Add(newEnemy);
+    }
+    
+    private GameObject GetClosestEnemy (List<GameObject> enemies)
+    {
+        GameObject bestTarget = null;
+        float closestDistanceSqr = Mathf.Infinity;
+        Vector3 currentPosition = player.transform.position;
+        foreach(GameObject potentialTarget in enemies)
+        {
+            Vector3 directionToTarget = potentialTarget.transform.position - currentPosition;
+            float dSqrToTarget = directionToTarget.sqrMagnitude;
+            if(dSqrToTarget < closestDistanceSqr)
+            {
+                closestDistanceSqr = dSqrToTarget;
+                bestTarget = potentialTarget;
+            }
+        }
+        
+        return bestTarget;
     }
 
     /// <summary>
@@ -237,6 +272,7 @@ public class GameManager : MonoBehaviour
 
         player.SetActive(false);
         enemy.SetActive(false);
+        gameRunning = false;
 
       
 

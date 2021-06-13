@@ -11,6 +11,7 @@ TagManager:
   - PerceptionCone
   - timeAudio
   - Goal
+  - enemy
   layers:
   - Default
   - TransparentFX
