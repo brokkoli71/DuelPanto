@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
         enemies = new List<GameObject>();
 
         spawnEnemy(enemySpawn.position, enemySpawn.rotation);
-        spawnEnemy(new Vector3(0, 0, -12.5f), enemyPrefab.transform.rotation);
+        //spawnEnemy(new Vector3(0, 0, -12.5f), enemyPrefab.transform.rotation);
 
         _speechIn = new SpeechIn(onRecognized, _commands.Keys.ToArray());
         _speechOut = new SpeechOut();
