@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
     public bool introduceGame = true;
     public GameObject player;
     public GameObject enemy;
+    public GameObject enemyPrefab;
+    public int enemyCount = 0;
+
     public EnemyConfig[] enemyConfigs;
     public Transform playerSpawn;
     public Transform enemySpawn;
@@ -182,10 +185,11 @@ public class GameManager : MonoBehaviour
 
         _upperHandle.Free();
 
-
         player.SetActive(true);
 
-
+        GameObject spwdEnemy = spawnEnemyOn(new Vector3(0, 0, -12.5f), true);
+        spwdEnemy.SetActive(true);
+        //await _lowerHandle.SwitchTo(spwdEnemy, 5f);
 
         _levelStartTime = Time.time;
     }
@@ -201,6 +205,20 @@ public class GameManager : MonoBehaviour
         _speechIn.StopListening(); // [macOS] do not delete this line!
     }
 
+    public GameObject spawnEnemyOn ( Vector3 position, bool activityState){
+        enemyCount++;
+
+        GameObject newEnemy = Instantiate(enemyPrefab, position, enemyPrefab.transform.rotation);
+        newEnemy.GetComponent<EnemyLogic>().config = enemyConfigs[level];
+        
+        newEnemy.GetComponent<EnemyLogic>().target = player.transform; 
+        newEnemy.GetComponent<Shooting>().enemyTransform = player.transform; 
+        //newEnemy.GetComponent<Health>().notifyDefeat.
+
+        newEnemy.SetActive(activityState);
+        return newEnemy;
+    }
+
     /// <summary>
     /// Ends the round by disabling player and enemy, updating UI, calculating
     /// game score and eventually ending the game.
@@ -208,10 +226,20 @@ public class GameManager : MonoBehaviour
     /// <param name="defeated"></param>
     public async void OnDefeat(GameObject defeated)
     {
+        
+        
+        bool playerDefeated = defeated.Equals(player);
+        //playerDefeated = false? enemy gets killed
+        if (!playerDefeated)
+        {
+            enemyCount--;
+        }
+        if(enemyCount == 0 || playerDefeated){
+
         player.SetActive(false);
         enemy.SetActive(false);
 
-        bool playerDefeated = defeated.Equals(player);
+      
 
         if (playerDefeated)
         {
@@ -238,6 +266,8 @@ public class GameManager : MonoBehaviour
             await _speechOut.Speak($"Current score is {_gameScore}");
             await _speechOut.Speak($"Continuing with level {level + 1}");
             await ResetRound();
+        }
+        
         }
     }
 
