@@ -11,6 +11,10 @@ public class EnemyLogic : MonoBehaviour
 
     bool foundPlayer = false;
     float timeToFind;
+
+    private Vector3 spawnPosition;
+
+    private Quaternion spawnRotation;
     Vector3 lastSeenPosition;
     NavMeshAgent agent;
 
@@ -30,6 +34,17 @@ public class EnemyLogic : MonoBehaviour
         GetComponent<Health>().maxHealth = config.health;
     }
 
+    public void setSpawnLocation(Vector3 position, Quaternion rotation)
+    {
+        spawnPosition = position;
+        spawnRotation = rotation;
+    }
+
+    public void resetLocation()
+    {
+        gameObject.transform.position = spawnPosition;
+        gameObject.transform.rotation = spawnRotation;
+    }
     void Update()
     {
         if (config.CSGoPlayer)
@@ -65,7 +80,8 @@ public class EnemyLogic : MonoBehaviour
                     transform.Rotate(0, Random.Range(-config.inaccuracy, config.inaccuracy), 0);
                 }
             }
-        } else
+        }
+        else
         {
             foundPlayer = false;
         }

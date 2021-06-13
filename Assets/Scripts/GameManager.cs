@@ -11,9 +11,7 @@ public class GameManager : MonoBehaviour
 
     public bool introduceGame = true;
     public GameObject player;
-    public GameObject enemy;
     public GameObject enemyPrefab;
-    public int enemyCount = 0;
     private List<GameObject> enemies;
 
     public EnemyConfig[] enemyConfigs;
@@ -40,7 +38,8 @@ public class GameManager : MonoBehaviour
     private float _levelStartTime = 0;
     private bool gameRunning = false;
     public bool playWithEnemy = true;
-    
+
+    private int defeatedEnemies = 0;
     private readonly Dictionary<string, KeyCode> _commands = new Dictionary<string, KeyCode>() {
         { "yes", KeyCode.Y },
         { "no", KeyCode.N },
@@ -51,20 +50,20 @@ public class GameManager : MonoBehaviour
     {
         // Ensure these are disabled at the start of the game.
         player.SetActive(false);
-        enemy.SetActive(false);
-
         enemies = new List<GameObject>();
-        enemies.Add(enemy);
+
+        spawnEnemy(enemySpawn.position, enemySpawn.rotation);
+        spawnEnemy(new Vector3(0, 0, -12.5f), enemyPrefab.transform.rotation);
 
         _speechIn = new SpeechIn(onRecognized, _commands.Keys.ToArray());
         _speechOut = new SpeechOut();
 
-        if (level < 0 || level >= enemyConfigs.Length)
-        {
-            Debug.LogWarning($"Level value {level} < 0 or >= enemyConfigs.Length. Resetting to 0");
+        //if (level < 0 || level >= enemyConfigs.Length)
+        //{
+        //    Debug.LogWarning($"Level value {level} < 0 or >= enemyConfigs.Length. Resetting to 0");
 
-            level = 0;
-        }
+        //   level = 0;
+        //}
     }
 
     void Start()
@@ -125,8 +124,6 @@ public class GameManager : MonoBehaviour
         await _speechOut.Speak("You hit nothing.");
     }
 
-
-
     async Task IntroduceHealth()
     {
         await _speechOut.Speak("You take damage when the enemies laser hits you.");
@@ -180,13 +177,12 @@ public class GameManager : MonoBehaviour
         //await _speechOut.Speak("Spawning enemy");
         if (playWithEnemy)
         {
-            enemy.transform.position = enemySpawn.position;
-            enemy.transform.rotation = enemySpawn.rotation;
-            await _lowerHandle.SwitchTo(enemy, 5f);
-            if (level >= enemyConfigs.Length)
-                Debug.LogError($"Level {level} is over number of enemies {enemyConfigs.Length}");
-            enemy.GetComponent<EnemyLogic>().config = enemyConfigs[level];
-            enemy.SetActive(true);
+
+            //if (level >= enemyConfigs.Length)
+            //    Debug.LogError($"Level {level} is over number of enemies {enemyConfigs.Length}");
+
+            resetEnemies();
+            setEnemies(true);
         }
 
         _upperHandle.Free();
@@ -194,17 +190,15 @@ public class GameManager : MonoBehaviour
         player.SetActive(true);
         gameRunning = true;
 
-        spawnEnemy(new Vector3(0, 0, -12.5f));
-
-        //await _lowerHandle.SwitchTo(spwdEnemy, 5f);
-
         _levelStartTime = Time.time;
     }
 
-    async void FixedUpdate() {
-        if (gameRunning){
-           GameObject closedEnemy = GetClosestEnemy(enemies);
-           await _lowerHandle.SwitchTo(closedEnemy, 5f);
+    async void FixedUpdate()
+    {
+        if (gameRunning)
+        {
+            GameObject closedEnemy = GetClosestEnemy(enemies);
+            await _lowerHandle.SwitchTo(closedEnemy, 5f);
         }
     }
 
@@ -220,36 +214,51 @@ public class GameManager : MonoBehaviour
         _speechIn.StopListening(); // [macOS] do not delete this line!
     }
 
-    public void spawnEnemy ( Vector3 position){
-        enemyCount++;
-
-        GameObject newEnemy = Instantiate(enemyPrefab, position, enemyPrefab.transform.rotation);
+    public void resetEnemies()
+    {
+        foreach (GameObject _enemy in enemies)
+        {
+            _enemy.GetComponent<EnemyLogic>().resetLocation();
+        }
+    }
+    public void setEnemies(bool activityStatus)
+    {
+        foreach (GameObject _enemy in enemies)
+        {
+            _enemy.SetActive(activityStatus);
+        }
+    }
+    public void spawnEnemy(Vector3 position, Quaternion rotation)
+    {
+        GameObject newEnemy = Instantiate(enemyPrefab, position, rotation);
         newEnemy.GetComponent<EnemyLogic>().config = enemyConfigs[level];
-        
-        newEnemy.GetComponent<EnemyLogic>().target = player.transform; 
-        newEnemy.GetComponent<Shooting>().enemyTransform = player.transform; 
+        newEnemy.GetComponent<EnemyLogic>().target = player.transform;
+        newEnemy.GetComponent<EnemyLogic>().setSpawnLocation(position, rotation);
+
+        newEnemy.GetComponent<Shooting>().enemyTransform = player.transform;
+
         //newEnemy.GetComponent<Health>().notifyDefeat.
 
-        newEnemy.SetActive(true);
+        newEnemy.SetActive(false);
         enemies.Add(newEnemy);
     }
-    
-    private GameObject GetClosestEnemy (List<GameObject> enemies)
+
+    private GameObject GetClosestEnemy(List<GameObject> enemies)
     {
         GameObject bestTarget = null;
         float closestDistanceSqr = Mathf.Infinity;
         Vector3 currentPosition = player.transform.position;
-        foreach(GameObject potentialTarget in enemies)
+        foreach (GameObject potentialTarget in enemies)
         {
             Vector3 directionToTarget = potentialTarget.transform.position - currentPosition;
             float dSqrToTarget = directionToTarget.sqrMagnitude;
-            if(dSqrToTarget < closestDistanceSqr)
+            if (dSqrToTarget < closestDistanceSqr)
             {
                 closestDistanceSqr = dSqrToTarget;
                 bestTarget = potentialTarget;
             }
         }
-        
+
         return bestTarget;
     }
 
@@ -260,49 +269,55 @@ public class GameManager : MonoBehaviour
     /// <param name="defeated"></param>
     public async void OnDefeat(GameObject defeated)
     {
-        
-        
+
+
         bool playerDefeated = defeated.Equals(player);
         //playerDefeated = false? enemy gets killed
         if (!playerDefeated)
         {
-            enemyCount--;
+            defeatedEnemies++;
+            GameObject defeatedEnemie = enemies.Find(x => x.Equals(defeated));
+            //Destroy(defeatedEnemie);
+            //enemies.Remove(defeatedEnemie);
+            defeatedEnemie.SetActive(false);
         }
-        if(enemyCount == 0 || playerDefeated){
-
-        player.SetActive(false);
-        enemy.SetActive(false);
-        gameRunning = false;
-
-      
-
-        if (playerDefeated)
+        print(enemies.Count);
+        if (enemies.Count == defeatedEnemies || playerDefeated)
         {
-            _enemyScore++;
-        }
-        else
-        {
-            _playerScore++;
-        }
 
-        string defeatedPerson = playerDefeated ? "You" : "Enemy";
-        await _speechOut.Speak($"{defeatedPerson} got defeated.");
+            player.SetActive(false);
+            setEnemies(false);
+            gameRunning = false;
+            defeatedEnemies = 0;
 
-        _gameScore += CalculateGameScore(player, enemy);
-        uiManager.UpdateUI(_playerScore, _enemyScore, _gameScore);
 
-        level++;
-        if (level >= enemyConfigs.Length)
-        {
-            await GameOver();
-        }
-        else
-        {
-            await _speechOut.Speak($"Current score is {_gameScore}");
-            await _speechOut.Speak($"Continuing with level {level + 1}");
-            await ResetRound();
-        }
-        
+            if (playerDefeated)
+            {
+                _enemyScore++;
+            }
+            else
+            {
+                _playerScore++;
+            }
+
+            string defeatedPerson = playerDefeated ? "You" : "Enemy";
+            await _speechOut.Speak($"{defeatedPerson} got defeated.");
+
+            //_gameScore += CalculateGameScore(player, enemy);
+            uiManager.UpdateUI(_playerScore, _enemyScore, _gameScore);
+
+            level++;
+            if (level >= enemyConfigs.Length)
+            {
+                await GameOver();
+            }
+            else
+            {
+                await _speechOut.Speak($"Current score is {_gameScore}");
+                await _speechOut.Speak($"Continuing with level {level + 1}");
+                await ResetRound();
+            }
+
         }
     }
 
