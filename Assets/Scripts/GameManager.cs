@@ -187,8 +187,7 @@ public class GameManager : MonoBehaviour
 
         player.SetActive(true);
 
-        GameObject spwdEnemy = spawnEnemyOn(new Vector3(0, 0, -12.5f), true);
-        spwdEnemy.SetActive(true);
+        GameObject spwdEnemy = spawnEnemy(new Vector3(0, 0, -12.5f));
         //await _lowerHandle.SwitchTo(spwdEnemy, 5f);
 
         _levelStartTime = Time.time;
@@ -205,7 +204,7 @@ public class GameManager : MonoBehaviour
         _speechIn.StopListening(); // [macOS] do not delete this line!
     }
 
-    public GameObject spawnEnemyOn ( Vector3 position, bool activityState){
+    public GameObject spawnEnemy ( Vector3 position){
         enemyCount++;
 
         GameObject newEnemy = Instantiate(enemyPrefab, position, enemyPrefab.transform.rotation);
@@ -215,7 +214,7 @@ public class GameManager : MonoBehaviour
         newEnemy.GetComponent<Shooting>().enemyTransform = player.transform; 
         //newEnemy.GetComponent<Health>().notifyDefeat.
 
-        newEnemy.SetActive(activityState);
+        newEnemy.SetActive(true);
         return newEnemy;
     }
 
