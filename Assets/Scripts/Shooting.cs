@@ -4,7 +4,11 @@ public class Shooting : MonoBehaviour
 {
     public float maxRayDistance = 20f;
     public LayerMask hitLayers;
-    // TODO: 6. A clever way of keeping track of hits might be to make the damage/second dependent on how precisely you hit the opponent, rather than having a step function hit/no hit.
+    /* TODO: 6. A clever way of keeping track of
+    hits might be to make the damage/second dependent 
+    on how precisely you hit the opponent, rather than 
+    having a step function hit/no hit.
+    */
     public int damage = 2;
     public bool isUpper = true;
     public AudioClip defaultClip;
