@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     private LowerHandle _lowerHandle;
     private SpeechIn _speechIn;
     private SpeechOut _speechOut;
+    private GameObject oldEnemy = null;
     private int _playerScore = 0;
     private int _enemyScore = 0;
     private int _gameScore = 0;
@@ -190,7 +191,8 @@ public class GameManager : MonoBehaviour
 
         _upperHandle.Free();
 
-        
+        oldEnemy = enemies[0];
+
         player.SetActive(true);
         gameRunning = true;
         player.GetComponent<PlayerLogic>().ResetPlayer();
@@ -204,8 +206,13 @@ public class GameManager : MonoBehaviour
         {
             enemyChecking = false;
             Invoke("ResetEnemyChecking", 0.8f);
-            GameObject closedEnemy = GetClosestEnemy(enemies);
-            await _lowerHandle.SwitchTo(closedEnemy, 5f);
+            GameObject closestEnemy = GetClosestEnemy(enemies);
+            if (oldEnemy != closestEnemy)
+            {
+                _speechOut.Speak("switching enemy");
+                oldEnemy = closestEnemy;
+            }
+            await _lowerHandle.SwitchTo(closestEnemy, 5f);
         }
     }
 
@@ -292,8 +299,9 @@ public class GameManager : MonoBehaviour
             //Destroy(defeatedEnemie);
             //enemies.Remove(defeatedEnemie);
             defeatedEnemie.SetActive(false);
+            if (defeatedEnemies < enemies.Count) _speechOut.Speak("enemy killed");
         }
-        print(enemies.Count);
+        print("enemy count: " + enemies.Count);
         if (enemies.Count == defeatedEnemies || playerDefeated)
         {
 
