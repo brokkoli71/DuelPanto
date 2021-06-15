@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
     public EnemyConfig[] enemyConfigs;
     public Transform playerSpawn;
-    public Transform enemySpawn;
+    public Transform[] enemySpawn;
     public int level = 0;
     public int trophyScore = 10000;
     public UIManager uiManager;
@@ -53,8 +53,8 @@ public class GameManager : MonoBehaviour
         player.SetActive(false);
         enemies = new List<GameObject>();
 
-        spawnEnemy(enemySpawn.position, enemySpawn.rotation);
-        //spawnEnemy(new Vector3(0, 0, -12.5f), enemyPrefab.transform.rotation);
+        spawnEnemy(enemySpawn[0].position, enemySpawn[0].rotation);
+        spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
 
         _speechIn = new SpeechIn(onRecognized, _commands.Keys.ToArray());
         _speechOut = new SpeechOut();
@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
 
         if (introduceGame)
         {
-            await IntroducePlayers();
+            //await IntroducePlayers();
             await IntroduceLaser();
             await IntroduceHealth();
             await IntroduceLevel();
@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
 
         await ResetRound();
     }
-
+    /*
     async Task IntroducePlayers()
     {
         await _speechOut.Speak("This is you.");
@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
         await _lowerHandle.MoveToPosition(enemySpawn.position, 5f);
         _lowerHandle.Freeze();
     }
-
+    */
     async Task IntroduceLaser()
     {
         await _speechOut.Speak("In this game you shoot your opponent with a laser.");
