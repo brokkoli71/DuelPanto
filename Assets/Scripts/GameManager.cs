@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 
     public bool introduceGame = true;
     public GameObject player;
+    public GameObject enemyOriginal;
     public GameObject enemyPrefab;
     private List<GameObject> enemies;
 
@@ -237,6 +238,7 @@ public class GameManager : MonoBehaviour
 
         newEnemy.GetComponent<Shooting>().enemyTransform = player.transform;
 
+        newEnemy.GetComponent<Health>().notifyDefeat = enemyOriginal.GetComponent<Health>().notifyDefeat;
         //newEnemy.GetComponent<Health>().notifyDefeat.
 
         newEnemy.SetActive(false);
@@ -250,12 +252,15 @@ public class GameManager : MonoBehaviour
         Vector3 currentPosition = player.transform.position;
         foreach (GameObject potentialTarget in enemies)
         {
-            Vector3 directionToTarget = potentialTarget.transform.position - currentPosition;
-            float dSqrToTarget = directionToTarget.sqrMagnitude;
-            if (dSqrToTarget < closestDistanceSqr)
+            if (potentialTarget.activeSelf)
             {
-                closestDistanceSqr = dSqrToTarget;
-                bestTarget = potentialTarget;
+                Vector3 directionToTarget = potentialTarget.transform.position - currentPosition;
+                float dSqrToTarget = directionToTarget.sqrMagnitude;
+                if (dSqrToTarget < closestDistanceSqr)
+                {
+                    closestDistanceSqr = dSqrToTarget;
+                    bestTarget = potentialTarget;
+                }
             }
         }
 

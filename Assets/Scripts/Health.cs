@@ -22,10 +22,10 @@ public class Health : MonoBehaviour
 
     void OnEnable()
     {
-        healthSlider.minValue = 0;
-        healthSlider.maxValue = maxHealth;
+        //healthSlider.minValue = 0;
+        //healthSlider.maxValue = maxHealth;
         healthPoints = maxHealth;
-        UpdateUI();
+        //UpdateUI();
     }
 
     /// <summary>
@@ -34,15 +34,19 @@ public class Health : MonoBehaviour
     /// <param name="amount"></param>
     /// <param name="from"></param>
     public void TakeDamage(int amount, GameObject from)
-    {
-        healthPoints -= amount;
 
-        UpdateUI();
+
+    {
+
+        healthPoints -= amount;
+        //print($"{gameObject} gets damage {from}, {healthPoints} health left.");
+        //UpdateUI();
 
         if (healthPoints <= 0)
         {
             notifyDefeat.Invoke(gameObject);
-        } else
+        }
+        else
         {
             notifyDamage.Invoke(from);
         }
@@ -54,10 +58,13 @@ public class Health : MonoBehaviour
         healthPoints = Mathf.Min(healthPoints + amount, maxHealth);
     }
 
+    /*
     void UpdateUI()
     {
         healthSlider.value = healthPoints;
         sliderImage.color = Color.Lerp(zeroHealthColor,
             fullHealthColor, healthPoints / (float)maxHealth);
     }
+
+*/
 }
