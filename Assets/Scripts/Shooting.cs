@@ -1,10 +1,16 @@
 ﻿using UnityEngine;
 using DualPantoFramework;
+using System.Collections.Generic;
+
 public class Shooting : MonoBehaviour
 {
     public float maxRayDistance = 20f;
     public LayerMask hitLayers;
-    // TODO: 6. A clever way of keeping track of hits might be to make the damage/second dependent on how precisely you hit the opponent, rather than having a step function hit/no hit.
+    /*
+     * TODO: 6. A clever way of keeping track of hits might be to make the 
+     * damage/second dependent on how precisely you hit the opponent, rather 
+     * than having a step function hit/no hit.
+    */
     public int damage = 2;
     public bool isUpper = true;
     public AudioClip defaultClip;
@@ -18,6 +24,11 @@ public class Shooting : MonoBehaviour
     AudioClip _currentClip;
     LineRenderer lineRenderer;
     PantoHandle handle;
+
+    System.DateTime lastShot;
+    public double reloadingTimeMillis;
+    public GameObject shot;
+    List<Rigidbody> shots;
 
     AudioClip currentClip
     {
@@ -37,6 +48,9 @@ public class Shooting : MonoBehaviour
 
     void Start()
     {
+        lastShot = System.DateTime.Now;
+        shots = new List<Rigidbody>();
+
         lineRenderer = GetComponent<LineRenderer>();
 
         audioSource = GetComponent<AudioSource>();
@@ -50,17 +64,36 @@ public class Shooting : MonoBehaviour
         {
             handle = panto.GetComponent<LowerHandle>();
         }
+        
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space) &&
+            (System.DateTime.Now-lastShot).TotalMilliseconds > reloadingTimeMillis)
+        {
+            lastShot = System.DateTime.Now;
+            shoot();
+        }
         //Fire();
         FireCone();
+        
     }
 
     /// <summary>
     /// Fire gun with aiming assistance.
     /// </summary>
+
+    void shoot()
+    {
+        GameObject projectile = Instantiate(shot, transform.position + transform.forward, transform.rotation);
+        Rigidbody rigidshot = projectile.GetComponent<Rigidbody>();
+        shots.Add(rigidshot);
+        rigidshot.constraints = RigidbodyConstraints.FreezePositionY;
+        rigidshot.velocity = transform.forward * 40;
+        projectile.GetComponent<shotController>().shotBy = gameObject;
+    }
+
     void FireCone()
     {
         RaycastHit hit;
