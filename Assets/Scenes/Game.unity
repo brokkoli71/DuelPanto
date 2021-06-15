@@ -1760,6 +1760,8 @@ MonoBehaviour:
   hitClip: {fileID: 8300000, guid: 2e99873b97e7a446a9befe2766fb45b4, type: 3}
   fireSpreadAngle: 30
   enemyTransform: {fileID: 1868310002}
+  reloadingTimeMillis: 1000
+  shot: {fileID: 60065284762972465, guid: 76d9ce6a5a9807c4eaf166c7c03005fc, type: 3}
 --- !u!114 &605852844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4444,6 +4446,8 @@ MonoBehaviour:
   hitClip: {fileID: 8300000, guid: 2e99873b97e7a446a9befe2766fb45b4, type: 3}
   fireSpreadAngle: 3
   enemyTransform: {fileID: 605852841}
+  reloadingTimeMillis: 0
+  shot: {fileID: 0}
 --- !u!114 &1868309995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4899,7 +4903,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 199081147454446092, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: orthographic size
-      value: 24.105839
+      value: 19.218729
+      objectReference: {fileID: 0}
+    - target: {fileID: 199081147454446092, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 826605487606422808, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: debug

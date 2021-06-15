@@ -14,7 +14,8 @@ public class shotController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //todo: zerstoeren falls zu alt
+        if()
     }
     void OnCollisionEnter(Collision collision)
     {
