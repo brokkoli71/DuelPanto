@@ -15,7 +15,7 @@ public class shotController : MonoBehaviour
     void Update()
     {
         //todo: zerstoeren falls zu alt
-        if()
+        
     }
     void OnCollisionEnter(Collision collision)
     {
