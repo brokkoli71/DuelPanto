@@ -40,6 +40,8 @@ public class GameManager : MonoBehaviour
     private bool gameRunning = false;
     public bool playWithEnemy = true;
 
+    
+    private bool enemyChecking = true;
     private int defeatedEnemies = 0;
     private readonly Dictionary<string, KeyCode> _commands = new Dictionary<string, KeyCode>() {
         { "yes", KeyCode.Y },
@@ -54,7 +56,7 @@ public class GameManager : MonoBehaviour
         enemies = new List<GameObject>();
 
         spawnEnemy(enemySpawn.position, enemySpawn.rotation);
-        //spawnEnemy(new Vector3(0, 0, -12.5f), enemyPrefab.transform.rotation);
+        spawnEnemy(new Vector3(0, 0, -12.5f), enemyPrefab.transform.rotation);
 
         _speechIn = new SpeechIn(onRecognized, _commands.Keys.ToArray());
         _speechOut = new SpeechOut();
@@ -71,7 +73,7 @@ public class GameManager : MonoBehaviour
     {
         _upperHandle = GetComponent<UpperHandle>();
         _lowerHandle = GetComponent<LowerHandle>();
-        _audioSource = GetComponent<AudioSource>();
+        _audioSource = player.GetComponent<AudioSource>();
 
         uiManager.UpdateUI(_playerScore, _enemyScore, _gameScore);
 
@@ -188,21 +190,28 @@ public class GameManager : MonoBehaviour
 
         _upperHandle.Free();
 
+        
         player.SetActive(true);
         gameRunning = true;
+        player.GetComponent<PlayerLogic>().ResetPlayer();
 
         _levelStartTime = Time.time;
     }
 
     async void FixedUpdate()
     {
-        if (gameRunning)
+        if (gameRunning && enemyChecking && playWithEnemy)
         {
+            enemyChecking = false;
+            Invoke("ResetEnemyChecking", 0.8f);
             GameObject closedEnemy = GetClosestEnemy(enemies);
             await _lowerHandle.SwitchTo(closedEnemy, 5f);
         }
     }
 
+    void ResetEnemyChecking(){
+        enemyChecking = true;
+    }
 
     async void onRecognized(string message)
     {
@@ -274,8 +283,6 @@ public class GameManager : MonoBehaviour
     /// <param name="defeated"></param>
     public async void OnDefeat(GameObject defeated)
     {
-
-
         bool playerDefeated = defeated.Equals(player);
         //playerDefeated = false? enemy gets killed
         if (!playerDefeated)
@@ -308,8 +315,30 @@ public class GameManager : MonoBehaviour
             string defeatedPerson = playerDefeated ? "You" : "Enemy";
             await _speechOut.Speak($"{defeatedPerson} got defeated.");
 
+            level++;
+            if (level >= enemyConfigs.Length)
+            {
+                await GameOver();
+            }
+            else
+            {
+                await ResetRound();
+            }
+
+        }
+    }
+
+    public async void OnVictory(GameObject player)
+    {
+
+            player.SetActive(false);
+            setEnemies(false);
+            gameRunning = false;
+            defeatedEnemies = 0;
+
+            await _speechOut.Speak(" Congratulations you have reached the goal.");
+
             //_gameScore += CalculateGameScore(player, enemy);
-            uiManager.UpdateUI(_playerScore, _enemyScore, _gameScore);
 
             level++;
             if (level >= enemyConfigs.Length)
@@ -318,13 +347,10 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                await _speechOut.Speak($"Current score is {_gameScore}");
-                await _speechOut.Speak($"Continuing with level {level + 1}");
                 await ResetRound();
             }
-
-        }
     }
+
 
     /// <summary>
     /// Ends the game.

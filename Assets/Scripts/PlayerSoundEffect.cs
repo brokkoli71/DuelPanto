@@ -6,6 +6,7 @@ public class PlayerSoundEffect : MonoBehaviour
 
     public AudioClip[] collisionClip;
     public AudioClip lastCollisionClip;
+    public AudioClip finishSound;
     public float maxPitch = 1.2f;
     public float minPitch = 0.8f;
     public GameObject Goal;
@@ -13,12 +14,18 @@ public class PlayerSoundEffect : MonoBehaviour
     public float audioCoolDown = 0.2f;
     private float lastCollision;
     private bool backgroundClipIsActive = false;
+    AudioSource audioSource;
     void Start()
     {
         backgroundSource = Goal.GetComponent<AudioSource>();
         backgroundSource.clip = backgroundClip;
     }
 
+
+    public void ResetMusic(){
+        backgroundSource.clip = backgroundClip;
+        backgroundClipIsActive = false;
+    }
     public AudioClip GetCollisionClip()
     {
         if (collisionClip.Length > 1)
@@ -52,6 +59,14 @@ public class PlayerSoundEffect : MonoBehaviour
         backgroundSource.PlayOneShot(clip);
         backgroundSource.pitch = 1f;
     }
+
+    public void playFinisherClip(){
+        backgroundSource.clip = finishSound;
+        backgroundSource.pitch =1;
+        backgroundSource.Play();
+    }
+
+    
     public void pitchBackgroundMusic(float pitchValue)
     {
         backgroundSource.pitch = pitchValue > 1 ? 1 : pitchValue;
@@ -67,7 +82,6 @@ public class PlayerSoundEffect : MonoBehaviour
     {
         return backgroundClipIsActive;
     }
-
 
     public void stopBackgroundMusic()
     {

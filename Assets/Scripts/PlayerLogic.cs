@@ -1,7 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using DualPantoFramework;
+
+[System.Serializable]
+public class GoalReachedEvent : UnityEvent<GameObject> { }
+
 public class PlayerLogic : MonoBehaviour
 {
     private PantoHandle upperHandle;
@@ -22,7 +27,7 @@ public class PlayerLogic : MonoBehaviour
     private bool tracking = false;
     private Vector3 position;
 
-    private bool goal_reached = false;
+    public GoalReachedEvent notifyFinished;
     void Start()
     {
         upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
@@ -31,6 +36,7 @@ public class PlayerLogic : MonoBehaviour
 
         bpmCoefficient = (endBPM - startBPM) / Mathf.Pow(health.maxHealth, 2);
     }
+    
     void FixedUpdate()
     {
         if (!tracking)
@@ -40,6 +46,7 @@ public class PlayerLogic : MonoBehaviour
         }
         listener.transform.position = gameObject.transform.position;
     }
+
 
     void trackActivity()
     {
@@ -72,9 +79,13 @@ public class PlayerLogic : MonoBehaviour
         soundEffects.stopBackgroundMusic();
     }
 
+    public void ResetPlayer(){
+        soundEffects.ResetMusic();
+    }
+
     void Update()
     {
-        if (gameObject.activeSelf && !soundEffects.isBackgroundMusicActive() && !goal_reached)
+        if (gameObject.activeSelf && !soundEffects.isBackgroundMusicActive())
         {
             soundEffects.startBackgroundMusic();
         }
@@ -103,7 +114,8 @@ public class PlayerLogic : MonoBehaviour
         if (other.CompareTag("Goal"))
         {
             soundEffects.stopBackgroundMusic();
-            goal_reached = true;
+            soundEffects.playFinisherClip();
+            notifyFinished.Invoke(gameObject);
         }
     }
 }
