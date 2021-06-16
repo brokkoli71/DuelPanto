@@ -79,18 +79,29 @@ public class shotController : MonoBehaviour
         {
             Debug.Log("hit " + hitObject.name);
             Destroy(gameObject, .0f);
-            if (hitObject.name.Contains("EnemyPrefab") || hitObject.name == "Player")
+            if (hitObject.name.Contains("EnemyPrefab"))
             {
-                hitObject.transform.GetComponent<Health>().TakeDamage(damage, shotBy); 
+                hitObject.transform.GetComponent<Health>().TakeDamage(damage, shotBy);
+            }
+            if (hitObject.name == "Player")
+            {
+                hitObject.transform.GetComponent<Health>().TakeDamage(damage, shotBy);
+                AudioSource.PlayClipAtPoint(playerShot, this.gameObject.transform.position);
+
             }
             if (hitObject.name.Contains("Obstacle"))
             {
-                gameObject.GetComponent<AudioSource>().PlayOneShot(wallShot);
+                AudioSource.PlayClipAtPoint(wallShot, this.gameObject.transform.position);
             }
 
 
 
         }
 
+    }
+
+    private void OnDestroy()
+    {
+        
     }
 }
