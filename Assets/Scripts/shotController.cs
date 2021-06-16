@@ -10,14 +10,19 @@ public class shotController : MonoBehaviour
     bool aiming = false;
     GameObject aimingAt;
     System.DateTime spawnTime;
-    double MaxLifeTimeMillis = 2000;
+    double MaxLifeTimeMillis = 20000;
+
+    
 
     bool isSlowed = false;
-    float slowFactor = 10;
+    float slowFactor = 4;
+
+    public AudioClip startShot;
     // Start is called before the first frame update
     void Start()
     {
         spawnTime = System.DateTime.Now;
+        gameObject.GetComponent<AudioSource>().PlayOneShot(startShot);
     }
 
     // Update is called once per frame

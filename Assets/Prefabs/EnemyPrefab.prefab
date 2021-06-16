@@ -34,7 +34,7 @@ Transform:
   m_GameObject: {fileID: 9213859822949923237}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.42, y: 0, z: -12.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -228,7 +228,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9213859822949923237}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 83c25aafb0a4d4598bc455810a48cd96, type: 3}
@@ -390,7 +390,7 @@ MonoBehaviour:
   enemyTransform: {fileID: 0}
   reloadingTimeMillis: 3000
   shotPrefab: {fileID: 60065284762972465, guid: c48913734aa85804887a7d8a8a576afd, type: 3}
-  shotSpeed: 40
+  shotSpeed: 5
 --- !u!114 &9213859822949923263
 MonoBehaviour:
   m_ObjectHideFlags: 0
