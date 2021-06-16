@@ -6,7 +6,7 @@ public class shotController : MonoBehaviour
 {
     public static int damage = 100;
     public GameObject shotBy;
-    public static float aimBotForce = 0.1f;
+    public static float aimBotForce = 0.01f;
     bool aiming = false;
     GameObject aimingAt;
     System.DateTime spawnTime;
@@ -14,10 +14,12 @@ public class shotController : MonoBehaviour
 
     
 
-    bool isSlowed = false;
+    bool isSlowed = true;
     float slowFactor = 4;
 
     public AudioClip startShot;
+    public AudioClip wallShot;
+    public AudioClip playerShot;
     // Start is called before the first frame update
     void Start()
     {
@@ -58,7 +60,8 @@ public class shotController : MonoBehaviour
         if (aiming)
         {
             Vector3 enemyDirection = aimingAt.transform.position - transform.position;
-            GetComponent<Rigidbody>().AddForce(enemyDirection * aimBotForce);
+            GetComponent<Rigidbody>().AddForce(enemyDirection * aimBotForce, ForceMode.Impulse);
+            GetComponent<Rigidbody>().velocity /= (1 + aimBotForce);
         }
 
     }
@@ -75,9 +78,16 @@ public class shotController : MonoBehaviour
         if (shotBy.name != hitObject.name)
         {
             Debug.Log("hit " + hitObject.name);
-            Destroy(gameObject, .01f);
+            Destroy(gameObject, .0f);
             if (hitObject.name.Contains("EnemyPrefab") || hitObject.name == "Player")
-            { hitObject.transform.GetComponent<Health>().TakeDamage(damage, shotBy); }
+            {
+                hitObject.transform.GetComponent<Health>().TakeDamage(damage, shotBy); 
+            }
+            if (hitObject.name.Contains("Obstacle"))
+            {
+                gameObject.GetComponent<AudioSource>().PlayOneShot(wallShot);
+            }
+
 
 
         }
