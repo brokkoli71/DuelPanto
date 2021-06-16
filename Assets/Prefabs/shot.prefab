@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3663996705819996174}
   - component: {fileID: -8305827092998777804}
   - component: {fileID: 6263553853817029522}
-  - component: {fileID: 5369300274388249765}
+  - component: {fileID: -3739782386421526304}
   m_Layer: 0
   m_Name: shot
   m_TagString: Untagged
@@ -123,11 +123,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 60065284762972465}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 438913f4a3e77b24b9bfc7022f347ae0, type: 3}
+  m_Script: {fileID: 11500000, guid: 06459e9b1edf3dc43bac691442765155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   shotBy: {fileID: 0}
---- !u!82 &5369300274388249765
+  startShot: {fileID: 8300000, guid: 8ee3812f51077294da21820a2f57476a, type: 3}
+  wallShot: {fileID: 8300000, guid: 81806bb74499c814a906ac467e9bdc85, type: 3}
+  playerShot: {fileID: 8300000, guid: afea8577d3b1778459fae9c6b54a713c, type: 3}
+--- !u!82 &-3739782386421526304
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -137,18 +140,18 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 2e99873b97e7a446a9befe2766fb45b4, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.492
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 3.09
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 5
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0

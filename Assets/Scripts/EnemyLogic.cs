@@ -11,14 +11,21 @@ public class EnemyLogic : MonoBehaviour
     public float enemyTimeFreezedSpeed = 0.2f;
     public float slowFactor = 0.05f;
     public EnemyConfig config;
+    public AudioClip[] foundPlayerClips; 
+    public AudioClip[] walkingClips;
+    private AudioSource _audioSource;
 
     bool foundPlayer = false;
+    private bool walking = false;
+    float lastWalked = 0f;
+    private bool firstFinding = false;
     float timeToFind;
 
     private Vector3 spawnPosition;
     private GameObject player;
     private Quaternion spawnRotation;
     Vector3 lastSeenPosition;
+    Vector3 oldLastPosition;
     NavMeshAgent agent;
 
     void Start()
@@ -26,6 +33,9 @@ public class EnemyLogic : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.stoppingDistance = config.CSGoPlayer ? aimbotDistance : seekingDistance;
         player = GameObject.Find("Player");
+        _audioSource = gameObject.GetComponent<AudioSource>();
+        // needed for walkingClips
+        oldLastPosition = spawnPosition;
     }
 
     void OnEnable()
@@ -61,7 +71,7 @@ public class EnemyLogic : MonoBehaviour
             */
         SeekMode();
         //}
-        print(agent.speed);
+        //print(agent.speed);
         if (player.GetComponent<PlayerLogic>().isPitched)
         {
             agent.speed = Mathf.Max(3.5f * enemyTimeFreezedSpeed, agent.speed * (1 - slowFactor));
@@ -72,8 +82,31 @@ public class EnemyLogic : MonoBehaviour
         }
         agent.SetDestination(lastSeenPosition);
 
+        // enemy "announces" to have found the player only at first time
+        if (!firstFinding && foundPlayer)
+        {
+            _audioSource.PlayOneShot(foundPlayerClips[(int)Random.Range(0, foundPlayerClips.Length - 1)]);
+            firstFinding = true;
+        }
+
+        // play random walking sounds every 0.5sec (audioclips are 0.5sec long)
+        if (walking && lastWalked + 0.5f < Time.time)
+        {
+            PlayClipPitched(walkingClips[(int)Random.Range(0, walkingClips.Length - 1)], 0.8f, 1.2f);
+            lastWalked = Time.time;
+        }
+
         Quaternion lookRotation = Quaternion.LookRotation(lastSeenPosition - transform.position, Vector3.up);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, config.turnSpeed);
+    }
+
+    public void PlayClipPitched(AudioClip clip, float minPitch, float maxPitch)
+    {
+        // little trick to make clip sound less redundant
+        _audioSource.pitch = Random.Range(minPitch, maxPitch);
+        // plays same clip only once, this way no overlapping
+        _audioSource.PlayOneShot(clip);
+        _audioSource.pitch = 1f;
     }
 
     /// <summary>
@@ -115,6 +148,11 @@ public class EnemyLogic : MonoBehaviour
         {
             timeToFind += Time.deltaTime;
         }
+
+        // checking if enemy moves to play walking-sounds
+        if(oldLastPosition != lastSeenPosition) walking = true;
+        else walking = false;
+        
     }
 
     /// <summary>
@@ -136,4 +174,5 @@ public class EnemyLogic : MonoBehaviour
         foundPlayer = true;
         lastSeenPosition = from.transform.position;
     }
+
 }

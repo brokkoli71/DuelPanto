@@ -13,9 +13,6 @@ public class Shooting : MonoBehaviour
     */
     public int damage = 2;
     public bool isUpper = true;
-    public AudioClip defaultClip;
-    public AudioClip wallClip;
-    public AudioClip hitClip;
 
     public float fireSpreadAngle = 2f;
     public Transform enemyTransform;
@@ -29,24 +26,9 @@ public class Shooting : MonoBehaviour
     public double reloadingTimeMillis;
     public GameObject shotPrefab;
     List<Rigidbody> shots;
-    public int shotSpeed = 40;
+    public int shotSpeed = 3;
 
-    AudioClip currentClip
-    {
-        get => _currentClip;
-        set
-        {
-            if (_currentClip == null) _currentClip = value;
-            else if (!currentClip.Equals(value))
-            {
-                _currentClip = value;
-                audioSource.Stop();
-                audioSource.clip = value;
-                audioSource.Play();
-            }
-        }
-    }
-
+    
     void Start()
     {
         lastShot = System.DateTime.Now;
@@ -55,7 +37,7 @@ public class Shooting : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
 
         audioSource = GetComponent<AudioSource>();
-        audioSource.clip = defaultClip;
+
 
         GameObject panto = GameObject.Find("Panto");
         if (isUpper)
@@ -97,7 +79,7 @@ public class Shooting : MonoBehaviour
 
     void shoot()
     {
-        GameObject projectile = Instantiate(shotPrefab, transform.position + transform.forward, transform.rotation);
+        GameObject projectile = Instantiate(shotPrefab, transform.position + transform.forward/10, transform.rotation);
         Rigidbody rigidshot = projectile.GetComponent<Rigidbody>();
         shots.Add(rigidshot); //uerberfluessig?
         rigidshot.constraints = RigidbodyConstraints.FreezePositionY;
@@ -128,7 +110,7 @@ public class Shooting : MonoBehaviour
             }
         }
     }
-
+    /*
     void FireCone()
     {
         RaycastHit hit;
@@ -147,7 +129,7 @@ public class Shooting : MonoBehaviour
                 lineRenderer.SetPositions(new Vector3[] { transform.position, hit.point });
 
                 Health enemy = hit.transform.GetComponent<Health>();
-
+                
                 if (enemy)
                 {
                     enemy.TakeDamage(damage, gameObject);
@@ -223,5 +205,5 @@ public class Shooting : MonoBehaviour
                 transform.position + transform.forward * maxRayDistance });
             currentClip = defaultClip;
         }
-    }
+    }*/
 }

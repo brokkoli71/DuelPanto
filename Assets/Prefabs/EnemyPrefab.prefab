@@ -34,7 +34,7 @@ Transform:
   m_GameObject: {fileID: 9213859822949923237}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.42, y: 0, z: -12.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -231,7 +231,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 83c25aafb0a4d4598bc455810a48cd96, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -389,8 +389,8 @@ MonoBehaviour:
   fireSpreadAngle: 3
   enemyTransform: {fileID: 0}
   reloadingTimeMillis: 3000
-  shotPrefab: {fileID: 60065284762972465, guid: a35bcd9dc01bce84aa3db2dbb2c64086, type: 3}
-  shotSpeed: 40
+  shotPrefab: {fileID: 60065284762972465, guid: c48913734aa85804887a7d8a8a576afd, type: 3}
+  shotSpeed: 5
 --- !u!114 &9213859822949923263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -412,3 +412,13 @@ MonoBehaviour:
   enemyTimeFreezedSpeed: 0.2
   slowFactor: 0.05
   config: {fileID: 11400000, guid: cc985994c53e84f6fae197a5aed96f0e, type: 2}
+  foundPlayerClips:
+  - {fileID: 8300000, guid: 3a3e2ab1f5ecfa043b32e4291df73f62, type: 3}
+  - {fileID: 8300000, guid: 5dc7eb44c972bfb4bb13381a10a1e38d, type: 3}
+  - {fileID: 8300000, guid: c365cd31c5b6a4a4a81c7353b2a117cd, type: 3}
+  - {fileID: 8300000, guid: bf74b32851100d24fa92f29cce092a8f, type: 3}
+  walkingClips:
+  - {fileID: 8300000, guid: 5726a5e62e7174e4b8a9dc5d4b4f9363, type: 3}
+  - {fileID: 8300000, guid: 8c03eceed0102744ea078912203e55b9, type: 3}
+  - {fileID: 8300000, guid: d9ba31c0904993a4baa03f4e97a10dfb, type: 3}
+  - {fileID: 8300000, guid: be38ae3ef8940a942aa423c06162b13e, type: 3}
