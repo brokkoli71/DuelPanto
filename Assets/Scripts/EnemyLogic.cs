@@ -11,8 +11,7 @@ public class EnemyLogic : MonoBehaviour
     public float enemyTimeFreezedSpeed = 0.2f;
     public float slowFactor = 0.05f;
     public EnemyConfig config;
-    public AudioClip[] foundPlayerClips;
-    public AudioClip[] enemyDyingClips;
+    public AudioClip[] foundPlayerClips; 
     public AudioClip[] walkingClips;
     private AudioSource _audioSource;
 
@@ -174,12 +173,6 @@ public class EnemyLogic : MonoBehaviour
         if (!config.returnsFireOnAttack) return;
         foundPlayer = true;
         lastSeenPosition = from.transform.position;
-    }
-
-    // plays random dying sound when setActive(false) (--> called in onDeafeat()) 
-    private void OnDisable()
-    {
-        _audioSource.PlayOneShot(enemyDyingClips[(int)Random.Range(0, enemyDyingClips.Length - 1)]);
     }
 
 }

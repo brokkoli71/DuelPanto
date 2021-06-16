@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     public AudioClip wallClip;
     public AudioClip hitClip;
     public AudioClip heartbeatClip;
+    public AudioClip[] enemyDyingClips;
     private AudioSource _audioSource;
 
     private UpperHandle _upperHandle;
@@ -299,8 +300,11 @@ public class GameManager : MonoBehaviour
             GameObject defeatedEnemie = enemies.Find(x => x.Equals(defeated));
             //Destroy(defeatedEnemie);
             //enemies.Remove(defeatedEnemie);
+            if (defeatedEnemies < enemies.Count)
+            {
+                AudioSource.PlayClipAtPoint(enemyDyingClips[(int)UnityEngine.Random.Range(0, enemyDyingClips.Length - 1)], defeatedEnemie.transform.position);
+            }
             defeatedEnemie.SetActive(false);
-            if (defeatedEnemies < enemies.Count) _speechOut.Speak("enemy killed");
         }
         print("enemy count: " + enemies.Count);
         if (enemies.Count == defeatedEnemies || playerDefeated)
