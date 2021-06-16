@@ -198,6 +198,9 @@ public class GameManager : MonoBehaviour
         gameRunning = true;
         player.GetComponent<PlayerLogic>().ResetPlayer();
 
+        // deactivate goal until all enemies are dead
+        GameObject.FindGameObjectWithTag("Goal").SetActive(false);
+
         _levelStartTime = Time.time;
     }
 
@@ -302,9 +305,16 @@ public class GameManager : MonoBehaviour
             //enemies.Remove(defeatedEnemie);
             if (defeatedEnemies < enemies.Count)
             {
-                AudioSource.PlayClipAtPoint(enemyDyingClips[(int)UnityEngine.Random.Range(0, enemyDyingClips.Length - 1)], defeatedEnemie.transform.position);
+                AudioSource.PlayClipAtPoint(enemyDyingClips[(int)UnityEngine.Random.Range(0, enemyDyingClips.Length - 1)],
+                    defeatedEnemie.transform.position);
             }
             defeatedEnemie.SetActive(false);
+
+            if(enemies.Count == defeatedEnemies)
+            {
+                await _speechOut.Speak("you eliminated all enemies! No follow the sound to the goal!");
+                GameObject.FindGameObjectWithTag("Goal").SetActive(true);
+            }
         }
         print("enemy count: " + enemies.Count);
         if (enemies.Count == defeatedEnemies || playerDefeated)
