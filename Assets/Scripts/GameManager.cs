@@ -8,7 +8,7 @@ using System.Linq;
 using DualPantoFramework;
 public class GameManager : MonoBehaviour
 {
-
+    public GameObject goal;
     public bool introduceGame = true;
     public GameObject player;
     public GameObject enemyOriginal;
@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
     public bool gameRunning = false;
     public bool playWithEnemy = true;
     public bool allEnemiesDefeated = false;
-
+    private bool switchedToGoal = false;
 
     private bool enemyChecking = true;
     private int defeatedEnemies = 0;
@@ -180,6 +180,8 @@ public class GameManager : MonoBehaviour
         player.transform.position = playerSpawn.position;
         await _upperHandle.SwitchTo(player, 5f);
 
+        _lowerHandle.Free();
+
         //await _speechOut.Speak("Spawning enemy");
         if (playWithEnemy)
         {
@@ -200,6 +202,10 @@ public class GameManager : MonoBehaviour
         player.GetComponent<PlayerLogic>().ResetPlayer();
 
         _levelStartTime = Time.time;
+
+        allEnemiesDefeated = false;
+        switchedToGoal = false;
+        defeatedEnemies = 0;
     }
 
     async void FixedUpdate()
@@ -215,6 +221,11 @@ public class GameManager : MonoBehaviour
                 oldEnemy = closestEnemy;
             }
             await _lowerHandle.SwitchTo(closestEnemy, 5f);
+        }
+        else if (allEnemiesDefeated && !switchedToGoal)
+        {
+            await _lowerHandle.SwitchTo(goal);
+            switchedToGoal = true;
         }
     }
 
@@ -293,9 +304,9 @@ public class GameManager : MonoBehaviour
     /// <param name="defeated"></param>
     public async void OnDefeat(GameObject defeated)
     {
-        bool playerDefeated = defeated.Equals(player);
+        bool isPlayerDefeated = defeated.Equals(player);
         //playerDefeated = false? disable enemy, play sound
-        if (!playerDefeated)
+        if (!isPlayerDefeated)
         {
             defeatedEnemies++;
             GameObject defeatedEnemie = enemies.Find(x => x.Equals(defeated));
@@ -303,20 +314,26 @@ public class GameManager : MonoBehaviour
             AudioSource.PlayClipAtPoint(enemyDyingClips[(int)UnityEngine.Random.Range(0, enemyDyingClips.Length - 1)],
                 defeatedEnemie.transform.position);
                        
-            defeatedEnemie.SetActive(false);
+            
 
             if(enemies.Count == defeatedEnemies)
             {
+                _lowerHandle.SwitchTo(goal);
+                switchedToGoal = true;
+
+                defeatedEnemie.SetActive(false);
                 // activate goal
-                await _speechOut.Speak("you eliminated all enemies! No follow the sound to the goal!");
+                await _speechOut.Speak("you eliminated all enemies! Now follow the sound to the goal!");
                 allEnemiesDefeated = true;
                 return;
             }
+
+            defeatedEnemie.SetActive(false);
         }
 
         print("enemy count: " + enemies.Count);
 
-        if (playerDefeated)
+        if (isPlayerDefeated)
         {
 
             player.SetActive(false);
@@ -325,7 +342,7 @@ public class GameManager : MonoBehaviour
             defeatedEnemies = 0;
 
 
-            if (playerDefeated)
+            if (isPlayerDefeated)
             {
                 _enemyScore++;
             }
@@ -334,7 +351,7 @@ public class GameManager : MonoBehaviour
                 _playerScore++;
             }
 
-            string defeatedPerson = playerDefeated ? "You" : "Enemy";
+            string defeatedPerson = isPlayerDefeated ? "You" : "Enemy";
             await _speechOut.Speak($"{defeatedPerson} got defeated.");
 
             level++;

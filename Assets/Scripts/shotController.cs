@@ -89,14 +89,14 @@ public class shotController : MonoBehaviour
                 AudioSource.PlayClipAtPoint(playerShot, this.gameObject.transform.position);
 
             }
-            if (hitObject.name.Contains("Obstacle"))
-            {
-                AudioSource auS = new AudioSource();
-                auS.maxDistance = 5;
-                auS.rolloffMode = AudioRolloffMode.Logarithmic;
-                auS.transform.position = this.gameObject.transform.position;
-                auS.PlayOneShot(wallShot);
-            }
+            //if (hitObject.name.Contains("Obstacle"))
+            //{
+            //    AudioSource auS = new AudioSource();
+            //    auS.maxDistance = 5;
+            //    auS.rolloffMode = AudioRolloffMode.Logarithmic;
+            //    auS.transform.position = this.gameObject.transform.position;
+            //    auS.PlayOneShot(wallShot);
+            //}
 
 
 
