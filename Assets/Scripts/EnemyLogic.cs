@@ -12,11 +12,13 @@ public class EnemyLogic : MonoBehaviour
     public float slowFactor = 0.05f;
     public EnemyConfig config;
     public AudioClip[] foundPlayerClips;
+    public AudioClip[] enemyDyingClips;
     public AudioClip[] walkingClips;
     private AudioSource _audioSource;
 
     bool foundPlayer = false;
     private bool walking = false;
+    float lastWalked = 0f;
     private bool firstFinding = false;
     float timeToFind;
 
@@ -88,9 +90,11 @@ public class EnemyLogic : MonoBehaviour
             firstFinding = true;
         }
 
-        if (walking)
+        // play random walking sounds every 0.5sec (audioclips are 0.5sec long)
+        if (walking && lastWalked + 0.5f < Time.time)
         {
             PlayClipPitched(walkingClips[(int)Random.Range(0, walkingClips.Length - 1)], 0.8f, 1.2f);
+            lastWalked = Time.time;
         }
 
         Quaternion lookRotation = Quaternion.LookRotation(lastSeenPosition - transform.position, Vector3.up);
@@ -171,4 +175,11 @@ public class EnemyLogic : MonoBehaviour
         foundPlayer = true;
         lastSeenPosition = from.transform.position;
     }
+
+    // plays random dying sound when setActive(false) (--> called in onDeafeat()) 
+    private void OnDisable()
+    {
+        _audioSource.PlayOneShot(enemyDyingClips[(int)Random.Range(0, enemyDyingClips.Length - 1)]);
+    }
+
 }
