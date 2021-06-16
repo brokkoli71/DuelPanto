@@ -40,7 +40,7 @@ public class shotController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (shotBy != collision.collider.gameObject)
+        if (shotBy.name != collision.collider.gameObject.name)
         {
             Debug.Log("hit " + collision.collider.gameObject.name);
             Destroy(gameObject, .01f);
