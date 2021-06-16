@@ -15,7 +15,7 @@ public class shotController : MonoBehaviour
     
 
     bool isSlowed = true;
-    float slowFactor = 4;
+    float slowFactor = 10;
 
     public AudioClip startShot;
     public AudioClip wallShot;
