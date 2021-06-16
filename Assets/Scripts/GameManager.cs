@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
     private int _gameScore = 0;
     private float _totalTime = 0;
     private float _levelStartTime = 0;
-    private bool gameRunning = false;
+    public bool gameRunning = false;
     public bool playWithEnemy = true;
 
 

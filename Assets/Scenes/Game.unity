@@ -2034,6 +2034,7 @@ MonoBehaviour:
   wallClip: {fileID: 8300000, guid: a492fe44c169248c888b6b7179b84f14, type: 3}
   hitClip: {fileID: 8300000, guid: 2e99873b97e7a446a9befe2766fb45b4, type: 3}
   heartbeatClip: {fileID: 8300000, guid: bf04339cd29ef4aa991476cdf62b4561, type: 3}
+  gameRunning: 0
   playWithEnemy: 1
 --- !u!1 &484561066
 GameObject:
@@ -2787,6 +2788,9 @@ MonoBehaviour:
   hitClip: {fileID: 8300000, guid: 2e99873b97e7a446a9befe2766fb45b4, type: 3}
   fireSpreadAngle: 30
   enemyTransform: {fileID: 1868310002}
+  reloadingTimeMillis: 1000
+  shotPrefab: {fileID: 60065284762972465, guid: a35bcd9dc01bce84aa3db2dbb2c64086, type: 3}
+  shotSpeed: 40
 --- !u!114 &605852844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2839,9 +2843,22 @@ MonoBehaviour:
   startBPM: 60
   endBPM: 220
   bps: 1
+  isPitched: 0
   notifyFinished:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 474128700}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: OnVictory
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &605852846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2859,7 +2876,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6b3b547480fd6e444a17bbef81bcd6ec, type: 3}
   - {fileID: 8300000, guid: 685f15bd11c88a447aa20768e7730ca1, type: 3}
   lastCollisionClip: {fileID: 0}
-  finishSound: {fileID: 0}
+  finishSound: {fileID: 8300000, guid: 1b2d69b3a7fa0af4d9f430d186caff9c, type: 3}
   maxPitch: 1.2
   minPitch: 0.8
   Goal: {fileID: 1005532776}
@@ -8302,7 +8319,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 199081147454446092, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: orthographic size
-      value: 22.497673
+      value: 26.495169
       objectReference: {fileID: 0}
     - target: {fileID: 826605487606422808, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: debug
@@ -11386,7 +11403,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 8839593422781233826}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 4
   m_OnValueChanged:
     m_PersistentCalls:

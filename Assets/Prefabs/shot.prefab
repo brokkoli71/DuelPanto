@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3315130684078782997}
   - component: {fileID: 3663996705819996174}
   - component: {fileID: -8305827092998777804}
-  - component: {fileID: -6351109155903838094}
+  - component: {fileID: 6263553853817029522}
   m_Layer: 0
   m_Name: shot
   m_TagString: Untagged
@@ -113,7 +113,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-6351109155903838094
+--- !u!114 &6263553853817029522
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,7 +122,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 60065284762972465}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06459e9b1edf3dc43bac691442765155, type: 3}
+  m_Script: {fileID: 11500000, guid: 438913f4a3e77b24b9bfc7022f347ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   shotBy: {fileID: 0}

@@ -18,19 +18,16 @@ public class shotController : MonoBehaviour
     void Start()
     {
         spawnTime = System.DateTime.Now;
-
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (MaxLifeTimeMillis<=(System.DateTime.Now - spawnTime).TotalMilliseconds)
+        if (!GameObject.Find("Panto").GetComponent<GameManager>().gameRunning || MaxLifeTimeMillis <= (System.DateTime.Now - spawnTime).TotalMilliseconds)
         {
             Destroy(gameObject);
         }
-        //if (GameObject.Find("Player").GetComponent<PlayerLogic>().isPitched)
-        if (true)
+        if (GameObject.Find("Player").GetComponent<PlayerLogic>().isPitched)
         {
             if (!isSlowed)
             {
@@ -46,6 +43,7 @@ public class shotController : MonoBehaviour
                 isSlowed = false;
             }
         }
+
     }
 
     private void FixedUpdate()
@@ -66,12 +64,15 @@ public class shotController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (shotBy.name != collision.collider.gameObject.name)
+        GameObject hitObject = collision.collider.gameObject;
+        if (shotBy.name != hitObject.name)
         {
-            Debug.Log("hit " + collision.collider.gameObject.name);
+            Debug.Log("hit " + hitObject.name);
             Destroy(gameObject, .01f);
-            if (collision.collider.gameObject.name.Contains("EnemyPrefab"))
-                collision.collider.gameObject.transform.GetComponent<Health>().TakeDamage(damage, shotBy);
+            if (hitObject.name.Contains("EnemyPrefab") || hitObject.name == "Player")
+            { hitObject.transform.GetComponent<Health>().TakeDamage(damage, shotBy); }
+
+
         }
 
     }
