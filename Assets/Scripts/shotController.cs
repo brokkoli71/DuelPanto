@@ -9,17 +9,43 @@ public class shotController : MonoBehaviour
     public static float aimBotForce = 0.1f;
     bool aiming = false;
     GameObject aimingAt;
+    System.DateTime spawnTime;
+    double MaxLifeTimeMillis = 2000;
+
+    bool isSlowed = false;
+    float slowFactor = 10;
     // Start is called before the first frame update
     void Start()
     {
+        spawnTime = System.DateTime.Now;
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        //todo: zerstoeren falls zu alt
-
+        if (MaxLifeTimeMillis<=(System.DateTime.Now - spawnTime).TotalMilliseconds)
+        {
+            Destroy(gameObject);
+        }
+        //if (GameObject.Find("Player").GetComponent<PlayerLogic>().isPitched)
+        if (true)
+        {
+            if (!isSlowed)
+            {
+                gameObject.GetComponent<Rigidbody>().velocity /= slowFactor;
+                isSlowed = true;
+            }
+        }
+        else
+        {
+            if (isSlowed)
+            {
+                gameObject.GetComponent<Rigidbody>().velocity *= slowFactor;
+                isSlowed = false;
+            }
+        }
     }
 
     private void FixedUpdate()
