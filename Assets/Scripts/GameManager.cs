@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
     public EnemyConfig[] enemyConfigs;
     public Transform playerSpawn;
-    public Transform enemySpawn;
+    public Transform[] enemySpawn;
     public int level = 0;
     public int trophyScore = 10000;
     public UIManager uiManager;
@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     private bool gameRunning = false;
     public bool playWithEnemy = true;
 
-    
+
     private bool enemyChecking = true;
     private int defeatedEnemies = 0;
     private readonly Dictionary<string, KeyCode> _commands = new Dictionary<string, KeyCode>() {
@@ -56,8 +56,8 @@ public class GameManager : MonoBehaviour
         player.SetActive(false);
         enemies = new List<GameObject>();
 
-        spawnEnemy(enemySpawn.position, enemySpawn.rotation);
-        spawnEnemy(new Vector3(0, 0, -12.5f), enemyPrefab.transform.rotation);
+        spawnEnemy(enemySpawn[0].position, enemySpawn[0].rotation);
+        spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
 
         _speechIn = new SpeechIn(onRecognized, _commands.Keys.ToArray());
         _speechOut = new SpeechOut();
@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
 
         if (introduceGame)
         {
-            await IntroducePlayers();
+            //await IntroducePlayers();
             await IntroduceLaser();
             await IntroduceHealth();
             await IntroduceLevel();
@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour
 
         await ResetRound();
     }
-
+    /*
     async Task IntroducePlayers()
     {
         await _speechOut.Speak("This is you.");
@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
         await _lowerHandle.MoveToPosition(enemySpawn.position, 5f);
         _lowerHandle.Freeze();
     }
-
+    */
     async Task IntroduceLaser()
     {
         await _speechOut.Speak("In this game you shoot your opponent with a laser.");
@@ -216,7 +216,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void ResetEnemyChecking(){
+    void ResetEnemyChecking()
+    {
         enemyChecking = true;
     }
 
@@ -339,24 +340,24 @@ public class GameManager : MonoBehaviour
     public async void OnVictory(GameObject player)
     {
 
-            player.SetActive(false);
-            setEnemies(false);
-            gameRunning = false;
-            defeatedEnemies = 0;
+        player.SetActive(false);
+        setEnemies(false);
+        gameRunning = false;
+        defeatedEnemies = 0;
 
-            await _speechOut.Speak(" Congratulations you have reached the goal.");
+        await _speechOut.Speak(" Congratulations you have reached the goal.");
 
-            //_gameScore += CalculateGameScore(player, enemy);
+        //_gameScore += CalculateGameScore(player, enemy);
 
-            level++;
-            if (level >= enemyConfigs.Length)
-            {
-                await GameOver();
-            }
-            else
-            {
-                await ResetRound();
-            }
+        level++;
+        if (level >= enemyConfigs.Length)
+        {
+            await GameOver();
+        }
+        else
+        {
+            await ResetRound();
+        }
     }
 
 

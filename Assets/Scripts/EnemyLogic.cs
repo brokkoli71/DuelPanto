@@ -7,13 +7,16 @@ public class EnemyLogic : MonoBehaviour
     public LayerMask layerMask;
     public float aimbotDistance = 10f;
     public float seekingDistance = 1f;
+
+    public float enemyTimeFreezedSpeed = 0.2f;
+    public float slowFactor = 0.05f;
     public EnemyConfig config;
 
     bool foundPlayer = false;
     float timeToFind;
 
     private Vector3 spawnPosition;
-
+    private GameObject player;
     private Quaternion spawnRotation;
     Vector3 lastSeenPosition;
     NavMeshAgent agent;
@@ -22,6 +25,7 @@ public class EnemyLogic : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         agent.stoppingDistance = config.CSGoPlayer ? aimbotDistance : seekingDistance;
+        player = GameObject.Find("Player");
     }
 
     void OnEnable()
@@ -47,16 +51,27 @@ public class EnemyLogic : MonoBehaviour
     }
     void Update()
     {
+        /*
         if (config.CSGoPlayer)
         {
             AimbotMode();
         }
         else
         {
-            SeekMode();
+            */
+        SeekMode();
+        //}
+        print(agent.speed);
+        if (player.GetComponent<PlayerLogic>().isPitched)
+        {
+            agent.speed = Mathf.Max(3.5f * enemyTimeFreezedSpeed, agent.speed * (1 - slowFactor));
         }
-
+        else
+        {
+            agent.speed = Mathf.Min(3.5f, agent.speed * (1 + slowFactor));
+        }
         agent.SetDestination(lastSeenPosition);
+
         Quaternion lookRotation = Quaternion.LookRotation(lastSeenPosition - transform.position, Vector3.up);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, config.turnSpeed);
     }

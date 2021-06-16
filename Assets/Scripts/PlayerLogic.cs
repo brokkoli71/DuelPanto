@@ -25,6 +25,8 @@ public class PlayerLogic : MonoBehaviour
     private AudioListener timeAudio;
     private PlayerSoundEffect soundEffects;
     private bool tracking = false;
+
+    public bool isPitched = false;
     private Vector3 position;
 
     public GoalReachedEvent notifyFinished;
@@ -53,12 +55,15 @@ public class PlayerLogic : MonoBehaviour
         float distance = Vector3.Distance(position, gameObject.transform.position);
         float distance_factor = 3.5f;
         //print($"Activity: {distance}");
+
         if (distance * distance_factor > 1)
         {
+            isPitched = false;
             soundEffects.pitchBackgroundMusic(1f);
         }
         else
         {
+            isPitched = true;
             soundEffects.pitchBackgroundMusic(Mathf.Max(.6f, distance * distance_factor));
         }
         startTracking();
