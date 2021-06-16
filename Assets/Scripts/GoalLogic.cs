@@ -1,7 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.AI;
-using System.Collections;
-using DualPantoFramework;
 
 public class GoalLogic : MonoBehaviour
 {

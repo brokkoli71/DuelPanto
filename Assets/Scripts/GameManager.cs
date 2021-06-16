@@ -296,28 +296,29 @@ public class GameManager : MonoBehaviour
     public async void OnDefeat(GameObject defeated)
     {
         bool playerDefeated = defeated.Equals(player);
-        //playerDefeated = false? enemy gets killed
+        //playerDefeated = false? disable enemy, play sound
         if (!playerDefeated)
         {
             defeatedEnemies++;
             GameObject defeatedEnemie = enemies.Find(x => x.Equals(defeated));
-            //Destroy(defeatedEnemie);
-            //enemies.Remove(defeatedEnemie);
-            if (defeatedEnemies < enemies.Count)
-            {
-                AudioSource.PlayClipAtPoint(enemyDyingClips[(int)UnityEngine.Random.Range(0, enemyDyingClips.Length - 1)],
-                    defeatedEnemie.transform.position);
-            }
+
+            AudioSource.PlayClipAtPoint(enemyDyingClips[(int)UnityEngine.Random.Range(0, enemyDyingClips.Length - 1)],
+                defeatedEnemie.transform.position);
+                       
             defeatedEnemie.SetActive(false);
 
             if(enemies.Count == defeatedEnemies)
             {
+                // activate goal
                 await _speechOut.Speak("you eliminated all enemies! No follow the sound to the goal!");
                 GameObject.FindGameObjectWithTag("Goal").SetActive(true);
+                return;
             }
         }
+
         print("enemy count: " + enemies.Count);
-        if (enemies.Count == defeatedEnemies || playerDefeated)
+
+        if (playerDefeated)
         {
 
             player.SetActive(false);
