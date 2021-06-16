@@ -61,7 +61,7 @@ public class EnemyLogic : MonoBehaviour
             */
         SeekMode();
         //}
-        print(agent.speed);
+        //print(agent.speed);
         if (player.GetComponent<PlayerLogic>().isPitched)
         {
             agent.speed = Mathf.Max(3.5f * enemyTimeFreezedSpeed, agent.speed * (1 - slowFactor));

@@ -389,7 +389,7 @@ MonoBehaviour:
   fireSpreadAngle: 3
   enemyTransform: {fileID: 0}
   reloadingTimeMillis: 3000
-  shotPrefab: {fileID: 60065284762972465, guid: a35bcd9dc01bce84aa3db2dbb2c64086, type: 3}
+  shotPrefab: {fileID: 60065284762972465, guid: c48913734aa85804887a7d8a8a576afd, type: 3}
   shotSpeed: 40
 --- !u!114 &9213859822949923263
 MonoBehaviour:

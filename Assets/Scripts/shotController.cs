@@ -23,9 +23,11 @@ public class shotController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!GameObject.Find("Panto").GetComponent<GameManager>().gameRunning || MaxLifeTimeMillis <= (System.DateTime.Now - spawnTime).TotalMilliseconds)
+        if ((!GameObject.Find("Panto").GetComponent<GameManager>().gameRunning) || 
+            MaxLifeTimeMillis <= (System.DateTime.Now - spawnTime).TotalMilliseconds)
         {
             Destroy(gameObject);
+            return;
         }
         if (GameObject.Find("Player").GetComponent<PlayerLogic>().isPitched)
         {
