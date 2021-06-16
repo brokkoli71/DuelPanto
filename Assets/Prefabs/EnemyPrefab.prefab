@@ -228,10 +228,10 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9213859822949923237}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 83c25aafb0a4d4598bc455810a48cd96, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -389,7 +389,7 @@ MonoBehaviour:
   fireSpreadAngle: 3
   enemyTransform: {fileID: 0}
   reloadingTimeMillis: 3000
-  shotPrefab: {fileID: 60065284762972465, guid: c48913734aa85804887a7d8a8a576afd, type: 3}
+  shotPrefab: {fileID: 60065284762972465, guid: 7b8f1cd900cc947bea40514cd9d79908, type: 3}
   shotSpeed: 5
 --- !u!114 &9213859822949923263
 MonoBehaviour:
@@ -412,3 +412,9 @@ MonoBehaviour:
   enemyTimeFreezedSpeed: 0.2
   slowFactor: 0.05
   config: {fileID: 11400000, guid: cc985994c53e84f6fae197a5aed96f0e, type: 2}
+  foundPlayerClips: []
+  walkingClips:
+  - {fileID: 8300000, guid: c1275bf248e5848d3844ec955e6836c7, type: 3}
+  - {fileID: 8300000, guid: 32c03de7fceaf4fb7b346b8921aa087c, type: 3}
+  - {fileID: 8300000, guid: 942f0dc78e456475a9e28a9ad6c32cf0, type: 3}
+  - {fileID: 8300000, guid: 209d16d10a18143508357c8eacbda750, type: 3}
