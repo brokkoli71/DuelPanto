@@ -123,13 +123,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 60065284762972465}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06459e9b1edf3dc43bac691442765155, type: 3}
+  m_Script: {fileID: 11500000, guid: 905f7d6c8d303436bb2a4a71d40a29df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   shotBy: {fileID: 0}
-  startShot: {fileID: 8300000, guid: 8ee3812f51077294da21820a2f57476a, type: 3}
-  wallShot: {fileID: 8300000, guid: 81806bb74499c814a906ac467e9bdc85, type: 3}
-  playerShot: {fileID: 8300000, guid: afea8577d3b1778459fae9c6b54a713c, type: 3}
+  startShot: {fileID: 8300000, guid: f9f34b4743b3d4a16b83c20ccf122607, type: 3}
+  wallShot: {fileID: 8300000, guid: e896404ae02524776b9b95c170d617a6, type: 3}
+  playerShot: {fileID: 8300000, guid: b42a11dd448274c4ea2ee36132956a43, type: 3}
 --- !u!82 &-3739782386421526304
 AudioSource:
   m_ObjectHideFlags: 0

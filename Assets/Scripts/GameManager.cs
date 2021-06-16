@@ -204,7 +204,7 @@ public class GameManager : MonoBehaviour
 
     async void FixedUpdate()
     {
-        if (gameRunning && enemyChecking && playWithEnemy)
+        if (gameRunning && enemyChecking && playWithEnemy && !allEnemiesDefeated)
         {
             enemyChecking = false;
             Invoke("ResetEnemyChecking", 0.8f);
