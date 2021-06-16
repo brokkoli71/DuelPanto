@@ -388,6 +388,8 @@ MonoBehaviour:
   hitClip: {fileID: 8300000, guid: 2e99873b97e7a446a9befe2766fb45b4, type: 3}
   fireSpreadAngle: 3
   enemyTransform: {fileID: 0}
+  reloadingTimeMillis: 3000
+  shotPrefab: {fileID: 60065284762972465, guid: c48913734aa85804887a7d8a8a576afd, type: 3}
 --- !u!114 &9213859822949923263
 MonoBehaviour:
   m_ObjectHideFlags: 0
