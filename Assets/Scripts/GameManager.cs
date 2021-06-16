@@ -312,15 +312,7 @@ public class GameManager : MonoBehaviour
             defeatedEnemies = 0;
 
 
-            if (playerDefeated)
-            {
-                _enemyScore++;
-            }
-            else
-            {
-                _playerScore++;
-            }
-
+            /*
             string defeatedPerson = playerDefeated ? "You" : "Enemy";
             await _speechOut.Speak($"{defeatedPerson} got defeated.");
 
@@ -333,18 +325,18 @@ public class GameManager : MonoBehaviour
             {
                 await ResetRound();
             }
-
+            */
         }
     }
 
     public async void OnVictory(GameObject player)
     {
-
         player.SetActive(false);
         setEnemies(false);
         gameRunning = false;
         defeatedEnemies = 0;
 
+        /*
         await _speechOut.Speak(" Congratulations you have reached the goal.");
 
         //_gameScore += CalculateGameScore(player, enemy);
@@ -358,6 +350,7 @@ public class GameManager : MonoBehaviour
         {
             await ResetRound();
         }
+        */
     }
 
 
