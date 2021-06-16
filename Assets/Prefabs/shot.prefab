@@ -128,6 +128,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shotBy: {fileID: 0}
   startShot: {fileID: 8300000, guid: 8ee3812f51077294da21820a2f57476a, type: 3}
+  wallShot: {fileID: 8300000, guid: 34990d7db8b33fc47b10e26e0776c862, type: 3}
+  playerShot: {fileID: 8300000, guid: afea8577d3b1778459fae9c6b54a713c, type: 3}
 --- !u!82 &-3739782386421526304
 AudioSource:
   m_ObjectHideFlags: 0

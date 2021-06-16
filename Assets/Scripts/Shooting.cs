@@ -97,7 +97,7 @@ public class Shooting : MonoBehaviour
 
     void shoot()
     {
-        GameObject projectile = Instantiate(shotPrefab, transform.position + transform.forward, transform.rotation);
+        GameObject projectile = Instantiate(shotPrefab, transform.position + transform.forward/10, transform.rotation);
         Rigidbody rigidshot = projectile.GetComponent<Rigidbody>();
         shots.Add(rigidshot); //uerberfluessig?
         rigidshot.constraints = RigidbodyConstraints.FreezePositionY;
