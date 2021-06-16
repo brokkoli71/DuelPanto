@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     private float _levelStartTime = 0;
     public bool gameRunning = false;
     public bool playWithEnemy = true;
+    public bool allEnemiesDefeated = false;
 
 
     private bool enemyChecking = true;
@@ -198,9 +199,6 @@ public class GameManager : MonoBehaviour
         gameRunning = true;
         player.GetComponent<PlayerLogic>().ResetPlayer();
 
-        // deactivate goal until all enemies are dead
-        GameObject.FindGameObjectWithTag("Goal").SetActive(false);
-
         _levelStartTime = Time.time;
     }
 
@@ -311,7 +309,7 @@ public class GameManager : MonoBehaviour
             {
                 // activate goal
                 await _speechOut.Speak("you eliminated all enemies! No follow the sound to the goal!");
-                GameObject.FindGameObjectWithTag("Goal").SetActive(true);
+                allEnemiesDefeated = true;
                 return;
             }
         }
@@ -354,24 +352,27 @@ public class GameManager : MonoBehaviour
 
     public async void OnVictory(GameObject player)
     {
-
-        player.SetActive(false);
-        setEnemies(false);
-        gameRunning = false;
-        defeatedEnemies = 0;
-
-        await _speechOut.Speak(" Congratulations you have reached the goal.");
-
-        //_gameScore += CalculateGameScore(player, enemy);
-
-        level++;
-        if (level >= enemyConfigs.Length)
+        if (allEnemiesDefeated)
         {
-            await GameOver();
-        }
-        else
-        {
-            await ResetRound();
+            player.SetActive(false);
+            setEnemies(false);
+            gameRunning = false;
+            defeatedEnemies = 0;
+
+            await _speechOut.Speak("Congratulations you have reached the goal.");
+
+            //_gameScore += CalculateGameScore(player, enemy);
+
+
+            level++;
+            if (level >= enemyConfigs.Length)
+            {
+                await GameOver();
+            }
+            else
+            {
+                await ResetRound();
+            }
         }
     }
 
