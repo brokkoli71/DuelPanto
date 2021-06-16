@@ -27,8 +27,9 @@ public class Shooting : MonoBehaviour
 
     System.DateTime lastShot;
     public double reloadingTimeMillis;
-    public GameObject shot;
+    public GameObject shotPrefab;
     List<Rigidbody> shots;
+    public static int shotSpeed = 40;
 
     AudioClip currentClip
     {
@@ -69,14 +70,23 @@ public class Shooting : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) &&
-            (System.DateTime.Now-lastShot).TotalMilliseconds > reloadingTimeMillis)
+        if((System.DateTime.Now - lastShot).TotalMilliseconds > reloadingTimeMillis)
         {
-            lastShot = System.DateTime.Now;
-            shoot();
+            if (Input.GetKeyDown(KeyCode.Space) &&
+            gameObject.name == "Player")
+            {
+                lastShot = System.DateTime.Now;
+                shoot();
+            }
+            else if (gameObject.name == "Enemy")
+            {
+                lastShot = System.DateTime.Now;
+                shoot();
+            }
         }
+        
         //Fire();
-        FireCone();
+        //FireCone();
         
     }
 
@@ -86,12 +96,35 @@ public class Shooting : MonoBehaviour
 
     void shoot()
     {
-        GameObject projectile = Instantiate(shot, transform.position + transform.forward, transform.rotation);
+        GameObject projectile = Instantiate(shotPrefab, transform.position + transform.forward, transform.rotation);
         Rigidbody rigidshot = projectile.GetComponent<Rigidbody>();
-        shots.Add(rigidshot);
+        shots.Add(rigidshot); //uerberfluessig?
         rigidshot.constraints = RigidbodyConstraints.FreezePositionY;
-        rigidshot.velocity = transform.forward * 40;
+        rigidshot.velocity = transform.forward * shotSpeed;
+        Debug.Log(gameObject.name);
         projectile.GetComponent<shotController>().shotBy = gameObject;
+        if(name.Equals("Player")){
+            GameObject aimTo = null;
+            float minRotationDifference = fireSpreadAngle;
+
+            foreach (var gObj in FindObjectsOfType(typeof(GameObject)) as GameObject[])
+            {
+                if (gObj.name == "Enemy") //TODO: check name
+                {
+                    Vector3 enemyDirection = gObj.transform.position - transform.position;
+                    float rotationDifference = Vector3.Angle(transform.forward, enemyDirection);
+                    if(Mathf.Abs(rotationDifference) <= minRotationDifference)
+                    {
+                        aimTo = gObj;
+                        minRotationDifference = Mathf.Abs(rotationDifference);
+                    }
+                }
+            }
+            if (aimTo != null)
+            {
+                projectile.GetComponent<shotController>().aimTo(aimTo);
+            }
+        }
     }
 
     void FireCone()
