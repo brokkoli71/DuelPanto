@@ -95,11 +95,9 @@ public class PlayerLogic : MonoBehaviour
             soundEffects.startBackgroundMusic();
         }
 
-
         // Simply connects the player to the upper handles position
         transform.position = upperHandle.HandlePosition(transform.position);
         transform.rotation = Quaternion.AngleAxis(upperHandle.GetRotation(), Vector3.up);
-
 
         if (health.healthPoints > 0 && health.healthPoints <= 2 * health.maxHealth / 3)
         {
