@@ -25,7 +25,7 @@ public class Shooting : MonoBehaviour
     System.DateTime lastShot;
     public double reloadingTimeMillis;
     public GameObject shotPrefab;
-    List<Rigidbody> shots;
+    Rigidbody shots;
     
     float shotSpeed = 0.3f;
 
@@ -33,7 +33,7 @@ public class Shooting : MonoBehaviour
     void Start()
     {
         lastShot = System.DateTime.Now;
-        shots = new List<Rigidbody>();
+        shots = null;
 
         lineRenderer = GetComponent<LineRenderer>();
 
@@ -64,8 +64,12 @@ public class Shooting : MonoBehaviour
             }
             else if (gameObject.name.Contains("EnemyPrefab"))
             {
+                // kein neuer schuss wenn noch einer existiert
                 lastShot = System.DateTime.Now;
-                shoot();
+                if (shots == null) //es existiert kein shot mehr
+                {
+                    shoot();
+                }
             }
         }
 
@@ -82,7 +86,7 @@ public class Shooting : MonoBehaviour
     {
         GameObject projectile = Instantiate(shotPrefab, transform.position + transform.forward/10, transform.rotation);
         Rigidbody rigidshot = projectile.GetComponent<Rigidbody>();
-        shots.Add(rigidshot); //uerberfluessig?
+        shots = rigidshot; //uerberfluessig?
         rigidshot.constraints = RigidbodyConstraints.FreezePositionY;
         rigidshot.velocity = transform.forward * shotSpeed;
         Debug.Log(gameObject.name + "direction: " + transform.forward);
