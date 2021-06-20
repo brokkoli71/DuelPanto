@@ -26,7 +26,8 @@ public class Shooting : MonoBehaviour
     public double reloadingTimeMillis;
     public GameObject shotPrefab;
     List<Rigidbody> shots;
-    public int shotSpeed = 3;
+    
+    int shotSpeed = 3;
 
     
     void Start()

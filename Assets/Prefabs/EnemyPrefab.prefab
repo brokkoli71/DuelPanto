@@ -99,7 +99,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 2
+  m_Radius: 0.4
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!195 &9213859822949923232
 NavMeshAgent:
@@ -386,8 +386,7 @@ MonoBehaviour:
   fireSpreadAngle: 3
   enemyTransform: {fileID: 0}
   reloadingTimeMillis: 3000
-  shotPrefab: {fileID: 60065284762972465, guid: 7b8f1cd900cc947bea40514cd9d79908, type: 3}
-  shotSpeed: 1
+  shotPrefab: {fileID: 60065284762972465, guid: c48913734aa85804887a7d8a8a576afd, type: 3}
 --- !u!114 &9213859822949923263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -410,12 +409,12 @@ MonoBehaviour:
   slowFactor: 0.05
   config: {fileID: 11400000, guid: cc985994c53e84f6fae197a5aed96f0e, type: 2}
   foundPlayerClips:
-  - {fileID: 8300000, guid: f545967d365f04de1bacd59a3855f766, type: 3}
-  - {fileID: 8300000, guid: 7cfe312c358c844cfa92b64d46e2c0db, type: 3}
-  - {fileID: 8300000, guid: 6040051e24b364a0d84d421db05b9e05, type: 3}
-  - {fileID: 8300000, guid: b99d215ede5314c24b823991907585d3, type: 3}
+  - {fileID: 8300000, guid: c365cd31c5b6a4a4a81c7353b2a117cd, type: 3}
+  - {fileID: 8300000, guid: 5dc7eb44c972bfb4bb13381a10a1e38d, type: 3}
+  - {fileID: 8300000, guid: 3a3e2ab1f5ecfa043b32e4291df73f62, type: 3}
+  - {fileID: 8300000, guid: bf74b32851100d24fa92f29cce092a8f, type: 3}
   walkingClips:
-  - {fileID: 8300000, guid: c1275bf248e5848d3844ec955e6836c7, type: 3}
-  - {fileID: 8300000, guid: 32c03de7fceaf4fb7b346b8921aa087c, type: 3}
-  - {fileID: 8300000, guid: 942f0dc78e456475a9e28a9ad6c32cf0, type: 3}
-  - {fileID: 8300000, guid: 209d16d10a18143508357c8eacbda750, type: 3}
+  - {fileID: 8300000, guid: 5726a5e62e7174e4b8a9dc5d4b4f9363, type: 3}
+  - {fileID: 8300000, guid: 8c03eceed0102744ea078912203e55b9, type: 3}
+  - {fileID: 8300000, guid: d9ba31c0904993a4baa03f4e97a10dfb, type: 3}
+  - {fileID: 8300000, guid: be38ae3ef8940a942aa423c06162b13e, type: 3}
