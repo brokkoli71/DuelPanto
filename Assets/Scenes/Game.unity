@@ -2030,12 +2030,15 @@ MonoBehaviour:
   level: 0
   trophyScore: 5000
   uiManager: {fileID: 8839593423076398340}
-  defaultClip: {fileID: 8300000, guid: 83c25aafb0a4d4598bc455810a48cd96, type: 3}
-  wallClip: {fileID: 8300000, guid: a492fe44c169248c888b6b7179b84f14, type: 3}
-  hitClip: {fileID: 8300000, guid: 2e99873b97e7a446a9befe2766fb45b4, type: 3}
-  heartbeatClip: {fileID: 8300000, guid: bf04339cd29ef4aa991476cdf62b4561, type: 3}
+  enemyDyingClips:
+  - {fileID: 8300000, guid: d15f22a2ffd7e414dac483706fd9736f, type: 3}
+  - {fileID: 8300000, guid: c2145df197fa8fc49a9e636535adbe5f, type: 3}
+  - {fileID: 8300000, guid: f53a31398e612504cb491ba49f4281bf, type: 3}
+  - {fileID: 8300000, guid: 6303b3e812766c14bb7e4988fe03009a, type: 3}
+  - {fileID: 8300000, guid: e26c9b961c4ac934db382f5f21f960f5, type: 3}
   gameRunning: 0
   playWithEnemy: 1
+  allEnemiesdefeated: 0
 --- !u!1 &484561066
 GameObject:
   m_ObjectHideFlags: 0
@@ -2494,7 +2497,7 @@ GameObject:
   m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &605852837
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2505,12 +2508,12 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 83c25aafb0a4d4598bc455810a48cd96, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
-  Mute: 1
+  Loop: 0
+  Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
@@ -2783,7 +2786,6 @@ MonoBehaviour:
     m_Bits: 384
   damage: 2
   isUpper: 1
-  defaultClip: {fileID: 8300000, guid: 83c25aafb0a4d4598bc455810a48cd96, type: 3}
   wallClip: {fileID: 8300000, guid: a492fe44c169248c888b6b7179b84f14, type: 3}
   hitClip: {fileID: 8300000, guid: 2e99873b97e7a446a9befe2766fb45b4, type: 3}
   fireSpreadAngle: 30
@@ -2840,9 +2842,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listener: {fileID: 197161195}
-  startBPM: 60
-  endBPM: 220
-  bps: 1
+  levelVoice: {fileID: 0}
+  goalReached: 0
   isPitched: 0
   notifyFinished:
     m_PersistentCalls:
@@ -2871,17 +2872,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50678e62210fb9c4ba160f22e7a9f0f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionClip:
-  - {fileID: 8300000, guid: c9bdd1f1dfeec3c40ba2cbce3e0e5431, type: 3}
-  - {fileID: 8300000, guid: 6b3b547480fd6e444a17bbef81bcd6ec, type: 3}
-  - {fileID: 8300000, guid: 685f15bd11c88a447aa20768e7730ca1, type: 3}
-  lastCollisionClip: {fileID: 0}
   finishSound: {fileID: 8300000, guid: 1b2d69b3a7fa0af4d9f430d186caff9c, type: 3}
   maxPitch: 1.2
   minPitch: 0.8
   Goal: {fileID: 1005532776}
   backgroundClip: {fileID: 8300000, guid: d1ba7b350616a0c4eb0881f0942041a1, type: 3}
-  audioCoolDown: 0.2
 --- !u!1 &615256668
 GameObject:
   m_ObjectHideFlags: 0
@@ -4543,7 +4538,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.226
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -8319,7 +8314,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 199081147454446092, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: orthographic size
-      value: 26.495169
+      value: 12.779487
+      objectReference: {fileID: 0}
+    - target: {fileID: 199081147454446092, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 826605487606422808, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: debug
@@ -11763,5 +11762,37 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 605852841}
+    - target: {fileID: 9213859822949923263, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}
+      propertyPath: walkingClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 98f85a0bb854d4645a4f37dd27ddf809, type: 3}
+    - target: {fileID: 9213859822949923263, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}
+      propertyPath: walkingClips.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 53474daf166c5d74cb22edde93771655, type: 3}
+    - target: {fileID: 9213859822949923263, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}
+      propertyPath: walkingClips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 3931829fbb0d0ce4b9430705fe0f3952, type: 3}
+    - target: {fileID: 9213859822949923263, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}
+      propertyPath: walkingClips.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: fa8a574e8f94fc74b96c78629bd4d611, type: 3}
+    - target: {fileID: 9213859822949923263, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}
+      propertyPath: foundPlayerClips.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 22a4b119099c49e49be06a5a8741eae8, type: 3}
+    - target: {fileID: 9213859822949923263, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}
+      propertyPath: foundPlayerClips.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 1fb29af501a41244a8cd8e4cf82e5acb, type: 3}
+    - target: {fileID: 9213859822949923263, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}
+      propertyPath: foundPlayerClips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 9c64cfc32a428714a940cab6524a8a5a, type: 3}
+    - target: {fileID: 9213859822949923263, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}
+      propertyPath: foundPlayerClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 940d645be8583fc4395f65dede2de5a0, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}

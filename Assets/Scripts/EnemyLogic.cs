@@ -11,7 +11,7 @@ public class EnemyLogic : MonoBehaviour
     public float enemyTimeFreezedSpeed = 0.2f;
     public float slowFactor = 0.05f;
     public EnemyConfig config;
-    public AudioClip[] foundPlayerClips; 
+    public AudioClip[] foundPlayerClips;
     public AudioClip[] walkingClips;
     private AudioSource _audioSource;
 
@@ -92,7 +92,9 @@ public class EnemyLogic : MonoBehaviour
         // play random walking sounds every 0.5sec (audioclips are 0.5sec long)
         if (walking && lastWalked + 0.5f < Time.time)
         {
-            PlayClipPitched(walkingClips[(int)Random.Range(0, walkingClips.Length - 1)], 0.8f, 1.2f);
+            int value = Random.Range(0, walkingClips.Length - 1);
+            AudioClip clip = walkingClips[value];
+            PlayClipPitched(clip, 0.8f, 1.2f);
             lastWalked = Time.time;
         }
 
@@ -150,9 +152,9 @@ public class EnemyLogic : MonoBehaviour
         }
 
         // checking if enemy moves to play walking-sounds
-        if(oldLastPosition != lastSeenPosition) walking = true;
+        if (oldLastPosition != lastSeenPosition) walking = true;
         else walking = false;
-        
+
     }
 
     /// <summary>

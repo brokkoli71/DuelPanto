@@ -44,7 +44,10 @@ public class Health : MonoBehaviour
 
         if (healthPoints <= 0)
         {
+            // gameObject is enemy
+
             notifyDefeat.Invoke(gameObject);
+
         }
         else
         {

@@ -11,19 +11,14 @@ public class PlayerLogic : MonoBehaviour
 {
     private PantoHandle upperHandle;
 
-    //AudioSource audioSource;
-    //public AudioClip heartbeatClip;
-
     public GameObject listener;
-    public int startBPM = 60;
-    public int endBPM = 220;
-    float bpmCoefficient;
-    public float bps = 1;
-    float nextHeartbeat;
-    Health health;
 
-    private AudioListener timeAudio;
+    public GameObject levelVoice;
+
+    public bool goalReached = false;
     private PlayerSoundEffect soundEffects;
+
+    private GameObject panto;
     private bool tracking = false;
 
     public bool isPitched = false;
@@ -32,13 +27,11 @@ public class PlayerLogic : MonoBehaviour
     public GoalReachedEvent notifyFinished;
     void Start()
     {
-        upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
-        health = GetComponent<Health>();
+        panto = GameObject.Find("Panto");
+        upperHandle = panto.GetComponent<UpperHandle>();
         soundEffects = GetComponent<PlayerSoundEffect>();
-
-        bpmCoefficient = (endBPM - startBPM) / Mathf.Pow(health.maxHealth, 2);
     }
-    
+
     void FixedUpdate()
     {
         if (!tracking)
@@ -52,21 +45,24 @@ public class PlayerLogic : MonoBehaviour
 
     void trackActivity()
     {
-        float distance = Vector3.Distance(position, gameObject.transform.position);
-        float distance_factor = 3.5f;
-        //print($"Activity: {distance}");
+        if (!goalReached)
+        {
+            float distance = Vector3.Distance(position, gameObject.transform.position);
+            float distance_factor = 3.5f;
+            //print($"Activity: {distance}");
 
-        if (distance * distance_factor > 1)
-        {
-            isPitched = false;
-            soundEffects.pitchBackgroundMusic(1f);
+            if (distance * distance_factor > 1)
+            {
+                isPitched = false;
+                soundEffects.pitchBackgroundMusic(1f);
+            }
+            else
+            {
+                isPitched = true;
+                soundEffects.pitchBackgroundMusic(Mathf.Max(.6f, distance * distance_factor));
+            }
+            startTracking();
         }
-        else
-        {
-            isPitched = true;
-            soundEffects.pitchBackgroundMusic(Mathf.Max(.6f, distance * distance_factor));
-        }
-        startTracking();
     }
 
     void startTracking()
@@ -84,8 +80,10 @@ public class PlayerLogic : MonoBehaviour
         soundEffects.stopBackgroundMusic();
     }
 
-    public void ResetPlayer(){
-        soundEffects.ResetMusic();
+    public void ResetPlayer()
+    {
+        goalReached = false;
+        tracking = false;
     }
 
     void Update()
@@ -99,30 +97,18 @@ public class PlayerLogic : MonoBehaviour
         // Simply connects the player to the upper handles position
         transform.position = upperHandle.HandlePosition(transform.position);
         transform.rotation = Quaternion.AngleAxis(upperHandle.GetRotation(), Vector3.up);
-
-
-        if (health.healthPoints > 0 && health.healthPoints <= 2 * health.maxHealth / 3)
-        {
-            if (nextHeartbeat > bps)
-            {
-                float bpm = bpmCoefficient * Mathf.Pow(health.healthPoints - health.maxHealth, 2) + startBPM;
-                bps = 60f / bpm;
-                //audioSource.PlayOneShot(heartbeatClip);
-                nextHeartbeat = 0;
-            }
-            else
-            {
-                nextHeartbeat += Time.deltaTime;
-            }
-        }
     }
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Goal"))
         {
-            soundEffects.stopBackgroundMusic();
-            soundEffects.playFinisherClip();
-            notifyFinished.Invoke(gameObject);
+            if (panto.GetComponent<GameManager>().allEnemiesdefeated)
+            {
+                goalReached = true;
+                soundEffects.stopBackgroundMusic();
+                soundEffects.playFinisherClip();
+                notifyFinished.Invoke(gameObject);
+            }
         }
     }
 }

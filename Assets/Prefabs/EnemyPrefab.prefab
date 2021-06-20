@@ -383,13 +383,12 @@ MonoBehaviour:
     m_Bits: 320
   damage: 3
   isUpper: 0
-  defaultClip: {fileID: 8300000, guid: 83c25aafb0a4d4598bc455810a48cd96, type: 3}
   wallClip: {fileID: 8300000, guid: a492fe44c169248c888b6b7179b84f14, type: 3}
   hitClip: {fileID: 8300000, guid: 2e99873b97e7a446a9befe2766fb45b4, type: 3}
   fireSpreadAngle: 3
   enemyTransform: {fileID: 0}
   reloadingTimeMillis: 3000
-  shotPrefab: {fileID: 60065284762972465, guid: 7b8f1cd900cc947bea40514cd9d79908, type: 3}
+  shotPrefab: {fileID: 60065284762972465, guid: a35bcd9dc01bce84aa3db2dbb2c64086, type: 3}
   shotSpeed: 5
 --- !u!114 &9213859822949923263
 MonoBehaviour:
@@ -413,18 +412,12 @@ MonoBehaviour:
   slowFactor: 0.05
   config: {fileID: 11400000, guid: cc985994c53e84f6fae197a5aed96f0e, type: 2}
   foundPlayerClips:
-  - {fileID: 8300000, guid: 7cfe312c358c844cfa92b64d46e2c0db, type: 3}
-  - {fileID: 8300000, guid: 6040051e24b364a0d84d421db05b9e05, type: 3}
-  - {fileID: 8300000, guid: b99d215ede5314c24b823991907585d3, type: 3}
-  - {fileID: 8300000, guid: f545967d365f04de1bacd59a3855f766, type: 3}
-  enemyDyingClips:
-  - {fileID: 8300000, guid: d3b29e286c1ad4d35aededbcbdf11228, type: 3}
-  - {fileID: 8300000, guid: 949aa66d0594f4f5ca905d856adf9ab3, type: 3}
-  - {fileID: 8300000, guid: 0073b73ecdfd24d669869a2c9dd9480c, type: 3}
-  - {fileID: 8300000, guid: 75d9214e4a52e4b7495904696536eaa1, type: 3}
-  - {fileID: 8300000, guid: 35742d11288bd40c598a1cc1865ca1ed, type: 3}
+  - {fileID: 8300000, guid: 22a4b119099c49e49be06a5a8741eae8, type: 3}
+  - {fileID: 8300000, guid: 940d645be8583fc4395f65dede2de5a0, type: 3}
+  - {fileID: 8300000, guid: 9c64cfc32a428714a940cab6524a8a5a, type: 3}
+  - {fileID: 8300000, guid: 1fb29af501a41244a8cd8e4cf82e5acb, type: 3}
   walkingClips:
-  - {fileID: 8300000, guid: c1275bf248e5848d3844ec955e6836c7, type: 3}
-  - {fileID: 8300000, guid: 32c03de7fceaf4fb7b346b8921aa087c, type: 3}
-  - {fileID: 8300000, guid: 942f0dc78e456475a9e28a9ad6c32cf0, type: 3}
-  - {fileID: 8300000, guid: 209d16d10a18143508357c8eacbda750, type: 3}
+  - {fileID: 8300000, guid: 98f85a0bb854d4645a4f37dd27ddf809, type: 3}
+  - {fileID: 8300000, guid: 53474daf166c5d74cb22edde93771655, type: 3}
+  - {fileID: 8300000, guid: 3931829fbb0d0ce4b9430705fe0f3952, type: 3}
+  - {fileID: 8300000, guid: fa8a574e8f94fc74b96c78629bd4d611, type: 3}

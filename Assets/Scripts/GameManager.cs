@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public GameObject enemyOriginal;
     public GameObject enemyPrefab;
+
     private List<GameObject> enemies;
 
     public EnemyConfig[] enemyConfigs;
@@ -22,11 +23,11 @@ public class GameManager : MonoBehaviour
     public int trophyScore = 10000;
     public UIManager uiManager;
 
-    public AudioClip defaultClip;
-    public AudioClip wallClip;
-    public AudioClip hitClip;
-    public AudioClip heartbeatClip;
     public AudioClip[] enemyDyingClips;
+
+    public AudioClip switchingEnemy;
+    public AudioClip playerDied;
+    public AudioClip enenmiesDefeated;
     private AudioSource _audioSource;
 
     private UpperHandle _upperHandle;
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
 
     private bool enemyChecking = true;
     private int defeatedEnemies = 0;
+    public bool allEnemiesdefeated = false;
     private readonly Dictionary<string, KeyCode> _commands = new Dictionary<string, KeyCode>() {
         { "yes", KeyCode.Y },
         { "no", KeyCode.N },
@@ -91,53 +93,12 @@ public class GameManager : MonoBehaviour
         if (introduceGame)
         {
             //await IntroducePlayers();
-            await IntroduceLaser();
-            await IntroduceHealth();
             await IntroduceLevel();
         }
 
-        await _speechOut.Speak("Introduction finished, game starts.");
+        //await _speechOut.Speak("Introduction finished, game starts.");
 
         await ResetRound();
-    }
-    /*
-    async Task IntroducePlayers()
-    {
-        await _speechOut.Speak("This is you.");
-        await _upperHandle.MoveToPosition(playerSpawn.position, 5f);
-        _upperHandle.Freeze();
-
-        await _speechOut.Speak("This is your enemy.");
-        await _lowerHandle.MoveToPosition(enemySpawn.position, 5f);
-        _lowerHandle.Freeze();
-    }
-    */
-    async Task IntroduceLaser()
-    {
-        await _speechOut.Speak("In this game you shoot your opponent with a laser.");
-
-        await _speechOut.Speak("When you hear this sound");
-        await PlayClipSync(hitClip);
-        await _speechOut.Speak("It means you hit your opponent.");
-
-        await _speechOut.Speak("When you hear this.");
-        await PlayClipSync(wallClip);
-        await _speechOut.Speak("You hit the wall.");
-
-        await _speechOut.Speak("And for this.");
-        await PlayClipSync(defaultClip);
-        await _speechOut.Speak("You hit nothing.");
-    }
-
-    async Task IntroduceHealth()
-    {
-        await _speechOut.Speak("You take damage when the enemies laser hits you.");
-        await _speechOut.Speak("The more health you lose, this heartbeat sound.");
-
-        await PlayClipSync(heartbeatClip);
-        await PlayClipSync(heartbeatClip, 100);
-        await _speechOut.Speak("will go faster and faster");
-
     }
 
     async Task IntroduceLevel()
@@ -150,12 +111,6 @@ public class GameManager : MonoBehaviour
         _upperHandle.Free();
         await _speechOut.Speak("Feel for yourself. Say yes or done when you're ready.");
         await _speechIn.Listen(new Dictionary<string, KeyCode>() { { "yes", KeyCode.Y }, { "done", KeyCode.D } });
-    }
-
-    private async Task PlayClipSync(AudioClip clip, int delay = 0)
-    {
-        _audioSource.PlayOneShot(clip);
-        await Task.Delay(Mathf.RoundToInt(clip.length * 1000) + Math.Abs(delay)); // convert sec in ms
     }
 
     void RegisterColliders()
@@ -187,33 +142,35 @@ public class GameManager : MonoBehaviour
             //    Debug.LogError($"Level {level} is over number of enemies {enemyConfigs.Length}");
 
             resetEnemies();
+            allEnemiesdefeated = false;
             setEnemies(true);
+            oldEnemy = enemies[0];
+            defeatedEnemies = 0;
         }
 
         _upperHandle.Free();
 
-        oldEnemy = enemies[0];
+
 
         player.SetActive(true);
         gameRunning = true;
         player.GetComponent<PlayerLogic>().ResetPlayer();
-
-        // deactivate goal until all enemies are dead
-        GameObject.FindGameObjectWithTag("Goal").SetActive(false);
+        player.GetComponent<PlayerSoundEffect>().ResetMusic();
 
         _levelStartTime = Time.time;
     }
 
     async void FixedUpdate()
     {
-        if (gameRunning && enemyChecking && playWithEnemy)
+        if (gameRunning && enemyChecking && playWithEnemy && !allEnemiesdefeated)
         {
             enemyChecking = false;
             Invoke("ResetEnemyChecking", 0.8f);
             GameObject closestEnemy = GetClosestEnemy(enemies);
             if (oldEnemy != closestEnemy)
             {
-                _speechOut.Speak("switching enemy");
+                //_speechOut.Speak("switching enemy");
+                _audioSource.PlayOneShot(switchingEnemy);
                 oldEnemy = closestEnemy;
             }
             await _lowerHandle.SwitchTo(closestEnemy, 5f);
@@ -260,7 +217,6 @@ public class GameManager : MonoBehaviour
         newEnemy.GetComponent<Shooting>().enemyTransform = player.transform;
 
         newEnemy.GetComponent<Health>().notifyDefeat = enemyOriginal.GetComponent<Health>().notifyDefeat;
-        //newEnemy.GetComponent<Health>().notifyDefeat.
 
         newEnemy.SetActive(false);
         enemies.Add(newEnemy);
@@ -295,59 +251,38 @@ public class GameManager : MonoBehaviour
     /// <param name="defeated"></param>
     public async void OnDefeat(GameObject defeated)
     {
-        bool playerDefeated = defeated.Equals(player);
-        //playerDefeated = false? enemy gets killed
-        if (!playerDefeated)
+        bool enemyKilled = !defeated.Equals(player);
+        if (enemyKilled)
         {
             defeatedEnemies++;
             GameObject defeatedEnemie = enemies.Find(x => x.Equals(defeated));
             //Destroy(defeatedEnemie);
             //enemies.Remove(defeatedEnemie);
-            if (defeatedEnemies < enemies.Count)
-            {
-                AudioSource.PlayClipAtPoint(enemyDyingClips[(int)UnityEngine.Random.Range(0, enemyDyingClips.Length - 1)],
-                    defeatedEnemie.transform.position);
-            }
+
+
+            AudioSource.PlayClipAtPoint(enemyDyingClips[(int)UnityEngine.Random.Range(0, enemyDyingClips.Length - 1)],
+                defeatedEnemie.transform.position);
+
+
             defeatedEnemie.SetActive(false);
 
-            if(enemies.Count == defeatedEnemies)
+            if (enemies.Count == defeatedEnemies)
             {
-                await _speechOut.Speak("you eliminated all enemies! No follow the sound to the goal!");
-                GameObject.FindGameObjectWithTag("Goal").SetActive(true);
+                //_speechOut.Speak("you eliminated all enemies! No follow the sound to the goal!");
+                _audioSource.PlayOneShot(enenmiesDefeated);
+                allEnemiesdefeated = true;
             }
         }
-        print("enemy count: " + enemies.Count);
-        if (enemies.Count == defeatedEnemies || playerDefeated)
+        else
         {
-
+            print("Player got killed!");
+            _audioSource.PlayOneShot(playerDied);
             player.SetActive(false);
             setEnemies(false);
             gameRunning = false;
-            defeatedEnemies = 0;
+            //await _speechOut.Speak("You got defeated.");
 
-
-            if (playerDefeated)
-            {
-                _enemyScore++;
-            }
-            else
-            {
-                _playerScore++;
-            }
-
-            string defeatedPerson = playerDefeated ? "You" : "Enemy";
-            await _speechOut.Speak($"{defeatedPerson} got defeated.");
-
-            level++;
-            if (level >= enemyConfigs.Length)
-            {
-                await GameOver();
-            }
-            else
-            {
-                await ResetRound();
-            }
-
+            await ResetRound();
         }
     }
 
@@ -357,11 +292,8 @@ public class GameManager : MonoBehaviour
         player.SetActive(false);
         setEnemies(false);
         gameRunning = false;
-        defeatedEnemies = 0;
 
-        await _speechOut.Speak(" Congratulations you have reached the goal.");
-
-        //_gameScore += CalculateGameScore(player, enemy);
+        //await _speechOut.Speak(" Congratulations you have reached the goal.");
 
         level++;
         if (level >= enemyConfigs.Length)
@@ -372,6 +304,7 @@ public class GameManager : MonoBehaviour
         {
             await ResetRound();
         }
+
     }
 
 
@@ -401,41 +334,4 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
-    /// <summary>
-    /// Calculates the game score by health, level complete time and enemy
-    /// difficulty.
-    /// </summary>
-    /// <param name="player"></param>
-    /// <param name="enemy"></param>
-    /// <returns></returns>
-    int CalculateGameScore(GameObject player, GameObject enemy)
-    {
-        Health playerHealth = player.GetComponent<Health>();
-        Health enemyHealth = enemy.GetComponent<Health>();
-
-        float levelCompleteTime = Time.time - _levelStartTime;
-        _totalTime += levelCompleteTime;
-        int timeMultiplier = 1;
-        if (levelCompleteTime < 30)
-        {
-            timeMultiplier = 5;
-        }
-        else if (levelCompleteTime < 45)
-        {
-            timeMultiplier = 3;
-        }
-        else if (levelCompleteTime < 60)
-        {
-            timeMultiplier = 2;
-        }
-
-        int levelScore = playerHealth.healthPoints - enemyHealth.healthPoints;
-        if (levelScore > 0)
-        {
-            int levelMultiplier = (int)(Mathf.Pow(2, level) + 1);
-            levelScore *= timeMultiplier * levelMultiplier;
-        }
-
-        return levelScore;
-    }
 }

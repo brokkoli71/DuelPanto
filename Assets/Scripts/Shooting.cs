@@ -13,7 +13,6 @@ public class Shooting : MonoBehaviour
     */
     public int damage = 2;
     public bool isUpper = true;
-    public AudioClip defaultClip;
     public AudioClip wallClip;
     public AudioClip hitClip;
 
@@ -55,7 +54,6 @@ public class Shooting : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
 
         audioSource = GetComponent<AudioSource>();
-        audioSource.clip = defaultClip;
 
         GameObject panto = GameObject.Find("Panto");
         if (isUpper)
@@ -97,7 +95,7 @@ public class Shooting : MonoBehaviour
 
     void shoot()
     {
-        GameObject projectile = Instantiate(shotPrefab, transform.position + transform.forward/10, transform.rotation);
+        GameObject projectile = Instantiate(shotPrefab, transform.position + transform.forward / 10, transform.rotation);
         Rigidbody rigidshot = projectile.GetComponent<Rigidbody>();
         shots.Add(rigidshot); //uerberfluessig?
         rigidshot.constraints = RigidbodyConstraints.FreezePositionY;
@@ -184,7 +182,6 @@ public class Shooting : MonoBehaviour
             {
                 lineRenderer.SetPositions(new Vector3[] { transform.position,
                     transform.position + transform.forward * maxRayDistance });
-                currentClip = defaultClip;
             }
 
         }
@@ -221,7 +218,6 @@ public class Shooting : MonoBehaviour
         {
             lineRenderer.SetPositions(new Vector3[] { transform.position,
                 transform.position + transform.forward * maxRayDistance });
-            currentClip = defaultClip;
         }
     }
 }
