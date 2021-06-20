@@ -27,7 +27,7 @@ public class Shooting : MonoBehaviour
     public GameObject shotPrefab;
     List<Rigidbody> shots;
     
-    int shotSpeed = 3;
+    float shotSpeed = 0.3f;
 
     
     void Start()
