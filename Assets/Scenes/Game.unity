@@ -106,7 +106,7 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 2
     agentTypeID: 0
-    agentRadius: 0.5
+    agentRadius: 0.4
     agentHeight: 2
     agentSlope: 20
     agentClimb: 0.4
@@ -114,7 +114,7 @@ NavMeshSettings:
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.16666667
+    cellSize: 0.13333334
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -814,11 +814,11 @@ GameObject:
   - component: {fileID: 149243866}
   - component: {fileID: 149243865}
   m_Layer: 8
-  m_Name: Obstacle 2 (10)
-  m_TagString: Untagged
+  m_Name: Obstacle 3
+  m_TagString: level2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 40
   m_IsActive: 1
 --- !u!114 &149243865
 MonoBehaviour:
@@ -925,7 +925,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 5, z: 2.5}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 24
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
 --- !u!1 &160905295
 GameObject:
@@ -2076,13 +2076,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 394148085}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.4, z: -10.78}
-  m_LocalScale: {x: 17, y: 1, z: 11}
+  m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: -0.4, z: -8.54}
+  m_LocalScale: {x: 14, y: 1, z: 14}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
 --- !u!1 &398396833
 GameObject:
   m_ObjectHideFlags: 0
@@ -4600,11 +4600,11 @@ GameObject:
   - component: {fileID: 857827161}
   - component: {fileID: 857827160}
   m_Layer: 8
-  m_Name: Obstacle 1 (1)
-  m_TagString: Untagged
+  m_Name: Obstacle 1
+  m_TagString: level1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 40
   m_IsActive: 1
 --- !u!4 &857827159
 Transform:
@@ -5401,11 +5401,11 @@ GameObject:
   - component: {fileID: 1045662316}
   - component: {fileID: 1045662315}
   m_Layer: 8
-  m_Name: Obstacle 2 (9)
-  m_TagString: Untagged
+  m_Name: Obstacle 7
+  m_TagString: level2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 40
   m_IsActive: 1
 --- !u!114 &1045662315
 MonoBehaviour:
@@ -5512,7 +5512,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 23
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &1052426469
 GameObject:
@@ -7152,11 +7152,11 @@ GameObject:
   - component: {fileID: 1440399996}
   - component: {fileID: 1440399995}
   m_Layer: 8
-  m_Name: Obstacle 2 (5)
-  m_TagString: Untagged
+  m_Name: Obstacle 6
+  m_TagString: level3
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 40
   m_IsActive: 1
 --- !u!114 &1440399995
 MonoBehaviour:
@@ -7263,7 +7263,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 5, z: 6}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &1443770695
 GameObject:
@@ -8390,11 +8390,11 @@ GameObject:
   - component: {fileID: 1630724435}
   - component: {fileID: 1630724434}
   m_Layer: 8
-  m_Name: Obstacle 2 (6)
-  m_TagString: Untagged
+  m_Name: Obstacle 4
+  m_TagString: level3
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 40
   m_IsActive: 1
 --- !u!114 &1630724434
 MonoBehaviour:
@@ -8950,11 +8950,11 @@ GameObject:
   - component: {fileID: 1692062081}
   - component: {fileID: 1692062080}
   m_Layer: 8
-  m_Name: Obstacle 2 (8)
-  m_TagString: Untagged
+  m_Name: Obstacle 5
+  m_TagString: level3
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 40
   m_IsActive: 1
 --- !u!114 &1692062080
 MonoBehaviour:
@@ -9157,11 +9157,11 @@ GameObject:
   - component: {fileID: 1700465954}
   - component: {fileID: 1700465953}
   m_Layer: 8
-  m_Name: Obstacle 2 (1)
-  m_TagString: Untagged
+  m_Name: Obstacle 2
+  m_TagString: level2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 40
   m_IsActive: 1
 --- !u!114 &1700465953
 MonoBehaviour:
