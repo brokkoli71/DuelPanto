@@ -15,7 +15,7 @@ public class shotController : MonoBehaviour
     
 
     bool isSlowed = true;
-    float slowFactor = 4;
+    float slowFactor = 10;
 
     public AudioClip startShot;
     public AudioClip wallShot;
@@ -89,10 +89,14 @@ public class shotController : MonoBehaviour
                 AudioSource.PlayClipAtPoint(playerShot, this.gameObject.transform.position);
 
             }
-            if (hitObject.name.Contains("Obstacle"))
-            {
-                AudioSource.PlayClipAtPoint(wallShot, this.gameObject.transform.position);
-            }
+            //if (hitObject.name.Contains("Obstacle"))
+            //{
+            //    AudioSource auS = new AudioSource();
+            //    auS.maxDistance = 5;
+            //    auS.rolloffMode = AudioRolloffMode.Logarithmic;
+            //    auS.transform.position = this.gameObject.transform.position;
+            //    auS.PlayOneShot(wallShot);
+            //}
 
 
 

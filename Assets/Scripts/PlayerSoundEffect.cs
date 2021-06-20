@@ -30,12 +30,14 @@ public class PlayerSoundEffect : MonoBehaviour
 
     public void pitchBackgroundMusic(float pitchValue)
     {
-        backgroundSource.pitch = pitchValue > 1 ? 1 : pitchValue;
+        //backgroundSource.pitch = pitchValue > 1 ? 1 : pitchValue;
+        backgroundSource.pitch = pitchValue > 1 ? 1 : 0.5f;
     }
 
     public void startBackgroundMusic()
     {
         backgroundSource.Play();
+        backgroundSource.volume /= 3;
         backgroundClipIsActive = true;
 
     }
