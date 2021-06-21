@@ -30,6 +30,21 @@ public class Shooting : MonoBehaviour
     Rigidbody shots;
     
     float shotSpeed = 0.3f;
+    AudioClip currentClip
+    {
+        get => _currentClip;
+        set
+        {
+            if (_currentClip == null) _currentClip = value;
+            else if (!currentClip.Equals(value))
+            {
+                _currentClip = value;
+                audioSource.Stop();
+                audioSource.clip = value;
+                audioSource.Play();
+            }
+        }
+    }
 
     void Start()
     {
@@ -139,8 +154,12 @@ public class Shooting : MonoBehaviour
                 {
                     enemy.TakeDamage(damage, gameObject);
 
-                   
-         
+                    currentClip = hitClip;
+                }
+                else
+                {
+                    currentClip = wallClip;
+                }
             }
         }
         else
@@ -156,8 +175,12 @@ public class Shooting : MonoBehaviour
                 {
                     enemy.TakeDamage(damage, gameObject);
 
+                    currentClip = hitClip;
                 }
-                
+                else
+                {
+                    currentClip = wallClip;
+                }
             }
             else
             {
@@ -166,7 +189,7 @@ public class Shooting : MonoBehaviour
             }
 
         }
-    }}
+    }
 
     /// <summary>
     /// Simple firing in forward direction. Doesn't require a target.
@@ -188,8 +211,12 @@ public class Shooting : MonoBehaviour
             {
                 enemy.TakeDamage(damage, gameObject);
 
+                currentClip = hitClip;
             }
-           
+            else
+            {
+                currentClip = wallClip;
+            }
         }
         else
         {
