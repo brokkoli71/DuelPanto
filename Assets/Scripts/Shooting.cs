@@ -139,12 +139,8 @@ public class Shooting : MonoBehaviour
                 {
                     enemy.TakeDamage(damage, gameObject);
 
-                    currentClip = hitClip;
-                }
-                else
-                {
-                    currentClip = wallClip;
-                }
+                   
+         
             }
         }
         else
@@ -160,12 +156,8 @@ public class Shooting : MonoBehaviour
                 {
                     enemy.TakeDamage(damage, gameObject);
 
-                    currentClip = hitClip;
                 }
-                else
-                {
-                    currentClip = wallClip;
-                }
+                
             }
             else
             {
@@ -174,7 +166,7 @@ public class Shooting : MonoBehaviour
             }
 
         }
-    }
+    }}
 
     /// <summary>
     /// Simple firing in forward direction. Doesn't require a target.
@@ -196,12 +188,8 @@ public class Shooting : MonoBehaviour
             {
                 enemy.TakeDamage(damage, gameObject);
 
-                currentClip = hitClip;
             }
-            else
-            {
-                currentClip = wallClip;
-            }
+           
         }
         else
         {

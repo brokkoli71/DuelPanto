@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3663996705819996174}
   - component: {fileID: -8305827092998777804}
   - component: {fileID: -3739782386421526304}
-  - component: {fileID: 1951856402796296864}
+  - component: {fileID: 8837941051389111144}
   m_Layer: 0
   m_Name: shot
   m_TagString: Untagged
@@ -210,7 +210,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1951856402796296864
+--- !u!114 &8837941051389111144
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -219,10 +219,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 60065284762972465}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06459e9b1edf3dc43bac691442765155, type: 3}
+  m_Script: {fileID: 11500000, guid: eb28536f30ac4da408339d19426acdac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   shotBy: {fileID: 0}
-  startShot: {fileID: 8300000, guid: 8ee3812f51077294da21820a2f57476a, type: 3}
-  wallShot: {fileID: 8300000, guid: b83a5d4926d4bac4393fcb19f9a3c775, type: 3}
-  playerShot: {fileID: 8300000, guid: afea8577d3b1778459fae9c6b54a713c, type: 3}
+  startShot: {fileID: 8300000, guid: 60c082cd344b6324fade8fc0d5daad67, type: 3}
+  wallShot: {fileID: 8300000, guid: 56b1eb78b96b2b843bef11f3a1d26de0, type: 3}
+  playerShot: {fileID: 8300000, guid: 9966df967c656b5418e2ec5444331c6f, type: 3}
