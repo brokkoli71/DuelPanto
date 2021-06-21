@@ -8,11 +8,12 @@ using System.Linq;
 using DualPantoFramework;
 public class GameManager : MonoBehaviour
 {
-    public GameObject goal;
+
     public bool introduceGame = true;
     public GameObject player;
     public GameObject enemyOriginal;
     public GameObject enemyPrefab;
+    public GameObject goal;
 
     private List<GameObject> enemies;
 
@@ -134,7 +135,6 @@ public class GameManager : MonoBehaviour
         //await _speechOut.Speak("Spawning player");
         player.transform.position = playerSpawn.position;
         await _upperHandle.SwitchTo(player, 5f);
-
         _lowerHandle.Free();
 
         //await _speechOut.Speak("Spawning enemy");
@@ -161,15 +161,11 @@ public class GameManager : MonoBehaviour
         player.GetComponent<PlayerSoundEffect>().ResetMusic();
 
         _levelStartTime = Time.time;
-
-        allEnemiesDefeated = false;
-        switchedToGoal = false;
-        defeatedEnemies = 0;
     }
 
     async void FixedUpdate()
     {
-        if (gameRunning && enemyChecking && playWithEnemy && !allEnemiesDefeated)
+        if (gameRunning && enemyChecking && playWithEnemy && !allEnemiesdefeated)
         {
             enemyChecking = false;
             Invoke("ResetEnemyChecking", 0.8f);
@@ -181,8 +177,7 @@ public class GameManager : MonoBehaviour
                 oldEnemy = closestEnemy;
             }
             await _lowerHandle.SwitchTo(closestEnemy, 5f);
-        }
-        else if (allEnemiesDefeated && !switchedToGoal)
+        } else if (allEnemiesDefeated && !switchedToGoal)
         {
             await _lowerHandle.SwitchTo(goal);
             switchedToGoal = true;
@@ -282,18 +277,12 @@ public class GameManager : MonoBehaviour
             {
                 //_speechOut.Speak("you eliminated all enemies! No follow the sound to the goal!");
                 _audioSource.PlayOneShot(enenmiesDefeated);
-
+                allEnemiesdefeated = true;
+                
                 await _lowerHandle.SwitchTo(goal);
                 switchedToGoal = true;
 
-                defeatedEnemie.SetActive(false);
-                // activate goal
-                await _speechOut.Speak("you eliminated all enemies! Now follow the sound to the goal!");
-                allEnemiesDefeated = true;
-                return;
             }
-
-            defeatedEnemie.SetActive(false);
         }
         else
         {
@@ -310,25 +299,21 @@ public class GameManager : MonoBehaviour
 
     public async void OnVictory(GameObject player)
     {
-        if (allEnemiesDefeated)
+
+        player.SetActive(false);
+        setEnemies(false);
+        gameRunning = false;
+
+        //await _speechOut.Speak(" Congratulations you have reached the goal.");
+
+        level++;
+        if (level >= enemyConfigs.Length)
         {
-            player.SetActive(false);
-            setEnemies(false);
-            gameRunning = false;
-            defeatedEnemies = 0;
-
-
-            //await _speechOut.Speak(" Congratulations you have reached the goal.");
-
-            level++;
-            if (level >= enemyConfigs.Length)
-            {
-                await GameOver();
-            }
-            else
-            {
-                await ResetRound();
-            }
+            await GameOver();
+        }
+        else
+        {
+            await ResetRound();
         }
 
     }

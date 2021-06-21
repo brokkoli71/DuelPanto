@@ -37,7 +37,7 @@ public class PlayerSoundEffect : MonoBehaviour
     public void startBackgroundMusic()
     {
         backgroundSource.Play();
-        backgroundSource.volume = 0.05f;
+        backgroundSource.volume = 1f;
         backgroundClipIsActive = true;
 
     }
