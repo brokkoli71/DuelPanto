@@ -4,17 +4,12 @@ using System.Collections.Generic;
 
 public class Shooting : MonoBehaviour
 {
-    public float maxRayDistance = 20f;
-    public LayerMask hitLayers;
     /*
      * TODO: 6. A clever way of keeping track of hits might be to make the 
      * damage/second dependent on how precisely you hit the opponent, rather 
      * than having a step function hit/no hit.
     */
-    public int damage = 2;
     public bool isUpper = true;
-    public AudioClip wallClip;
-    public AudioClip hitClip;
 
     public float fireSpreadAngle = 2f;
     public Transform enemyTransform;
@@ -28,7 +23,7 @@ public class Shooting : MonoBehaviour
     public double reloadingTimeMillis;
     public GameObject shotPrefab;
     Rigidbody shots;
-    
+
     float shotSpeed = 0.3f;
     AudioClip currentClip
     {
@@ -81,7 +76,7 @@ public class Shooting : MonoBehaviour
             {
                 // kein neuer schuss wenn noch einer existiert
                 lastShot = System.DateTime.Now;
-                if (shots == null) //es existiert kein shot mehr
+                if (shots == null && gameObject.GetComponent<EnemyLogic>().foundPlayer) //es existiert kein shot mehr
                 {
                     shoot();
                 }
@@ -128,100 +123,6 @@ public class Shooting : MonoBehaviour
             {
                 projectile.GetComponent<shotController>().aimTo(aimTo);
             }
-        }
-    }
-
-    void FireCone()
-    {
-        RaycastHit hit;
-
-        // Getting upper rotation only for player interesting
-        if (isUpper)
-            transform.rotation = Quaternion.Euler(0, handle.GetRotation(), 0);
-
-        Vector3 enemyDirection = enemyTransform.position - transform.position;
-        float rotationDifference = Vector3.Angle(transform.forward, enemyDirection);
-
-        if (Mathf.Abs(rotationDifference) <= fireSpreadAngle)
-        {
-            if (Physics.Raycast(transform.position, enemyDirection, out hit, maxRayDistance, hitLayers))
-            {
-                lineRenderer.SetPositions(new Vector3[] { transform.position, hit.point });
-
-                Health enemy = hit.transform.GetComponent<Health>();
-
-                if (enemy)
-                {
-                    enemy.TakeDamage(damage, gameObject);
-
-                    currentClip = hitClip;
-                }
-                else
-                {
-                    currentClip = wallClip;
-                }
-            }
-        }
-        else
-        {
-            if (Physics.Raycast(transform.position, transform.forward, out hit, maxRayDistance, hitLayers))
-            {
-                lineRenderer.SetPositions(new Vector3[] { transform.position,
-                    hit.point });
-
-                Health enemy = hit.transform.GetComponent<Health>();
-
-                if (enemy)
-                {
-                    enemy.TakeDamage(damage, gameObject);
-
-                    currentClip = hitClip;
-                }
-                else
-                {
-                    currentClip = wallClip;
-                }
-            }
-            else
-            {
-                lineRenderer.SetPositions(new Vector3[] { transform.position,
-                    transform.position + transform.forward * maxRayDistance });
-            }
-
-        }
-    }
-
-    /// <summary>
-    /// Simple firing in forward direction. Doesn't require a target.
-    /// </summary>
-    void Fire()
-    {
-        RaycastHit hit;
-
-        if (isUpper)
-            transform.rotation = Quaternion.Euler(0, handle.GetRotation(), 0);
-
-        if (Physics.Raycast(transform.position, transform.forward, out hit, maxRayDistance, hitLayers))
-        {
-            lineRenderer.SetPositions(new Vector3[] { transform.position, hit.point });
-
-            Health enemy = hit.transform.GetComponent<Health>();
-
-            if (enemy)
-            {
-                enemy.TakeDamage(damage, gameObject);
-
-                currentClip = hitClip;
-            }
-            else
-            {
-                currentClip = wallClip;
-            }
-        }
-        else
-        {
-            lineRenderer.SetPositions(new Vector3[] { transform.position,
-                transform.position + transform.forward * maxRayDistance });
         }
     }
 }

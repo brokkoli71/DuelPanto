@@ -7,15 +7,12 @@ public class EnemyLogic : MonoBehaviour
     public LayerMask layerMask;
     public float aimbotDistance = 10f;
     public float seekingDistance = 1f;
-
-    public float enemyTimeFreezedSpeed = 0.2f;
-    public float slowFactor = 0.05f;
     public EnemyConfig config;
     public AudioClip[] foundPlayerClips;
     public AudioClip[] walkingClips;
     private AudioSource _audioSource;
 
-    bool foundPlayer = false;
+    public bool foundPlayer = false;
     private bool walking = false;
     float lastWalked = 0f;
     private bool firstFinding = false;
@@ -74,11 +71,13 @@ public class EnemyLogic : MonoBehaviour
         //print(agent.speed);
         if (player.GetComponent<PlayerLogic>().isPitched)
         {
-            agent.speed = Mathf.Max(3.5f * enemyTimeFreezedSpeed, agent.speed * (1 - slowFactor));
+            //agent.speed = Mathf.Max(3.5f * enemyTimeFreezedSpeed, agent.speed * (1 - slowFactor));
+            agent.speed = 0.01f;
         }
         else
         {
-            agent.speed = Mathf.Min(3.5f, agent.speed * (1 + slowFactor));
+            agent.speed = 1.5f;
+            //agent.speed = Mathf.Min(3.5f, agent.speed * (1 + slowFactor));
         }
         agent.SetDestination(lastSeenPosition);
 
@@ -101,7 +100,12 @@ public class EnemyLogic : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(lastSeenPosition - transform.position, Vector3.up);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, config.turnSpeed);
     }
-
+    public void reset()
+    {
+        resetLocation();
+        foundPlayer = false;
+        firstFinding = false;
+    }
     public void PlayClipPitched(AudioClip clip, float minPitch, float maxPitch)
     {
         // little trick to make clip sound less redundant

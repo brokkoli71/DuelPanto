@@ -48,10 +48,9 @@ public class PlayerLogic : MonoBehaviour
         if (!goalReached)
         {
             float distance = Vector3.Distance(position, gameObject.transform.position);
-            float distance_factor = 3.5f;
             //print($"Activity: {distance}");
 
-            if (distance * distance_factor > 1)
+            if (distance > 0.05f)
             {
                 isPitched = false;
                 soundEffects.pitchBackgroundMusic(1f);
@@ -59,7 +58,8 @@ public class PlayerLogic : MonoBehaviour
             else
             {
                 isPitched = true;
-                soundEffects.pitchBackgroundMusic(Mathf.Max(.6f, distance * distance_factor));
+                soundEffects.pitchBackgroundMusic(0.5f);
+                //soundEffects.pitchBackgroundMusic(Mathf.Max(.6f, distance * distance_factor));
             }
             startTracking();
         }

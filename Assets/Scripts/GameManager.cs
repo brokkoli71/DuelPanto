@@ -4,7 +4,7 @@ using SpeechIO;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Collections;
 using DualPantoFramework;
 public class GameManager : MonoBehaviour
 {
@@ -177,7 +177,8 @@ public class GameManager : MonoBehaviour
                 oldEnemy = closestEnemy;
             }
             await _lowerHandle.SwitchTo(closestEnemy, 5f);
-        } else if (allEnemiesDefeated && !switchedToGoal)
+        }
+        else if (allEnemiesDefeated && !switchedToGoal)
         {
             await _lowerHandle.SwitchTo(goal);
             switchedToGoal = true;
@@ -204,7 +205,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (GameObject _enemy in enemies)
         {
-            _enemy.GetComponent<EnemyLogic>().resetLocation();
+            _enemy.GetComponent<EnemyLogic>().reset();
         }
     }
     public void setEnemies(bool activityStatus)
@@ -278,7 +279,7 @@ public class GameManager : MonoBehaviour
                 //_speechOut.Speak("you eliminated all enemies! No follow the sound to the goal!");
                 _audioSource.PlayOneShot(enenmiesDefeated);
                 allEnemiesdefeated = true;
-                
+
                 await _lowerHandle.SwitchTo(goal);
                 switchedToGoal = true;
 
@@ -286,25 +287,28 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            print("Player got killed!");
-            _audioSource.PlayOneShot(playerDied);
-            player.SetActive(false);
-            setEnemies(false);
-            gameRunning = false;
-            //await _speechOut.Speak("You got defeated.");
 
-            await ResetRound();
+            StartCoroutine(playerGotFinished());
         }
     }
 
+
+
+    private IEnumerator playerGotFinished()
+    {
+        setEnemies(false);
+        gameRunning = false;
+        _audioSource.PlayOneShot(playerDied);
+        yield return new WaitForSeconds(playerDied.length);
+        player.SetActive(false);
+        ResetRound();
+    }
     public async void OnVictory(GameObject player)
     {
 
         player.SetActive(false);
         setEnemies(false);
         gameRunning = false;
-
-        //await _speechOut.Speak(" Congratulations you have reached the goal.");
 
         level++;
         if (level >= enemyConfigs.Length)

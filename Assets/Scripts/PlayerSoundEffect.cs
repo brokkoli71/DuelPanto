@@ -4,17 +4,16 @@ public class PlayerSoundEffect : MonoBehaviour
 {
     private AudioSource backgroundSource;
     public AudioClip finishSound;
-    public float maxPitch = 1.2f;
-    public float minPitch = 0.8f;
     public GameObject Goal;
     public AudioClip backgroundClip;
     private bool backgroundClipIsActive = false;
 
+    float backgroundVolume = 0.5f;
 
     public void ResetMusic()
     {
         backgroundSource = Goal.GetComponent<AudioSource>();
-        backgroundSource.volume = 0.05f;
+        backgroundSource.volume = backgroundVolume;
         backgroundSource.clip = backgroundClip;
         backgroundClipIsActive = false;
     }
@@ -31,13 +30,13 @@ public class PlayerSoundEffect : MonoBehaviour
     public void pitchBackgroundMusic(float pitchValue)
     {
         //backgroundSource.pitch = pitchValue > 1 ? 1 : pitchValue;
-        backgroundSource.pitch = pitchValue > 1 ? 1 : 0.5f;
+        backgroundSource.pitch = pitchValue;
     }
 
     public void startBackgroundMusic()
     {
         backgroundSource.Play();
-        backgroundSource.volume = 1f;
+        backgroundSource.volume = backgroundVolume;
         backgroundClipIsActive = true;
 
     }
