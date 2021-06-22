@@ -77,7 +77,7 @@ public class shotController : MonoBehaviour
         GameObject hitObject = collision.collider.gameObject;
         if (shotBy.name != hitObject.name)
         {
-            Debug.Log("hit " + hitObject.name);
+            //Debug.Log("hit " + hitObject.name);
             Destroy(gameObject, .0f);
             if (hitObject.name.Contains("EnemyPrefab"))
             {
@@ -87,7 +87,6 @@ public class shotController : MonoBehaviour
             {
                 hitObject.transform.GetComponent<Health>().TakeDamage(damage, shotBy);
                 AudioSource.PlayClipAtPoint(playerShot, this.gameObject.transform.position);
-
             }
             //if (hitObject.name.Contains("Obstacle"))
             //{

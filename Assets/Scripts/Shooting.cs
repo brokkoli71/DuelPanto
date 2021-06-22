@@ -99,7 +99,7 @@ public class Shooting : MonoBehaviour
         shots = rigidshot; //uerberfluessig?
         rigidshot.constraints = RigidbodyConstraints.FreezePositionY;
         rigidshot.velocity = transform.forward * shotSpeed;
-        Debug.Log(gameObject.name + "direction: " + transform.forward);
+        //Debug.Log(gameObject.name + "direction: " + transform.forward);
         projectile.GetComponent<shotController>().shotBy = gameObject;
         if (name.Equals("Player"))
         {

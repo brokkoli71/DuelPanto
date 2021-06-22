@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
         PantoCollider[] colliders = FindObjectsOfType<PantoCollider>();
         foreach (PantoCollider collider in colliders)
         {
-            Debug.Log(collider);
+            //Debug.Log(collider);
             collider.CreateObstacle();
             collider.Enable();
         }
