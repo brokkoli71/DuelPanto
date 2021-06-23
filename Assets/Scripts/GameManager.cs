@@ -15,7 +15,10 @@ public class GameManager : MonoBehaviour
     public GameObject enemyPrefab;
     public GameObject goal;
 
-    private List<GameObject> enemies;
+    public List<GameObject> enemies;
+    public int levels;
+    private int currLevel;
+    public int playerLives;
 
     public EnemyConfig[] enemyConfigs;
     public Transform playerSpawn;
@@ -23,6 +26,9 @@ public class GameManager : MonoBehaviour
     public int level = 0;
     public int trophyScore = 10000;
     public UIManager uiManager;
+    private List<GameObject> obstacleList;
+    private GameObject[] obstacles;
+    private GameObject[] lvlObstacles;
 
     public AudioClip[] enemyDyingClips;
 
@@ -49,6 +55,7 @@ public class GameManager : MonoBehaviour
     private bool enemyChecking = true;
     private int defeatedEnemies = 0;
     public bool allEnemiesdefeated = false;
+
     private readonly Dictionary<string, KeyCode> _commands = new Dictionary<string, KeyCode>() {
         { "yes", KeyCode.Y },
         { "no", KeyCode.N },
@@ -61,18 +68,11 @@ public class GameManager : MonoBehaviour
         player.SetActive(false);
         enemies = new List<GameObject>();
 
-        spawnEnemy(enemySpawn[0].position, enemySpawn[0].rotation);
-        spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
+        // enemies will now be spawned in NextLevel(int level)
 
         _speechIn = new SpeechIn(onRecognized, _commands.Keys.ToArray());
         _speechOut = new SpeechOut();
 
-        //if (level < 0 || level >= enemyConfigs.Length)
-        //{
-        //    Debug.LogWarning($"Level value {level} < 0 or >= enemyConfigs.Length. Resetting to 0");
-
-        //   level = 0;
-        //}
     }
 
     void Start()
@@ -82,6 +82,25 @@ public class GameManager : MonoBehaviour
         _audioSource = player.GetComponent<AudioSource>();
 
         uiManager.UpdateUI(_playerScore, _enemyScore, _gameScore);
+
+        currLevel = 0;
+
+        // create list of all obstacles TODO hopefully a nice way for this exists?
+        GameObject[] allGOs = GameObject.FindObjectsOfType<GameObject>();
+        obstacleList = new List<GameObject>();
+        obstacles = new GameObject[] { };
+        print("printing all obstacles from start()");
+        for(int i = 0; i < allGOs.Length; i++)
+        {
+            GameObject o = allGOs[i];
+            if (o.name.Contains("Obstacle"))
+            {
+                obstacleList.Add(o);
+                print("object: " + o + " Tag: " + o.tag);
+            }
+        }
+        obstacles = obstacleList.ToArray();
+        print("obstacles.length : " + obstacles.Length);
 
         Introduction();
     }
@@ -100,7 +119,8 @@ public class GameManager : MonoBehaviour
 
         //await _speechOut.Speak("Introduction finished, game starts.");
 
-        await ResetRound();
+        //await ResetRound();
+        NextLevel(0);
     }
 
     async Task IntroduceLevel()
@@ -138,12 +158,8 @@ public class GameManager : MonoBehaviour
         _lowerHandle.Free();
 
         //await _speechOut.Speak("Spawning enemy");
-        if (playWithEnemy)
+        if (playWithEnemy && enemies.Count > 0)
         {
-
-            //if (level >= enemyConfigs.Length)
-            //    Debug.LogError($"Level {level} is over number of enemies {enemyConfigs.Length}");
-
             resetEnemies();
             allEnemiesdefeated = false;
             setEnemies(true);
@@ -153,8 +169,6 @@ public class GameManager : MonoBehaviour
 
         _upperHandle.Free();
 
-
-
         player.SetActive(true);
         gameRunning = true;
         player.GetComponent<PlayerLogic>().ResetPlayer();
@@ -163,9 +177,81 @@ public class GameManager : MonoBehaviour
         _levelStartTime = Time.time;
     }
 
+    private async void NextLevel(int level)
+    {
+        print("currLevel when entering NextLevel(): " + currLevel);
+        print("level NextLevel() call: " + level);
+        // max level reached --> gameOver
+        if (level > 4)
+        {
+            await _speechOut.Speak("You completed all levels!");
+            await GameOver();
+        }
+
+        // reset all obstacles; reactivate for each level
+        foreach (GameObject o in obstacles) o.SetActive(false);
+
+        // actually destroy the gameObjects, clearing the list before spawning new ones
+        DestroyEnemies();
+        enemies.Clear();
+
+        switch (level)
+        {
+            case 0:
+                activateTags(new string[] { "Wall" });
+                break;
+
+            case 1:
+                activateTags(new string[] { "Wall", "level1" });
+                break;
+
+            case 2:
+                activateTags(new string[] { "Wall", "level1", "level2" });
+                spawnEnemy(enemySpawn[0].position, enemySpawn[0].rotation);
+                break;
+
+            case 3:
+                activateTags(new string[] { "Wall", "level1", "level2", "level3" });
+                spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
+                break;
+
+            case 4:
+                activateTags(new string[] { "Wall", "level1", "level2", "level3", "level4"});
+                spawnEnemy(enemySpawn[0].position, enemySpawn[0].rotation);
+                spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
+                break;
+
+            default:
+                break;
+
+        }
+        currLevel = level;
+        await ResetRound();
+    }
+
+    private void DestroyEnemies()
+    {
+        foreach (GameObject e in enemies)
+        {
+            Destroy(e);
+        }
+    }
+
+    private void activateTags(String[] s)
+    {
+        for (int i = 0; i < s.Length; i++)
+        {
+            print(s[i]);
+            foreach (GameObject o in obstacles)
+            {
+                if (o.tag == s[i]) o.SetActive(true);
+            }
+        }
+    }
+
     async void FixedUpdate()
     {
-        if (gameRunning && enemyChecking && playWithEnemy && !allEnemiesdefeated)
+        if (gameRunning && enemyChecking && playWithEnemy && enemies.Count > 0 && !allEnemiesdefeated)
         {
             enemyChecking = false;
             Invoke("ResetEnemyChecking", 0.8f);
@@ -178,7 +264,7 @@ public class GameManager : MonoBehaviour
             }
             await _lowerHandle.SwitchTo(closestEnemy, 5f);
         }
-        else if (allEnemiesDefeated && !switchedToGoal)
+        else if (allEnemiesDefeated && !switchedToGoal || enemies.Count == 0 && !switchedToGoal)
         {
             await _lowerHandle.SwitchTo(goal);
             switchedToGoal = true;
@@ -208,6 +294,7 @@ public class GameManager : MonoBehaviour
             _enemy.GetComponent<EnemyLogic>().reset();
         }
     }
+
     public void setEnemies(bool activityStatus)
     {
         foreach (GameObject _enemy in enemies)
@@ -215,6 +302,7 @@ public class GameManager : MonoBehaviour
             _enemy.SetActive(activityStatus);
         }
     }
+
     public void spawnEnemy(Vector3 position, Quaternion rotation)
     {
         GameObject newEnemy = Instantiate(enemyPrefab, position, rotation);
@@ -264,13 +352,9 @@ public class GameManager : MonoBehaviour
         {
             defeatedEnemies++;
             GameObject defeatedEnemie = enemies.Find(x => x.Equals(defeated));
-            //Destroy(defeatedEnemie);
-            //enemies.Remove(defeatedEnemie);
-
 
             AudioSource.PlayClipAtPoint(enemyDyingClips[(int)UnityEngine.Random.Range(0, enemyDyingClips.Length - 1)],
                 defeatedEnemie.transform.position);
-
 
             defeatedEnemie.SetActive(false);
 
@@ -282,17 +366,21 @@ public class GameManager : MonoBehaviour
 
                 await _lowerHandle.SwitchTo(goal);
                 switchedToGoal = true;
-
             }
         }
         else
         {
-
+            if (playerLives <= 1)
+            {
+                setEnemies(false);
+                gameRunning = false;
+                player.SetActive(false);
+                await GameOver();
+            }
+            else playerLives--;
             StartCoroutine(playerGotFinished());
         }
     }
-
-
 
     private IEnumerator playerGotFinished()
     {
@@ -303,25 +391,15 @@ public class GameManager : MonoBehaviour
         player.SetActive(false);
         ResetRound();
     }
+
     public async void OnVictory(GameObject player)
     {
-
         player.SetActive(false);
         setEnemies(false);
         gameRunning = false;
-
         level++;
-        if (level >= enemyConfigs.Length)
-        {
-            await GameOver();
-        }
-        else
-        {
-            await ResetRound();
-        }
-
+        NextLevel((currLevel + 1));
     }
-
 
     /// <summary>
     /// Ends the game.

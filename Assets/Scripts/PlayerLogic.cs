@@ -42,7 +42,6 @@ public class PlayerLogic : MonoBehaviour
         listener.transform.position = gameObject.transform.position;
     }
 
-
     void trackActivity()
     {
         if (!goalReached)
@@ -67,7 +66,6 @@ public class PlayerLogic : MonoBehaviour
 
     void startTracking()
     {
-
         if (gameObject.activeSelf || true)
         {
             position = gameObject.transform.position;
@@ -101,7 +99,7 @@ public class PlayerLogic : MonoBehaviour
     {
         if (other.CompareTag("Goal"))
         {
-            if (panto.GetComponent<GameManager>().allEnemiesdefeated)
+            if (panto.GetComponent<GameManager>().allEnemiesdefeated || panto.GetComponent<GameManager>().enemies.Count == 0)
             {
                 goalReached = true;
                 soundEffects.stopBackgroundMusic();
