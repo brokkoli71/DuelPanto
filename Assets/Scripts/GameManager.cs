@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
 
     public List<GameObject> enemies;
     public int levels;
+    public int startLevel;
     private int currLevel;
     public int playerLives;
 
@@ -90,7 +91,7 @@ public class GameManager : MonoBehaviour
         obstacleList = new List<GameObject>();
         obstacles = new GameObject[] { };
         print("printing all obstacles from start()");
-        for(int i = 0; i < allGOs.Length; i++)
+        for (int i = 0; i < allGOs.Length; i++)
         {
             GameObject o = allGOs[i];
             if (o.name.Contains("Obstacle"))
@@ -120,7 +121,7 @@ public class GameManager : MonoBehaviour
         //await _speechOut.Speak("Introduction finished, game starts.");
 
         //await ResetRound();
-        NextLevel(0);
+        NextLevel(startLevel);
     }
 
     async Task IntroduceLevel()
@@ -192,8 +193,9 @@ public class GameManager : MonoBehaviour
         foreach (GameObject o in obstacles) o.SetActive(false);
 
         // actually destroy the gameObjects, clearing the list before spawning new ones
-        DestroyEnemies();
-        enemies.Clear();
+
+        //DestroyEnemies();
+        //enemies.Clear();
 
         switch (level)
         {
@@ -216,12 +218,12 @@ public class GameManager : MonoBehaviour
 
             case 3:
                 activateTags(new string[] { "Wall", "level1", "level2", "level3" });
-                spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
+                //spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
                 break;
 
             case 4:
-                activateTags(new string[] { "Wall", "level1", "level2", "level3", "level4"});
-                spawnEnemy(enemySpawn[0].position, enemySpawn[0].rotation);
+                activateTags(new string[] { "Wall", "level1", "level2", "level3", "level4" });
+                //spawnEnemy(enemySpawn[0].position, enemySpawn[0].rotation);
                 spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
                 break;
 
@@ -268,7 +270,7 @@ public class GameManager : MonoBehaviour
             }
             await _lowerHandle.SwitchTo(closestEnemy, 5f);
         }
-        else if (allEnemiesDefeated && !switchedToGoal || enemies.Count == 0 && !switchedToGoal)
+        else if (allEnemiesDefeated && !switchedToGoal || enemies.Count == 0 && !switchedToGoal)
         {
             await _lowerHandle.SwitchTo(goal);
             switchedToGoal = true;
@@ -304,13 +306,14 @@ public class GameManager : MonoBehaviour
         foreach (GameObject _enemy in enemies)
         {
             _enemy.SetActive(activityStatus);
+            _enemy.GetComponent<EnemyLogic>().target = player.transform;
         }
     }
 
     public void spawnEnemy(Vector3 position, Quaternion rotation)
     {
         GameObject newEnemy = Instantiate(enemyPrefab, position, rotation);
-        newEnemy.GetComponent<EnemyLogic>().config = enemyConfigs[level];
+        newEnemy.GetComponent<EnemyLogic>().config = enemyConfigs[2]; //level];
         newEnemy.GetComponent<EnemyLogic>().target = player.transform;
         newEnemy.GetComponent<EnemyLogic>().setSpawnLocation(position, rotation);
 
