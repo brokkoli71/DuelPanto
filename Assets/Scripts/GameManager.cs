@@ -198,14 +198,18 @@ public class GameManager : MonoBehaviour
         switch (level)
         {
             case 0:
+                _speechOut.Speak("Follow the sound to the goal.");
                 activateTags(new string[] { "Wall" });
                 break;
 
             case 1:
+                _speechOut.Speak("Now, with obstacles");
                 activateTags(new string[] { "Wall", "level1" });
                 break;
 
             case 2:
+                _speechOut.Speak("Watch out there are enemies! You can hear them");
+                await _speechOut.Speak("Shot them!");
                 activateTags(new string[] { "Wall", "level1", "level2" });
                 spawnEnemy(enemySpawn[0].position, enemySpawn[0].rotation);
                 break;
