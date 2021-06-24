@@ -190,7 +190,17 @@ public class GameManager : MonoBehaviour
         }
 
         // reset all obstacles; reactivate for each level
-        foreach (GameObject o in obstacles) o.SetActive(false);
+        foreach (GameObject o in obstacles)
+        {
+            o.SetActive(false);
+            try
+            {
+                o.GetComponent<PantoBoxCollider>().Disable();
+            }catch(Exception e)
+            {
+
+            }
+        }
 
         // actually destroy the gameObjects, clearing the list before spawning new ones
 
@@ -250,7 +260,18 @@ public class GameManager : MonoBehaviour
             print(s[i]);
             foreach (GameObject o in obstacles)
             {
-                if (o.tag == s[i]) o.SetActive(true);
+                if (o.tag == s[i])
+                {
+                    o.SetActive(true);
+                    try
+                    {
+                        o.GetComponent<PantoBoxCollider>().Enable();
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
             }
         }
     }
