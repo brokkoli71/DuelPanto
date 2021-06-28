@@ -18,7 +18,7 @@ public class itForceField : DualPantoFramework.ForceField
 
     protected override float GetCurrentStrength(Collider other)
     {
-        return Vector3.Distance(gameObject.transform.position, lower.transform.position) * 10;
+        return Vector3.Distance(gameObject.transform.position, lower.transform.position) * 30;
 
     }
 
