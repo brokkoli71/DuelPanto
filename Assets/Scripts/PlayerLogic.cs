@@ -86,7 +86,6 @@ public class PlayerLogic : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("positeion"+transform.position);
         if (gameObject.activeSelf && !soundEffects.isBackgroundMusicActive())
         {
             soundEffects.startBackgroundMusic();
