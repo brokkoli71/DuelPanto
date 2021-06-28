@@ -284,7 +284,7 @@ public class GameManager : MonoBehaviour
         }
         else if (allEnemiesDefeated && !switchedToGoal || enemies.Count == 0 && !switchedToGoal)
         {
-            await _lowerHandle.SwitchTo(goal);
+            //await _lowerHandle.SwitchTo(goal);
             switchedToGoal = true;
         }
     }

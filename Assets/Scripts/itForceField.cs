@@ -9,6 +9,8 @@ public class itForceField : DualPantoFramework.ForceField
     protected override Vector3 GetCurrentForce(Collider other)
     {
         //Debug.DrawLine(gameObject.transform.position, gameObject.transform.position + Vector3.Normalize(gameObject.transform.position - lower.transform.position));
+                Debug.Log("test");
+
         Debug.Log(Vector3.Normalize(lower.transform.position - upper.transform.position));
         return Vector3.Normalize(lower.transform.position - upper.transform.position);
 
@@ -16,7 +18,7 @@ public class itForceField : DualPantoFramework.ForceField
 
     protected override float GetCurrentStrength(Collider other)
     {
-        return Vector3.Distance(gameObject.transform.position, lower.transform.position);
+        return Vector3.Distance(gameObject.transform.position, lower.transform.position) * 10;
 
     }
 
