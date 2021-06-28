@@ -193,13 +193,10 @@ public class GameManager : MonoBehaviour
         foreach (GameObject o in obstacles)
         {
             o.SetActive(false);
-            try
-            {
-                o.GetComponent<PantoBoxCollider>().Disable();
-            }catch(Exception e)
-            {
+            Debug.Log("disabling " + o.ToString());
+            //o.GetComponent<PantoBoxCollider>().Disable();
 
-            }
+
         }
 
         // actually destroy the gameObjects, clearing the list before spawning new ones
@@ -263,14 +260,8 @@ public class GameManager : MonoBehaviour
                 if (o.tag == s[i])
                 {
                     o.SetActive(true);
-                    try
-                    {
-                        o.GetComponent<PantoBoxCollider>().Enable();
-                    }
-                    catch (Exception e)
-                    {
-
-                    }
+                    //o.GetComponent<PantoBoxCollider>().Enable();
+                   
                 }
             }
         }
