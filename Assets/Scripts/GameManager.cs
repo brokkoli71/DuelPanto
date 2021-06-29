@@ -261,16 +261,19 @@ public class GameManager : MonoBehaviour
                 _speechOut.Speak("Watch out there are enemies! You can hear them");
                 await _speechOut.Speak("Shot them!");
                 activateTags(new string[] { "Wall", "level1", "level2" });
+                RegisterCollidersByTag(new string[] { "level2" });
                 spawnEnemy(enemySpawn[0].position, enemySpawn[0].rotation);
                 break;
 
             case 3:
                 activateTags(new string[] { "Wall", "level1", "level2", "level3" });
+                RegisterCollidersByTag(new string[] { "level3" });
                 //spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
                 break;
 
             case 4:
                 activateTags(new string[] { "Wall", "level1", "level2", "level3", "level4" });
+                RegisterCollidersByTag(new string[] { "level4" });
                 //spawnEnemy(enemySpawn[0].position, enemySpawn[0].rotation);
                 spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
                 break;
