@@ -54,7 +54,6 @@ public class GameManager : MonoBehaviour
     private float _levelStartTime = 0;
     public bool gameRunning = false;
     public bool playWithEnemy = true;
-    public bool allEnemiesDefeated = false;
     private bool switchedToGoal = false;
 
     private bool enemyChecking = true;
@@ -208,14 +207,14 @@ public class GameManager : MonoBehaviour
         if (playWithEnemy && enemies.Count > 0)
         {
             resetEnemies();
-            allEnemiesdefeated = false;
             setEnemies(true);
             oldEnemy = enemies[0];
             defeatedEnemies = 0;
         }
-
+        
+        allEnemiesdefeated = enemies.Count > 0? false : true;
         _upperHandle.Free();
-
+        switchedToGoal = false;
         player.SetActive(true);
         gameRunning = true;
         player.GetComponent<PlayerLogic>().ResetPlayer();
@@ -247,14 +246,15 @@ public class GameManager : MonoBehaviour
         switch (level)
         {
             case 0:
-                _speechOut.Speak("Follow the sound to the goal.");
+                await _speechOut.Speak("Follow the sound to the goal.");
                 activateTags(new string[] { "Wall" });
+                
                 goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
                 break;
 
             case 1:
                 //_speechOut.Speak("Now, with obstacles");
-                _speechOut.Speak("Explore the obstacles");
+                await _speechOut.Speak("Explore the obstacles");
                 activateTags(new string[] { "Wall", "level1", "level2", "level3" });
 
                 // adding level-colliders
@@ -266,7 +266,9 @@ public class GameManager : MonoBehaviour
                 break;
 
             case 2:
-                _speechOut.Speak("Watch out there are enemies! You can hear them");
+                await _speechOut.Speak("Watch out there are enemies!"); 
+                await _speechOut.Speak("The IT-Handle shows the nearest enemy");
+                await _speechOut.Speak("Also you can hear them");
                 await _speechOut.Speak("Shot them!");
                 activateTags(new string[] { "Wall", "level1", "level2", "level3" });
 
@@ -310,7 +312,7 @@ public class GameManager : MonoBehaviour
 
     private void SpawnsEnemies(Transform[] spawns)
     {
-        ;
+        
         for (int i = 0; i < spawns.Length; i++)
         {
             if (i > (enemies.Count - 1))
@@ -358,11 +360,11 @@ public class GameManager : MonoBehaviour
                 _audioSource.PlayOneShot(switchingEnemy);
                 oldEnemy = closestEnemy;
             }
-            //await _lowerHandle.SwitchTo(closestEnemy, 5f);
+            await _lowerHandle.SwitchTo(closestEnemy, 5f);
         }
-        else if (allEnemiesDefeated && !switchedToGoal || enemies.Count == 0 && !switchedToGoal)
+        else if (allEnemiesdefeated && !switchedToGoal)
         {
-            //await _lowerHandle.SwitchTo(goal);
+            await _lowerHandle.SwitchTo(goal);
             switchedToGoal = true;
         }
     }
@@ -458,11 +460,13 @@ public class GameManager : MonoBehaviour
             if (enemies.Count == defeatedEnemies)
             {
                 //_speechOut.Speak("you eliminated all enemies! No follow the sound to the goal!");
-                _audioSource.PlayOneShot(enenmiesDefeated);
                 allEnemiesdefeated = true;
+                _audioSource.PlayOneShot(enenmiesDefeated);
+                
+                if  (!switchedToGoal){           
+                    await _lowerHandle.SwitchTo(goal);
+                    switchedToGoal = true;}
 
-                //await _lowerHandle.SwitchTo(goal);
-                switchedToGoal = true;
             }
         }
         else
