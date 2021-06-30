@@ -253,7 +253,8 @@ public class GameManager : MonoBehaviour
                 break;
 
             case 1:
-                _speechOut.Speak("Now, with obstacles");
+                //_speechOut.Speak("Now, with obstacles");
+                _speechOut.Speak("Explore the obstacles");
                 activateTags(new string[] { "Wall", "level1", "level2", "level3" });
 
                 // adding level-colliders
