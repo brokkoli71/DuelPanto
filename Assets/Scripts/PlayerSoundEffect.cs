@@ -8,7 +8,7 @@ public class PlayerSoundEffect : MonoBehaviour
     public AudioClip backgroundClip;
     private bool backgroundClipIsActive = false;
 
-    float backgroundVolume = 0.5f;
+    float backgroundVolume = 0.2f;
 
     public void ResetMusic()
     {

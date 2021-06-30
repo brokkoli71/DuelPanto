@@ -239,7 +239,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 130
+  Priority: 256
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -377,11 +377,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fa69b5265a9c459287c4120917fab09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRayDistance: 100
-  hitLayers:
-    serializedVersion: 2
-    m_Bits: 320
-  damage: 3
   isUpper: 0
   fireSpreadAngle: 3
   enemyTransform: {fileID: 0}
@@ -405,8 +400,6 @@ MonoBehaviour:
     m_Bits: 320
   aimbotDistance: 10
   seekingDistance: 3
-  enemyTimeFreezedSpeed: 0.2
-  slowFactor: 0.05
   config: {fileID: 11400000, guid: cc985994c53e84f6fae197a5aed96f0e, type: 2}
   foundPlayerClips:
   - {fileID: 8300000, guid: 98e302a3d92e31046a2dbc87ce20d5db, type: 3}
@@ -418,3 +411,4 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5314fc1eede740040a0b2bf16760b815, type: 3}
   - {fileID: 8300000, guid: 41d9cf2c0dbf2dc49b517145579b9a32, type: 3}
   - {fileID: 8300000, guid: b34a337ba6733fb4a9c9435a9e64fb5b, type: 3}
+  foundPlayer: 0

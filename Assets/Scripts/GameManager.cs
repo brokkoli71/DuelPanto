@@ -23,7 +23,9 @@ public class GameManager : MonoBehaviour
 
     public EnemyConfig[] enemyConfigs;
     public Transform playerSpawn;
-    public Transform[] enemySpawn;
+    public Transform[] enemySpawnLvl2;
+    public Transform[] enemySpawnLvl3;
+    public Transform[] enemySpawnLvl4;
     public int level = 0;
     public int trophyScore = 10000;
     public UIManager uiManager;
@@ -152,14 +154,12 @@ public class GameManager : MonoBehaviour
 
     async Task IntroduceLevel()
     {
-        await _speechOut.Speak("There are two obstacles.");
-        _lowerHandle.Free(); // we free this here, so that level can introduce "objects of interest"
-        Level level = GetComponent<Level>();
-        await level.PlayIntroduction();
+        await _speechOut.Speak("Welcome to Superhot!");
+        await _speechOut.Speak("Please put a keyboard on the floor.");
+        await _speechOut.Speak("If you press SPACE, you can shoot.");
+        await _speechOut.Speak("We recommend you to use your toe for this");
 
-        _upperHandle.Free();
-        await _speechOut.Speak("Feel for yourself. Say yes or done when you're ready.");
-        await _speechIn.Listen(new Dictionary<string, KeyCode>() { { "yes", KeyCode.Y }, { "done", KeyCode.D } });
+        await _speechOut.Speak("Thats all! We wish you good luck.");
     }
 
     void RegisterWallColliders()
@@ -178,7 +178,7 @@ public class GameManager : MonoBehaviour
     // only call with tags that haven't been added before
     void RegisterCollidersByTag(String[] s)
     {
-        foreach(String _s in s)
+        foreach (String _s in s)
         {
             Debug.Log("registering Tag " + _s);
             foreach (PantoCollider c in allColliders)
@@ -241,6 +241,7 @@ public class GameManager : MonoBehaviour
             o.SetActive(false);
             Debug.Log("disabling " + o.ToString());
         }
+        playerSpawn.position = goal.transform.position;
 
         //level = 1;
         switch (level)
@@ -248,49 +249,81 @@ public class GameManager : MonoBehaviour
             case 0:
                 _speechOut.Speak("Follow the sound to the goal.");
                 activateTags(new string[] { "Wall" });
+                goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
                 break;
 
             case 1:
                 _speechOut.Speak("Now, with obstacles");
-                activateTags(new string[] { "Wall", "level1" });
-                // adding level1-colliders
+                activateTags(new string[] { "Wall", "level1", "level2", "level3" });
+
+                // adding level-colliders
                 RegisterCollidersByTag(new string[] { "level1" });
+                RegisterCollidersByTag(new string[] { "level2" });
+                RegisterCollidersByTag(new string[] { "level3" });
+                goal.transform.position = new Vector3(0.0f, 0.0f, -3.0f);
+
                 break;
 
             case 2:
                 _speechOut.Speak("Watch out there are enemies! You can hear them");
                 await _speechOut.Speak("Shot them!");
-                activateTags(new string[] { "Wall", "level1", "level2" });
-                RegisterCollidersByTag(new string[] { "level2" });
-                spawnEnemy(enemySpawn[0].position, enemySpawn[0].rotation);
+                activateTags(new string[] { "Wall", "level1", "level2", "level3" });
+
+
+                SpawnsEnemies(enemySpawnLvl2);
+                goal.transform.position = new Vector3(2.0f, 0.0f, -14.0f);
+
                 break;
 
             case 3:
-                activateTags(new string[] { "Wall", "level1", "level2", "level3" });
-                RegisterCollidersByTag(new string[] { "level3" });
                 //spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
+                activateTags(new string[] { "Wall", "level1", "level2", "level3" });
+
+
+                SpawnsEnemies(enemySpawnLvl3);
+
+                goal.transform.position = new Vector3(2.0f, 0.0f, -5.0f);
                 break;
 
             case 4:
                 activateTags(new string[] { "Wall", "level1", "level2", "level3", "level4" });
                 RegisterCollidersByTag(new string[] { "level4" });
-                //spawnEnemy(enemySpawn[0].position, enemySpawn[0].rotation);
-                spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
+
+
+                SpawnsEnemies(enemySpawnLvl4);
+
+                goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
+
                 break;
 
             default:
                 break;
 
         }
+
+
+
         currLevel = level;
         await ResetRound();
     }
 
-    private void DestroyEnemies()
+    private void SpawnsEnemies(Transform[] spawns)
     {
-        foreach (GameObject e in enemies)
+        ;
+        for (int i = 0; i < spawns.Length; i++)
         {
-            Destroy(e);
+            if (i > (enemies.Count - 1))
+            {
+                spawnEnemy(spawns[i].position, spawns[i].rotation);
+            }
+            else
+            {
+                enemies[i].GetComponent<EnemyLogic>().
+                                                   setSpawnLocation(
+                                                       spawns[i].position,
+                                                       spawns[i].rotation);
+
+            }
         }
     }
 
@@ -305,7 +338,7 @@ public class GameManager : MonoBehaviour
                 {
                     o.SetActive(true);
                     //o.GetComponent<PantoBoxCollider>().Enable();
-                   
+
                 }
             }
         }
@@ -427,7 +460,7 @@ public class GameManager : MonoBehaviour
                 _audioSource.PlayOneShot(enenmiesDefeated);
                 allEnemiesdefeated = true;
 
-                await _lowerHandle.SwitchTo(goal);
+                //await _lowerHandle.SwitchTo(goal);
                 switchedToGoal = true;
             }
         }
@@ -471,19 +504,6 @@ public class GameManager : MonoBehaviour
     async Task GameOver()
     {
         await _speechOut.Speak("Congratulations.");
-
-        if (!GetComponent<DualPantoSync>().debug)
-        {
-            await _speechOut.Speak($"You achieved a score of {_gameScore}.");
-            await _speechOut.Speak("Please enter your name to submit your highscore.");
-
-            await uiManager.GameOver(_gameScore, (int)_totalTime, trophyScore);
-        }
-        else
-        {
-            await _speechOut.Speak($"You achieved a score of {_gameScore} in debug mode.");
-        }
-
         await _speechOut.Speak("Thanks for playing DuelPanto. Say quit when you're done.");
         await _speechIn.Listen(new Dictionary<string, KeyCode>() { { "quit", KeyCode.Escape } });
 

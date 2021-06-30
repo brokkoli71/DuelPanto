@@ -12,9 +12,6 @@ public class PlayerLogic : MonoBehaviour
     private PantoHandle upperHandle;
 
     public GameObject listener;
-
-    public GameObject levelVoice;
-
     public bool goalReached = false;
     private PlayerSoundEffect soundEffects;
 
