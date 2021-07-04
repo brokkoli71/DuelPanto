@@ -5,7 +5,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using System.Threading;
 using DualPantoFramework;
+
 public class GameManager : MonoBehaviour
 {
 
@@ -154,7 +156,7 @@ public class GameManager : MonoBehaviour
 
     async Task IntroduceLevel()
     {
-        await _speechOut.Speak("Welcome to Superhot!");
+        await _speechOut.Speak("Welcome to Super-Hot!");
         await _speechOut.Speak("Please put a keyboard on the floor.");
         await _speechOut.Speak("If you press SPACE, you can shoot.");
         await _speechOut.Speak("We recommend you to use your toe for this");
@@ -164,8 +166,6 @@ public class GameManager : MonoBehaviour
 
     void RegisterWallColliders()
     {
-        // PantoCollider[] colliders = FindObjectsOfType<PantoCollider>();
-
         // register just level-border colliders at beginning
         foreach (PantoCollider collider in wallColliders)
         {
@@ -188,6 +188,24 @@ public class GameManager : MonoBehaviour
                     c.CreateObstacle();
                     c.Enable();
                     Debug.Log("registered collider: " + c);
+                }      
+            }
+        }
+    }
+
+    // only call with tags that have been added before
+    void RemoveCollidersByTag(String[] s)
+    {
+        foreach (String _s in s)
+        {
+            Debug.Log("removing Tag " + _s);
+            foreach (PantoCollider c in allColliders)
+            {
+                if (c.CompareTag(_s))
+                {
+                    c.Disable();
+                    c.Remove();
+                    Debug.Log("removed collider: " + c);
                 }
             }
         }
@@ -253,23 +271,22 @@ public class GameManager : MonoBehaviour
                 break;
 
             case 1:
-                //_speechOut.Speak("Now, with obstacles");
                 _speechOut.Speak("Explore the obstacles");
-                activateTags(new string[] { "Wall", "level1", "level2", "level3" });
+                activateTags(new string[] { "Wall", "level1" }); 
 
                 // adding level-colliders
-                RegisterCollidersByTag(new string[] { "level1" });
-                RegisterCollidersByTag(new string[] { "level2" });
-                RegisterCollidersByTag(new string[] { "level3" });
+                RegisterCollidersByTag(new string[] { "level1"});
+
                 goal.transform.position = new Vector3(0.0f, 0.0f, -3.0f);
 
                 break;
 
             case 2:
-                _speechOut.Speak("Watch out there are enemies! You can hear them");
-                await _speechOut.Speak("Shot them!");
-                activateTags(new string[] { "Wall", "level1", "level2", "level3" });
+                await _speechOut.Speak("Watch out there are enemies! You can hear them");
+                await _speechOut.Speak("Shoot them!");
+                activateTags(new string[] { "Wall", "level1", "level2" });
 
+                RegisterCollidersByTag(new string[] { "level2" });
 
                 SpawnsEnemies(enemySpawnLvl2);
                 goal.transform.position = new Vector3(2.0f, 0.0f, -14.0f);
@@ -280,19 +297,21 @@ public class GameManager : MonoBehaviour
                 //spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
                 activateTags(new string[] { "Wall", "level1", "level2", "level3" });
 
+                RegisterCollidersByTag(new string[] { "level3" })
 
                 SpawnsEnemies(enemySpawnLvl3);
-
                 goal.transform.position = new Vector3(2.0f, 0.0f, -5.0f);
+
                 break;
 
             case 4:
                 activateTags(new string[] { "Wall", "level1", "level2", "level3", "level4" });
-                RegisterCollidersByTag(new string[] { "level4" });
 
+                Thread.Sleep(200);
+                RegisterCollidersByTag(new string[] { "level4" });
+                Thread.Sleep(200);
 
                 SpawnsEnemies(enemySpawnLvl4);
-
                 goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
 
                 break;
