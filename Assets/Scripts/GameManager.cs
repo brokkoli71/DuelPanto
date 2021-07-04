@@ -121,7 +121,6 @@ public class GameManager : MonoBehaviour
                     allCollidersList.Add(o.GetComponent<PantoCollider>());
                 }
             }
-
         }
         obstacles = obstacleList.ToArray();
         obstacleColliders = obstacleColliderList.ToArray();
@@ -144,7 +143,6 @@ public class GameManager : MonoBehaviour
 
         if (introduceGame)
         {
-            //await IntroducePlayers();
             await IntroduceLevel();
         }
 
@@ -259,23 +257,27 @@ public class GameManager : MonoBehaviour
             o.SetActive(false);
             Debug.Log("disabling " + o.ToString());
         }
-        playerSpawn.position = goal.transform.position;
+        //playerSpawn.position = goal.transform.position;
 
         //level = 1;
         switch (level)
         {
             case 0:
                 _speechOut.Speak("Follow the sound to the goal.");
+                //activateTags(new string[] { "Wall" });
                 activateTags(new string[] { "Wall" });
+                
                 goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
                 break;
 
             case 1:
+                await _upperHandle.MoveToPosition(new Vector3(0, 0, -3));
+                await _upperHandle.MoveToPosition(new Vector3(0, 0, 0));
+                //await _upperHandle.MoveToPosition(playerSpawn.position);
                 _speechOut.Speak("Explore the obstacles");
-                activateTags(new string[] { "Wall", "level1" }); 
-
-                // adding level-colliders
-                RegisterCollidersByTag(new string[] { "level1"});
+                activateTags(new string[] { "Wall", "level1", "level2" });
+                Thread.Sleep(200);
+                RegisterCollidersByTag(new string[] { "level1", "level2" });
 
                 goal.transform.position = new Vector3(0.0f, 0.0f, -3.0f);
 
@@ -297,7 +299,7 @@ public class GameManager : MonoBehaviour
                 //spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
                 activateTags(new string[] { "Wall", "level1", "level2", "level3" });
 
-                RegisterCollidersByTag(new string[] { "level3" })
+                RegisterCollidersByTag(new string[] { "level3" });
 
                 SpawnsEnemies(enemySpawnLvl3);
                 goal.transform.position = new Vector3(2.0f, 0.0f, -5.0f);
@@ -320,9 +322,7 @@ public class GameManager : MonoBehaviour
                 break;
 
         }
-
-
-
+        await _upperHandle.MoveToPosition(playerSpawn.position);
         currLevel = level;
         await ResetRound();
     }
