@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour
     {
         //await _speechOut.Speak("Welcome to Duel Panto");
         //await Task.Delay(1000);
-        RegisterWallColliders();
+        //RegisterWallColliders();
 
         if (introduceGame)
         {
@@ -257,23 +257,17 @@ public class GameManager : MonoBehaviour
             o.SetActive(false);
             Debug.Log("disabling " + o.ToString());
         }
-        //playerSpawn.position = goal.transform.position;
-
-        //level = 1;
+        
         switch (level)
         {
             case 0:
                 _speechOut.Speak("Follow the sound to the goal.");
-                //activateTags(new string[] { "Wall" });
-                activateTags(new string[] { "Wall" });
-                
+                activateTags(new string[] { "Wall", "level1", "level2", "level3" });
+                RegisterCollidersByTag(new string[] { "level1", "level2", "level3" });
                 goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
                 break;
 
             case 1:
-                await _upperHandle.MoveToPosition(new Vector3(0, 0, -3));
-                await _upperHandle.MoveToPosition(new Vector3(0, 0, 0));
-                //await _upperHandle.MoveToPosition(playerSpawn.position);
                 _speechOut.Speak("Explore the obstacles");
                 activateTags(new string[] { "Wall", "level1", "level2" });
                 Thread.Sleep(200);
