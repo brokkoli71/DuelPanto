@@ -163,6 +163,150 @@ public class GameManager : MonoBehaviour
         _levelStartTime = Time.time;
     }
 
+<<<<<<< Updated upstream
+=======
+    private async void NextLevel(int level)
+    {
+        print("currLevel when entering NextLevel(): " + currLevel);
+        print("level NextLevel() call: " + level);
+        // max level reached --> gameOver
+        if (level > 4)
+        {
+           
+            await GameOver();
+        }
+
+        // reset all obstacles; reactivate for each level
+        foreach (GameObject o in obstacles)
+        {
+            o.SetActive(false);
+            Debug.Log("disabling " + o.ToString());
+        }
+        playerSpawn.position = goal.transform.position;
+
+        //level = 1;
+        switch (level)
+        {
+            case 0:
+                playLevelDescription();
+                activateTags(new string[] { "Wall" });
+                     SpawnsEnemies(enemySpawnLvl2);
+                goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
+                break;
+
+            case 1:
+                activateTags(new string[] { "Wall", "level1", "level2", "level3" });
+
+                // adding level-colliders
+                RegisterCollidersByTag(new string[] { "level1" });
+                RegisterCollidersByTag(new string[] { "level2" });
+                RegisterCollidersByTag(new string[] { "level3" });
+                goal.transform.position = new Vector3(0.0f, 0.0f, -3.0f);
+
+                break;
+
+            case 2:
+                activateTags(new string[] { "Wall", "level1", "level2", "level3" });
+
+
+                SpawnsEnemies(enemySpawnLvl2);
+                goal.transform.position = new Vector3(2.0f, 0.0f, -14.0f);
+
+                break;
+
+            case 3:
+                //spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
+                activateTags(new string[] { "Wall", "level1", "level2", "level3" });
+
+
+                SpawnsEnemies(enemySpawnLvl3);
+
+                goal.transform.position = new Vector3(2.0f, 0.0f, -5.0f);
+                break;
+
+            case 4:
+                activateTags(new string[] { "Wall", "level1", "level2", "level3", "level4" });
+                RegisterCollidersByTag(new string[] { "level4" });
+
+
+                SpawnsEnemies(enemySpawnLvl4);
+
+                goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
+
+                break;
+
+            default:
+                break;
+
+        }
+        await ResetRound();
+    }
+
+    async private void playLevelDescription(){
+        switch (currLevel)
+        {
+            case 0:
+                await _speechOut.Speak("Follow the sound to the goal.");
+                break;
+            case 1:
+                await _speechOut.Speak("Explore the obstacles");
+                break;
+            case 2:
+                await _speechOut.Speak("Watch out there are enemies!"); 
+                await _speechOut.Speak("The IT-Handle shows the nearest enemy");
+                await _speechOut.Speak("Also you can hear them");
+                await _speechOut.Speak("Shot them!");
+                break;
+            case 3:
+                break;
+
+            case 4:
+                break;
+                
+            default:
+                await _speechOut.Speak("You completed all levels!");
+                break;
+        }
+    }
+
+    private void SpawnsEnemies(Transform[] spawns)
+    {
+        
+        for (int i = 0; i < spawns.Length; i++)
+        {
+            if (i > (enemies.Count - 1))
+            {
+                spawnEnemy(spawns[i].position, spawns[i].rotation);
+            }
+            else
+            {
+                enemies[i].GetComponent<EnemyLogic>().
+                                                   setSpawnLocation(
+                                                       spawns[i].position,
+                                                       spawns[i].rotation);
+
+            }
+        }
+    }
+
+    private void activateTags(String[] s)
+    {
+        for (int i = 0; i < s.Length; i++)
+        {
+            print(s[i]);
+            foreach (GameObject o in obstacles)
+            {
+                if (o.tag == s[i])
+                {
+                    o.SetActive(true);
+                    //o.GetComponent<PantoBoxCollider>().Enable();
+
+                }
+            }
+        }
+    }
+
+>>>>>>> Stashed changes
     async void FixedUpdate()
     {
         if (gameRunning && enemyChecking && playWithEnemy && !allEnemiesdefeated)
@@ -288,6 +432,19 @@ public class GameManager : MonoBehaviour
         else
         {
 
+<<<<<<< Updated upstream
+=======
+        
+            setEnemies(false);
+            gameRunning = false;
+            if (playerLives <= 1)
+            {
+                await GameOver();
+            }
+            else playerLives--;
+
+
+>>>>>>> Stashed changes
             StartCoroutine(playerGotFinished());
         }
     }
@@ -296,15 +453,18 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator playerGotFinished()
     {
-        setEnemies(false);
-        gameRunning = false;
         _audioSource.PlayOneShot(playerDied);
-        yield return new WaitForSeconds(playerDied.length);
+        yield return new WaitForSeconds(playerDied.length);       
         player.SetActive(false);
+        player.GetComponent<PlayerSoundEffect>().stopBackgroundMusic();
+        player.GetComponent<PlayerSoundEffect>().playGoalReachedClip();
+        yield return new WaitForSeconds(2);
+       
         ResetRound();
     }
     public async void OnVictory(GameObject player)
     {
+<<<<<<< Updated upstream
 
         player.SetActive(false);
         setEnemies(false);
@@ -323,6 +483,29 @@ public class GameManager : MonoBehaviour
     }
 
 
+=======
+        //level++;
+        StartCoroutine(playerReachedGoal());
+        player.SetActive(false);
+        setEnemies(false);
+        gameRunning = false;
+        
+    }
+
+    private IEnumerator playerReachedGoal()
+    {
+        currLevel +=1;
+        player.GetComponent<PlayerSoundEffect>().playGoalReachedClip();
+        yield return new WaitForSeconds(1);
+        player.GetComponent<PlayerSoundEffect>().playFinisherClip();
+        yield return new WaitForSeconds(1);
+        playLevelDescription();
+         yield return new WaitForSeconds(4);
+        player.GetComponent<PlayerSoundEffect>().playGoalReachedClip();
+        yield return new WaitForSeconds(2);
+        NextLevel((currLevel));
+    }
+>>>>>>> Stashed changes
     /// <summary>
     /// Ends the game.
     /// </summary>

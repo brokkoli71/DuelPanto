@@ -3630,9 +3630,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50678e62210fb9c4ba160f22e7a9f0f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  finishSound: {fileID: 8300000, guid: 41d324e286bd51848a001516e3f76753, type: 3}
+  goalReachedSound: {fileID: 8300000, guid: 16a65e781b6d6c040a0a9907302eea01, type: 3}
+  finishSound: {fileID: 8300000, guid: a154560381ff6594590e5b7fd026dc81, type: 3}
   Goal: {fileID: 1005532776}
-  backgroundClip: {fileID: 8300000, guid: d1ba7b350616a0c4eb0881f0942041a1, type: 3}
+  backgroundClip: {fileID: 8300000, guid: ced74770088704440953204f06bf4953, type: 3}
 --- !u!1 &616187060
 GameObject:
   m_ObjectHideFlags: 0
@@ -4837,6 +4838,7 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< Updated upstream
   m_GameObject: {fileID: 956311400}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -4869,6 +4871,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 2ae922c7d8b784fc9aac6e923c5a88ab, type: 3}
       propertyPath: m_LocalPosition.x
+=======
+  m_GameObject: {fileID: 1005532776}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: ced74770088704440953204f06bf4953, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.5
+  m_Pitch: 0.5
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 0.5
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+>>>>>>> Stashed changes
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 2ae922c7d8b784fc9aac6e923c5a88ab, type: 3}
@@ -10342,7 +10381,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 199081147454446092, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: orthographic size
+<<<<<<< Updated upstream
       value: 12.779487
+=======
+      value: 11.909562
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 199081147454446092, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: m_CullingMask.m_Bits

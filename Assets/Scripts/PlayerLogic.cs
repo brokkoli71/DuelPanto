@@ -105,7 +105,6 @@ public class PlayerLogic : MonoBehaviour
             {
                 goalReached = true;
                 soundEffects.stopBackgroundMusic();
-                soundEffects.playFinisherClip();
                 notifyFinished.Invoke(gameObject);
             }
         }
