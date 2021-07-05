@@ -4,11 +4,13 @@ public class PlayerSoundEffect : MonoBehaviour
 {
     private AudioSource backgroundSource;
     public AudioClip finishSound;
+
+    public AudioClip goalReachedSound;
     public GameObject Goal;
     public AudioClip backgroundClip;
     private bool backgroundClipIsActive = false;
 
-    float backgroundVolume = 0.2f;
+    float backgroundVolume = 0.5f;
 
     public void ResetMusic()
     {
@@ -20,11 +22,20 @@ public class PlayerSoundEffect : MonoBehaviour
 
     public void playFinisherClip()
     {
-        backgroundSource.volume = 0.8f;
         backgroundSource.clip = finishSound;
+        backgroundSource.volume = 0.6f;
         backgroundSource.pitch = 1;
         backgroundSource.Play();
     }
+
+    public void playGoalReachedClip()
+    {
+        backgroundSource.volume = 0.8f;
+        backgroundSource.pitch = 1;
+        backgroundSource.PlayOneShot(goalReachedSound);
+    }
+
+
 
 
     public void pitchBackgroundMusic(float pitchValue)

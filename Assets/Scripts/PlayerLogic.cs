@@ -96,11 +96,10 @@ public class PlayerLogic : MonoBehaviour
     {
         if (other.CompareTag("Goal"))
         {
-            if (panto.GetComponent<GameManager>().allEnemiesdefeated || panto.GetComponent<GameManager>().enemies.Count == 0)
+            if (panto.GetComponent<GameManager>().allEnemiesdefeated)
             {
                 goalReached = true;
                 soundEffects.stopBackgroundMusic();
-                soundEffects.playFinisherClip();
                 notifyFinished.Invoke(gameObject);
             }
         }

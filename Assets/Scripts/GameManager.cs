@@ -211,8 +211,8 @@ public class GameManager : MonoBehaviour
             oldEnemy = enemies[0];
             defeatedEnemies = 0;
         }
-        
-        allEnemiesdefeated = enemies.Count > 0? false : true;
+
+        allEnemiesdefeated = enemies.Count > 0 ? false : true;
         _upperHandle.Free();
         switchedToGoal = false;
         player.SetActive(true);
@@ -230,7 +230,7 @@ public class GameManager : MonoBehaviour
         // max level reached --> gameOver
         if (level > 4)
         {
-            await _speechOut.Speak("You completed all levels!");
+
             await GameOver();
         }
 
@@ -246,15 +246,13 @@ public class GameManager : MonoBehaviour
         switch (level)
         {
             case 0:
-                await _speechOut.Speak("Follow the sound to the goal.");
+                playLevelDescription();
                 activateTags(new string[] { "Wall" });
-                
+                SpawnsEnemies(enemySpawnLvl2);
                 goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
                 break;
 
             case 1:
-                //_speechOut.Speak("Now, with obstacles");
-                await _speechOut.Speak("Explore the obstacles");
                 activateTags(new string[] { "Wall", "level1", "level2", "level3" });
 
                 // adding level-colliders
@@ -266,10 +264,6 @@ public class GameManager : MonoBehaviour
                 break;
 
             case 2:
-                await _speechOut.Speak("Watch out there are enemies!"); 
-                await _speechOut.Speak("The IT-Handle shows the nearest enemy");
-                await _speechOut.Speak("Also you can hear them");
-                await _speechOut.Speak("Shot them!");
                 activateTags(new string[] { "Wall", "level1", "level2", "level3" });
 
 
@@ -303,16 +297,38 @@ public class GameManager : MonoBehaviour
                 break;
 
         }
-
-
-
-        currLevel = level;
         await ResetRound();
     }
+    async private void playLevelDescription()
+    {
+        switch (currLevel)
+        {
+            case 0:
+                await _speechOut.Speak("Follow the sound to the goal.");
+                break;
+            case 1:
+                await _speechOut.Speak("Explore the obstacles");
+                break;
+            case 2:
+                await _speechOut.Speak("Watch out there are enemies!");
+                await _speechOut.Speak("The IT-Handle shows the nearest enemy");
+                await _speechOut.Speak("Also you can hear them");
+                await _speechOut.Speak("Shot them!");
+                break;
+            case 3:
+                break;
 
+            case 4:
+                break;
+
+            default:
+                await _speechOut.Speak("You completed all levels!");
+                break;
+        }
+    }
     private void SpawnsEnemies(Transform[] spawns)
     {
-        
+
         for (int i = 0; i < spawns.Length; i++)
         {
             if (i > (enemies.Count - 1))
@@ -451,55 +467,77 @@ public class GameManager : MonoBehaviour
         {
             defeatedEnemies++;
             GameObject defeatedEnemie = enemies.Find(x => x.Equals(defeated));
+            //Destroy(defeatedEnemie);
+            //enemies.Remove(defeatedEnemie);
+
 
             AudioSource.PlayClipAtPoint(enemyDyingClips[(int)UnityEngine.Random.Range(0, enemyDyingClips.Length - 1)],
                 defeatedEnemie.transform.position);
+
 
             defeatedEnemie.SetActive(false);
 
             if (enemies.Count == defeatedEnemies)
             {
                 //_speechOut.Speak("you eliminated all enemies! No follow the sound to the goal!");
-                allEnemiesdefeated = true;
                 _audioSource.PlayOneShot(enenmiesDefeated);
-                
-                if  (!switchedToGoal){           
-                    await _lowerHandle.SwitchTo(goal);
-                    switchedToGoal = true;}
+                allEnemiesdefeated = true;
+
+                await _lowerHandle.SwitchTo(goal);
+                switchedToGoal = true;
 
             }
         }
         else
         {
+
+
+            setEnemies(false);
+            gameRunning = false;
             if (playerLives <= 1)
             {
-                setEnemies(false);
-                gameRunning = false;
-                player.SetActive(false);
                 await GameOver();
             }
             else playerLives--;
+
+
             StartCoroutine(playerGotFinished());
         }
     }
 
+
+
     private IEnumerator playerGotFinished()
     {
-        setEnemies(false);
-        gameRunning = false;
         _audioSource.PlayOneShot(playerDied);
         yield return new WaitForSeconds(playerDied.length);
         player.SetActive(false);
+        player.GetComponent<PlayerSoundEffect>().stopBackgroundMusic();
+        player.GetComponent<PlayerSoundEffect>().playGoalReachedClip();
+        yield return new WaitForSeconds(2);
+
         ResetRound();
     }
-
     public async void OnVictory(GameObject player)
     {
+        StartCoroutine(playerReachedGoal());
         player.SetActive(false);
         setEnemies(false);
         gameRunning = false;
-        level++;
-        NextLevel((currLevel + 1));
+    }
+
+    private IEnumerator playerReachedGoal()
+    {
+        currLevel += 1;
+        player.GetComponent<PlayerSoundEffect>().playGoalReachedClip();
+        yield return new WaitForSeconds(1);
+        player.GetComponent<PlayerSoundEffect>().playFinisherClip();
+        yield return new WaitForSeconds(1);
+        playLevelDescription();
+        yield return new WaitForSeconds(4);
+        player.GetComponent<PlayerSoundEffect>().playGoalReachedClip();
+        yield return new WaitForSeconds(2);
+        NextLevel((currLevel));
     }
 
     /// <summary>
