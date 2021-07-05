@@ -18,6 +18,7 @@ TagManager:
   - level4
   - Wall
   - forcefield
+  - movefield
   layers:
   - Default
   - TransparentFX
