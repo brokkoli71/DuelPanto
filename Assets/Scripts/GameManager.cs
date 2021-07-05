@@ -219,6 +219,7 @@ public class GameManager : MonoBehaviour
         gameRunning = true;
         player.GetComponent<PlayerLogic>().ResetPlayer();
         player.GetComponent<PlayerSoundEffect>().ResetMusic();
+        player.GetComponent<PlayerSoundEffect>().startBackgroundMusic();
 
         _levelStartTime = Time.time;
     }
@@ -248,7 +249,6 @@ public class GameManager : MonoBehaviour
             case 0:
                 playLevelDescription();
                 activateTags(new string[] { "Wall" });
-                SpawnsEnemies(enemySpawnLvl2);
                 goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
                 break;
 
@@ -467,9 +467,6 @@ public class GameManager : MonoBehaviour
         {
             defeatedEnemies++;
             GameObject defeatedEnemie = enemies.Find(x => x.Equals(defeated));
-            //Destroy(defeatedEnemie);
-            //enemies.Remove(defeatedEnemie);
-
 
             AudioSource.PlayClipAtPoint(enemyDyingClips[(int)UnityEngine.Random.Range(0, enemyDyingClips.Length - 1)],
                 defeatedEnemie.transform.position);
@@ -479,7 +476,6 @@ public class GameManager : MonoBehaviour
 
             if (enemies.Count == defeatedEnemies)
             {
-                //_speechOut.Speak("you eliminated all enemies! No follow the sound to the goal!");
                 allEnemiesdefeated = true;
                 _audioSource.PlayOneShot(enenmiesDefeated);
 
@@ -514,17 +510,16 @@ public class GameManager : MonoBehaviour
     {
         _audioSource.PlayOneShot(playerDied);
         yield return new WaitForSeconds(playerDied.length);
-        player.SetActive(false);
         player.GetComponent<PlayerSoundEffect>().stopBackgroundMusic();
         player.GetComponent<PlayerSoundEffect>().playGoalReachedClip();
         yield return new WaitForSeconds(2);
-
+        player.SetActive(false);
         ResetRound();
     }
     public async void OnVictory(GameObject player)
     {
         StartCoroutine(playerReachedGoal());
-        player.SetActive(false);
+      
         setEnemies(false);
         gameRunning = false;
     }
@@ -540,6 +535,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(4);
         player.GetComponent<PlayerSoundEffect>().playGoalReachedClip();
         yield return new WaitForSeconds(2);
+        player.SetActive(false);
         NextLevel((currLevel));
     }
 

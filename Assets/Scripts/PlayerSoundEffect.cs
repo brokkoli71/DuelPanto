@@ -3,6 +3,8 @@ using SpeechIO;
 public class PlayerSoundEffect : MonoBehaviour
 {
     private AudioSource backgroundSource;
+
+    private AudioSource playerSource;
     public AudioClip finishSound;
 
     public AudioClip goalReachedSound;
@@ -15,24 +17,21 @@ public class PlayerSoundEffect : MonoBehaviour
     public void ResetMusic()
     {
         backgroundSource = Goal.GetComponent<AudioSource>();
+        playerSource = gameObject.GetComponent<AudioSource>();
         backgroundSource.volume = backgroundVolume;
         backgroundSource.clip = backgroundClip;
+        playerSource.Stop();
         backgroundClipIsActive = false;
     }
 
     public void playFinisherClip()
     {
-        backgroundSource.clip = finishSound;
-        backgroundSource.volume = 0.6f;
-        backgroundSource.pitch = 1;
-        backgroundSource.Play();
+        playerSource.PlayOneShot(finishSound, 0.2f);
     }
 
     public void playGoalReachedClip()
     {
-        backgroundSource.volume = 0.8f;
-        backgroundSource.pitch = 1;
-        backgroundSource.PlayOneShot(goalReachedSound);
+        playerSource.PlayOneShot(goalReachedSound, 0.4f);
     }
 
 
@@ -49,7 +48,6 @@ public class PlayerSoundEffect : MonoBehaviour
         backgroundSource.Play();
         backgroundSource.volume = backgroundVolume;
         backgroundClipIsActive = true;
-
     }
     public bool isBackgroundMusicActive()
     {
