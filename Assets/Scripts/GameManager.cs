@@ -371,7 +371,8 @@ public class GameManager : MonoBehaviour
                 _audioSource.PlayOneShot(switchingEnemy);
                 oldEnemy = closestEnemy;
             }
-            //await _lowerHandle.SwitchTo(closestEnemy, 5f);
+            //await _lowerHandle.
+            //(closestEnemy, 5f);
         }
         else if (allEnemiesDefeated && !switchedToGoal || enemies.Count == 0 && !switchedToGoal)
         {
