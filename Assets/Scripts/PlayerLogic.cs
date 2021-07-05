@@ -92,12 +92,16 @@ public class PlayerLogic : MonoBehaviour
         transform.position = upperHandle.HandlePosition(transform.position);
         transform.rotation = Quaternion.AngleAxis(upperHandle.GetRotation(), Vector3.up);
     }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Goal"))
         {
             if (panto.GetComponent<GameManager>().allEnemiesdefeated || panto.GetComponent<GameManager>().enemies.Count == 0)
             {
+                GameManager g = GameObject.Find("Panto").GetComponent<GameManager>();
+                g.RemoveActiveColliders();
+
                 goalReached = true;
                 soundEffects.stopBackgroundMusic();
                 soundEffects.playFinisherClip();

@@ -32,10 +32,7 @@ public class GameManager : MonoBehaviour
     public int trophyScore = 10000;
     public UIManager uiManager;
     private List<GameObject> obstacleList;
-    private GameObject[] obstacles;
-    private PantoCollider[] wallColliders;
-    private PantoCollider[] obstacleColliders;
-    private PantoCollider[] allColliders;
+    public GameObject[] obstacles;
 
     public AudioClip[] enemyDyingClips;
 
@@ -93,16 +90,9 @@ public class GameManager : MonoBehaviour
         currLevel = 0;
 
         // create arrays of all obstacles, colliders TODO hopefully a nice way for this exists?
-        GameObject[] allGOs = GameObject.FindObjectsOfType<GameObject>();
+        GameObject[] allGOs = FindObjectsOfType<GameObject>();
         obstacleList = new List<GameObject>();
-        List<PantoCollider> obstacleColliderList = new List<PantoCollider>();
-        List<PantoCollider> wallCollidersList = new List<PantoCollider>();
-        List<PantoCollider> allCollidersList = new List<PantoCollider>();
-
         obstacles = new GameObject[] { };
-        obstacleColliders = new PantoCollider[] { };
-        wallColliders = new PantoCollider[] { };
-        allColliders = new PantoCollider[] { };
 
         print("printing all obstacles from start()");
         for (int i = 0; i < allGOs.Length; i++)
@@ -112,26 +102,12 @@ public class GameManager : MonoBehaviour
             {
                 obstacleList.Add(o);
                 print("object: " + o + ", Tag: " + o.tag);
-
-                // collecting colliders
-                if (o.GetComponent<PantoCollider>() != null)
-                {
-                    if (o.CompareTag("Wall")) wallCollidersList.Add(o.GetComponent<PantoCollider>());
-                    else obstacleColliderList.Add(o.GetComponent<PantoCollider>());
-                    allCollidersList.Add(o.GetComponent<PantoCollider>());
-                }
             }
         }
         obstacles = obstacleList.ToArray();
-        obstacleColliders = obstacleColliderList.ToArray();
-        wallColliders = wallCollidersList.ToArray();
-        allColliders = allCollidersList.ToArray();
 
         print("obstacles.length : " + obstacles.Length);
-        print("wallcolliders: " + wallColliders.Length);
-        print("obstacleColliders: " + obstacleColliders.Length);
-        print("allcolliders: " + allColliders.Length);
-
+        
         Introduction();
     }
 
@@ -139,16 +115,13 @@ public class GameManager : MonoBehaviour
     {
         //await _speechOut.Speak("Welcome to Duel Panto");
         //await Task.Delay(1000);
-        //RegisterWallColliders();
+
 
         if (introduceGame)
         {
             await IntroduceLevel();
         }
 
-        //await _speechOut.Speak("Introduction finished, game starts.");
-
-        //await ResetRound();
         NextLevel(startLevel);
     }
 
@@ -162,49 +135,60 @@ public class GameManager : MonoBehaviour
         await _speechOut.Speak("Thats all! We wish you good luck.");
     }
 
-    void RegisterWallColliders()
-    {
-        // register just level-border colliders at beginning
-        foreach (PantoCollider collider in wallColliders)
-        {
-            collider.CreateObstacle();
-            collider.Enable();
-            Debug.Log("registered collider: " + collider);
-        }
-    }
+    //void RegisterWallColliders()
+    //{
+    //    // register just level-border colliders at beginning
+    //    foreach (PantoCollider collider in wallColliders)
+    //    {
+    //        collider.CreateObstacle();
+    //        collider.Enable();
+    //        Debug.Log("registered collider: " + collider);
+    //    }
+    //}
 
     // only call with tags that haven't been added before
-    void RegisterCollidersByTag(String[] s)
+    //void RegisterCollidersByTag(String[] s)
+    //{
+    //    foreach (String _s in s)
+    //    {
+    //        Debug.Log("registering Tag " + _s);
+    //        foreach (PantoCollider c in allColliders)
+    //        {
+    //            if (c.CompareTag(_s))
+    //            {
+    //                c.CreateObstacle();
+    //                c.Enable();
+    //                Debug.Log("registered collider: " + c);
+    //            }      
+    //        }
+    //    }
+    //}
+
+    // only call with tags that have been added before
+
+    void RemoveAllColliders()
     {
-        foreach (String _s in s)
+        ActivateObstaclesSphere OActivater = GameObject.Find("ObstacleActivater").GetComponent<ActivateObstaclesSphere>();
+        for(int i = 0; i < obstacles.Length; i++)
         {
-            Debug.Log("registering Tag " + _s);
-            foreach (PantoCollider c in allColliders)
-            {
-                if (c.CompareTag(_s))
-                {
-                    c.CreateObstacle();
-                    c.Enable();
-                    Debug.Log("registered collider: " + c);
-                }      
-            }
+            Collider c = obstacles[i].GetComponent<Collider>();
+            OActivater.TriggerExit(c);
         }
     }
 
-    // only call with tags that have been added before
-    void RemoveCollidersByTag(String[] s)
+    void RemoveCollider(Collider collider)
     {
-        foreach (String _s in s)
+        ActivateObstaclesSphere OActivater = GameObject.Find("ObstacleActivater").GetComponent<ActivateObstaclesSphere>();
+        OActivater.TriggerExit(collider);
+    }
+
+    public void RemoveActiveColliders()
+    {
+        foreach(GameObject o in obstacles)
         {
-            Debug.Log("removing Tag " + _s);
-            foreach (PantoCollider c in allColliders)
+            if (o.GetComponent<Collider>().enabled)
             {
-                if (c.CompareTag(_s))
-                {
-                    c.Disable();
-                    c.Remove();
-                    Debug.Log("removed collider: " + c);
-                }
+                RemoveCollider(o.GetComponent<Collider>());
             }
         }
     }
@@ -237,6 +221,8 @@ public class GameManager : MonoBehaviour
         player.GetComponent<PlayerLogic>().ResetPlayer();
         player.GetComponent<PlayerSoundEffect>().ResetMusic();
 
+        //if (level > 0) RemoveAllColliders();
+
         _levelStartTime = Time.time;
     }
 
@@ -257,32 +243,30 @@ public class GameManager : MonoBehaviour
             o.SetActive(false);
             Debug.Log("disabling " + o.ToString());
         }
-        
+
+        //removing all pantoColliders (screws next level if not done
+        //if(level > 0) RemoveAllColliders();
+
         switch (level)
         {
             case 0:
                 _speechOut.Speak("Follow the sound to the goal.");
-                activateTags(new string[] { "Wall", "level1", "level2", "level3" });
-                RegisterCollidersByTag(new string[] { "level1", "level2", "level3" });
-                goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
+                activateObstaclesByTag(new string[] { "Wall"});
+
+                 goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
+
                 break;
 
             case 1:
-                _speechOut.Speak("Explore the obstacles");
-                activateTags(new string[] { "Wall", "level1", "level2" });
-                Thread.Sleep(200);
-                RegisterCollidersByTag(new string[] { "level1", "level2" });
-
-                goal.transform.position = new Vector3(0.0f, 0.0f, -3.0f);
+                _speechOut.Speak("Explore the world! Next time it might not be as easy!");
+                activateObstaclesByTag(new string[] { "Wall", "level1"});
+                 
+                //goal.transform.position = new Vector3(0.0f, 0.0f, -3.0f);
 
                 break;
 
             case 2:
-                await _speechOut.Speak("Watch out there are enemies! You can hear them");
-                await _speechOut.Speak("Shoot them!");
-                activateTags(new string[] { "Wall", "level1", "level2" });
-
-                RegisterCollidersByTag(new string[] { "level2" });
+                activateObstaclesByTag(new string[] { "Wall", "level1", "level2" });
 
                 SpawnsEnemies(enemySpawnLvl2);
                 goal.transform.position = new Vector3(2.0f, 0.0f, -14.0f);
@@ -290,10 +274,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case 3:
-                //spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
-                activateTags(new string[] { "Wall", "level1", "level2", "level3" });
-
-                RegisterCollidersByTag(new string[] { "level3" });
+                activateObstaclesByTag(new string[] { "Wall", "level1", "level2", "level3" });
 
                 SpawnsEnemies(enemySpawnLvl3);
                 goal.transform.position = new Vector3(2.0f, 0.0f, -5.0f);
@@ -301,11 +282,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case 4:
-                activateTags(new string[] { "Wall", "level1", "level2", "level3", "level4" });
-
-                Thread.Sleep(200);
-                RegisterCollidersByTag(new string[] { "level4" });
-                Thread.Sleep(200);
+                activateObstaclesByTag(new string[] { "Wall", "level1", "level2", "level3", "level4" });
 
                 SpawnsEnemies(enemySpawnLvl4);
                 goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
@@ -316,7 +293,7 @@ public class GameManager : MonoBehaviour
                 break;
 
         }
-        await _upperHandle.MoveToPosition(playerSpawn.position);
+        //await _upperHandle.MoveToPosition(playerSpawn.position);
         currLevel = level;
         await ResetRound();
     }
@@ -341,17 +318,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void activateTags(String[] s)
+    private void activateObstaclesByTag(String[] s)
     {
         for (int i = 0; i < s.Length; i++)
         {
-            print(s[i]);
+            print("activating tag " + s[i]);
             foreach (GameObject o in obstacles)
             {
                 if (o.tag == s[i])
                 {
                     o.SetActive(true);
-                    //o.GetComponent<PantoBoxCollider>().Enable();
 
                 }
             }
@@ -519,8 +495,7 @@ public class GameManager : MonoBehaviour
     {
         await _speechOut.Speak("Congratulations.");
         await _speechOut.Speak("Thanks for playing DuelPanto. Say quit when you're done.");
-        await _speechIn.Listen(new Dictionary<string, KeyCode>() { { "quit", KeyCode.Escape } });
-
+        //await _speechIn.Listen(new Dictionary<string, KeyCode>() { { "quit", KeyCode.Escape } });
         Application.Quit();
     }
 

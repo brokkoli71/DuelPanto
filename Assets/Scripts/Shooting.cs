@@ -66,7 +66,7 @@ public class Shooting : MonoBehaviour
     {
         if ((System.DateTime.Now - lastShot).TotalMilliseconds > reloadingTimeMillis)
         {
-            if (Input.GetKeyDown(KeyCode.Space) &&
+            if (Input.GetKeyDown(KeyCode.C) &&
             gameObject.name == "Player")
             {
                 lastShot = System.DateTime.Now;
