@@ -480,12 +480,14 @@ public class GameManager : MonoBehaviour
             if (enemies.Count == defeatedEnemies)
             {
                 //_speechOut.Speak("you eliminated all enemies! No follow the sound to the goal!");
-                _audioSource.PlayOneShot(enenmiesDefeated);
                 allEnemiesdefeated = true;
+                _audioSource.PlayOneShot(enenmiesDefeated);
 
-                await _lowerHandle.SwitchTo(goal);
-                switchedToGoal = true;
-
+                if (!switchedToGoal)
+                {
+                    await _lowerHandle.SwitchTo(goal);
+                    switchedToGoal = true;
+                }
             }
         }
         else
@@ -496,6 +498,7 @@ public class GameManager : MonoBehaviour
             gameRunning = false;
             if (playerLives <= 1)
             {
+                player.SetActive(false);
                 await GameOver();
             }
             else playerLives--;
