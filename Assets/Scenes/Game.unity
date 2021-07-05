@@ -2807,6 +2807,11 @@ MonoBehaviour:
   switchingEnemy: {fileID: 8300000, guid: a78cee9e6af98634891c08b24d336897, type: 3}
   playerDied: {fileID: 8300000, guid: 565b51ce110fe224292d20a2ec14f394, type: 3}
   enenmiesDefeated: {fileID: 8300000, guid: 0eecc6913b8c2c84785e9a11e980406f, type: 3}
+  elevatorMusic: {fileID: 8300000, guid: a154560381ff6594590e5b7fd026dc81, type: 3}
+  elevatorRing: {fileID: 8300000, guid: 16a65e781b6d6c040a0a9907302eea01, type: 3}
+  elevatorDoor:
+  - {fileID: 8300000, guid: 68d7898710028374b9280931ac0741d4, type: 3}
+  - {fileID: 8300000, guid: d2e3d17e1e93da54482f31426ce15f78, type: 3}
   gameRunning: 0
   playWithEnemy: 1
   allEnemiesdefeated: 0

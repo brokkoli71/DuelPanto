@@ -23,18 +23,10 @@ public class PlayerSoundEffect : MonoBehaviour
         playerSource.Stop();
         backgroundClipIsActive = false;
     }
-
-    public void playFinisherClip()
-    {
-        playerSource.PlayOneShot(finishSound, 0.2f);
+  
+    public void playerAudio(AudioClip clip, float volume){
+        playerSource.PlayOneShot(clip,volume);
     }
-
-    public void playGoalReachedClip()
-    {
-        playerSource.PlayOneShot(goalReachedSound, 0.4f);
-    }
-
-
 
 
     public void pitchBackgroundMusic(float pitchValue)

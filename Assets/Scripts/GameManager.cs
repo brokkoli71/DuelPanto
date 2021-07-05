@@ -40,6 +40,11 @@ public class GameManager : MonoBehaviour
     public AudioClip switchingEnemy;
     public AudioClip playerDied;
     public AudioClip enenmiesDefeated;
+
+    public AudioClip elevatorMusic;
+    public AudioClip elevatorRing;
+    public AudioClip[] elevatorDoor;
+    
     private AudioSource _audioSource;
 
     private UpperHandle _upperHandle;
@@ -511,8 +516,10 @@ public class GameManager : MonoBehaviour
         _audioSource.PlayOneShot(playerDied);
         yield return new WaitForSeconds(playerDied.length);
         player.GetComponent<PlayerSoundEffect>().stopBackgroundMusic();
-        player.GetComponent<PlayerSoundEffect>().playGoalReachedClip();
-        yield return new WaitForSeconds(2);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorRing,0.4f);
+        yield return new WaitForSeconds(elevatorRing.length);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1],0.4f);
+        yield return new WaitForSeconds(elevatorDoor[1].length-1);
         player.SetActive(false);
         ResetRound();
     }
@@ -527,14 +534,18 @@ public class GameManager : MonoBehaviour
     private IEnumerator playerReachedGoal()
     {
         currLevel += 1;
-        player.GetComponent<PlayerSoundEffect>().playGoalReachedClip();
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[0],0.4f);
+        yield return new WaitForSeconds(elevatorDoor[0].length/2f);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorRing,0.4f);
         yield return new WaitForSeconds(1);
-        player.GetComponent<PlayerSoundEffect>().playFinisherClip();
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorMusic,0.2f);
         yield return new WaitForSeconds(1);
         playLevelDescription();
         yield return new WaitForSeconds(4);
-        player.GetComponent<PlayerSoundEffect>().playGoalReachedClip();
-        yield return new WaitForSeconds(2);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorRing,0.4f);
+        yield return new WaitForSeconds(elevatorRing.length);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1],0.4f);
+        yield return new WaitForSeconds(elevatorDoor[1].length-1);
         player.SetActive(false);
         NextLevel((currLevel));
     }
