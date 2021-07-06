@@ -91,7 +91,7 @@ public class PlayerLogic : MonoBehaviour
     {
         if (other.CompareTag("Goal"))
         {
-            if (panto.GetComponent<GameManager>().allEnemiesdefeated)
+            if (panto.GetComponent<GameManager>().allEnemiesdefeated && !goalReached)
             {
                 goalReached = true;
                 soundEffects.stopBackgroundMusic();

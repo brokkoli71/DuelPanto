@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     public AudioClip elevatorMusic;
     public AudioClip elevatorRing;
     public AudioClip[] elevatorDoor;
+    public AudioClip[] levelVoice;
     
     private AudioSource _audioSource;
 
@@ -143,17 +144,8 @@ public class GameManager : MonoBehaviour
         //await _speechOut.Speak("Welcome to Duel Panto");
         //await Task.Delay(1000);
         RegisterWallColliders();
-
-        if (introduceGame)
-        {
-            //await IntroducePlayers();
-            await IntroduceLevel();
-        }
-
-        //await _speechOut.Speak("Introduction finished, game starts.");
-
-        //await ResetRound();
-        NextLevel(startLevel);
+        
+        NextLevel(startLevel);      
     }
 
     async Task IntroduceLevel()
@@ -162,7 +154,6 @@ public class GameManager : MonoBehaviour
         await _speechOut.Speak("Please put a keyboard on the floor.");
         await _speechOut.Speak("If you press SPACE, you can shoot.");
         await _speechOut.Speak("We recommend you to use your toe for this");
-
         await _speechOut.Speak("Thats all! We wish you good luck.");
     }
 
@@ -217,15 +208,31 @@ public class GameManager : MonoBehaviour
             defeatedEnemies = 0;
         }
 
+
+        player.SetActive(true);
+        player.GetComponent<PlayerLogic>().ResetPlayer();
+        player.GetComponent<PlayerSoundEffect>().ResetMusic();
+
+        if (introduceGame)
+        {
+            introduceGame = false;
+            player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[0], 0.8f);
+            await Task.Delay((int) levelVoice[0].length*1000);
+            await Task.Delay((int) 3*1000);
+
+            player.GetComponent<PlayerSoundEffect>().startBackgroundMusic();
+            player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[1], 0.8f);
+            await Task.Delay((int) levelVoice[1].length*1000);
+            await Task.Delay((int) 1*1000);
+        }else{
+             player.GetComponent<PlayerSoundEffect>().startBackgroundMusic();
+        }
+
         allEnemiesdefeated = enemies.Count > 0 ? false : true;
         _upperHandle.Free();
         switchedToGoal = false;
-        player.SetActive(true);
         gameRunning = true;
-        player.GetComponent<PlayerLogic>().ResetPlayer();
-        player.GetComponent<PlayerSoundEffect>().ResetMusic();
-        player.GetComponent<PlayerSoundEffect>().startBackgroundMusic();
-
+       
         _levelStartTime = Time.time;
     }
 
@@ -252,7 +259,7 @@ public class GameManager : MonoBehaviour
         switch (level)
         {
             case 0:
-                playLevelDescription();
+                //playLevelDescription();
                 activateTags(new string[] { "Wall" });
                 goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
                 break;
@@ -310,6 +317,7 @@ public class GameManager : MonoBehaviour
         {
             case 0:
                 await _speechOut.Speak("Follow the sound to the goal.");
+                //return levelVoice[currLevel+1];
                 break;
             case 1:
                 await _speechOut.Speak("Explore the obstacles");
@@ -482,7 +490,7 @@ public class GameManager : MonoBehaviour
             if (enemies.Count == defeatedEnemies)
             {
                 allEnemiesdefeated = true;
-                _audioSource.PlayOneShot(enenmiesDefeated);
+                //_audioSource.PlayOneShot(enenmiesDefeated);
 
                 if (!switchedToGoal)
                 {
@@ -519,7 +527,7 @@ public class GameManager : MonoBehaviour
         player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorRing,0.4f);
         yield return new WaitForSeconds(elevatorRing.length);
         player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1],0.4f);
-        yield return new WaitForSeconds(elevatorDoor[1].length-1);
+        yield return new WaitForSeconds(elevatorDoor[1].length);
         player.SetActive(false);
         ResetRound();
     }
@@ -536,18 +544,29 @@ public class GameManager : MonoBehaviour
         currLevel += 1;
         player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[0],0.4f);
         yield return new WaitForSeconds(elevatorDoor[0].length/2f);
-        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorRing,0.4f);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorMusic,0.05f);
         yield return new WaitForSeconds(1);
-        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorMusic,0.2f);
+         
+        player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[currLevel+1], 1f);
+        //playLevelDescription();
+        yield return new WaitForSeconds(levelVoice[currLevel+1].length);
         yield return new WaitForSeconds(1);
-        playLevelDescription();
-        yield return new WaitForSeconds(4);
         player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorRing,0.4f);
         yield return new WaitForSeconds(elevatorRing.length);
         player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1],0.4f);
-        yield return new WaitForSeconds(elevatorDoor[1].length-1);
+        yield return new WaitForSeconds(elevatorDoor[1].length);
         player.SetActive(false);
         NextLevel((currLevel));
+    }
+
+    
+    private IEnumerator playIntro(){
+        player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[0], 1f);
+        yield return new WaitForSeconds(levelVoice[0].length);
+        yield return new WaitForSeconds(3);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[1], 1f);
+        yield return new WaitForSeconds(levelVoice[1].length);
+        NextLevel(startLevel);
     }
 
     /// <summary>
@@ -556,8 +575,6 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     async Task GameOver()
     {
-        await _speechOut.Speak("Congratulations.");
-        await _speechOut.Speak("Thanks for playing DuelPanto. Say quit when you're done.");
         await _speechIn.Listen(new Dictionary<string, KeyCode>() { { "quit", KeyCode.Escape } });
 
         Application.Quit();

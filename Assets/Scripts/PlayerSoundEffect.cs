@@ -9,17 +9,18 @@ public class PlayerSoundEffect : MonoBehaviour
 
     public AudioClip goalReachedSound;
     public GameObject Goal;
-    public AudioClip backgroundClip;
+    public AudioClip[] backgroundClip;
     private bool backgroundClipIsActive = false;
 
-    float backgroundVolume = 0.5f;
+    float backgroundVolume = 1f;
 
     public void ResetMusic()
     {
         backgroundSource = Goal.GetComponent<AudioSource>();
         playerSource = gameObject.GetComponent<AudioSource>();
         backgroundSource.volume = backgroundVolume;
-        backgroundSource.clip = backgroundClip;
+        int value = Random.Range(0, backgroundClip.Length - 1);
+        backgroundSource.clip = backgroundClip[value];
         playerSource.Stop();
         backgroundClipIsActive = false;
     }
