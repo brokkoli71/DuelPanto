@@ -73,13 +73,13 @@ public class ExprorerScript : MonoBehaviour
                     {
                         print("asd BOUND");
                         state = BOUND;
-                        //lowerHandle.Freeze();
-                        lowerHandle.SwitchTo(player);
+                        lowerHandle.Freeze();
+                        //lowerHandle.SwitchTo(player);
                         disableColider();
                     }
                     break;
                 case BOUND:
-                    if (!meMoving)
+                    if (!meMoving&&isHome)
                     {
                         print("asd HOME");
                         state = HOME;
