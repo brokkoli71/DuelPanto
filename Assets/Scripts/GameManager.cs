@@ -360,7 +360,7 @@ public class GameManager : MonoBehaviour
                 _audioSource.PlayOneShot(switchingEnemy);
                 oldEnemy = closestEnemy;
             }
-            await _lowerHandle.SwitchTo(closestEnemy, 5f);
+            //await _lowerHandle.SwitchTo(closestEnemy, 5f);
         }
         else if (allEnemiesdefeated && !switchedToGoal)
         {
@@ -465,7 +465,7 @@ public class GameManager : MonoBehaviour
 
                 if (!switchedToGoal)
                 {
-                    await _lowerHandle.SwitchTo(goal);
+                    //await _lowerHandle.SwitchTo(goal);
                     switchedToGoal = true;
                 }
             }
