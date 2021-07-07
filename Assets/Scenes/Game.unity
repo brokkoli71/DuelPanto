@@ -2800,11 +2800,23 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8abb8840380862949bc5fbf94673c205, type: 3}
   - {fileID: 8300000, guid: 20c455d1e04d78a448935fd55c813040, type: 3}
   switchingEnemy: {fileID: 8300000, guid: a78cee9e6af98634891c08b24d336897, type: 3}
-  playerDied: {fileID: 8300000, guid: 565b51ce110fe224292d20a2ec14f394, type: 3}
+  playerDied: {fileID: 8300000, guid: c7371df2f16a606439bce9ba782a7bdd, type: 3}
   enenmiesDefeated: {fileID: 8300000, guid: 0eecc6913b8c2c84785e9a11e980406f, type: 3}
+  elevatorMusic: {fileID: 8300000, guid: a154560381ff6594590e5b7fd026dc81, type: 3}
+  elevatorRing: {fileID: 8300000, guid: 16a65e781b6d6c040a0a9907302eea01, type: 3}
+  elevatorDoor:
+  - {fileID: 8300000, guid: d2e3d17e1e93da54482f31426ce15f78, type: 3}
+  - {fileID: 8300000, guid: 68d7898710028374b9280931ac0741d4, type: 3}
+  levelVoice:
+  - {fileID: 8300000, guid: c81f79272d7fe3147bef9a4e85c8055d, type: 3}
+  - {fileID: 8300000, guid: 0a6612c356e389043a8d365d7982afb4, type: 3}
+  - {fileID: 8300000, guid: e3dcc9001abfd9c458f5b01b38882717, type: 3}
+  - {fileID: 8300000, guid: a5ac8339870186a44a4b1fca6fd7914f, type: 3}
+  - {fileID: 8300000, guid: 372766b8cf1837b4e92c6943f987b9b4, type: 3}
+  - {fileID: 8300000, guid: 2c6c2c4ca7eb17146957921cd41e06f9, type: 3}
+  - {fileID: 8300000, guid: ecc416b63ad4ba04e9d47aed60690415, type: 3}
   gameRunning: 0
   playWithEnemy: 1
-  allEnemiesDefeated: 0
   allEnemiesdefeated: 0
 --- !u!1 &476931875
 GameObject:
@@ -3674,8 +3686,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   finishSound: {fileID: 8300000, guid: 41d324e286bd51848a001516e3f76753, type: 3}
+  goalReachedSound: {fileID: 0}
   Goal: {fileID: 1005532776}
-  backgroundClip: {fileID: 8300000, guid: d1ba7b350616a0c4eb0881f0942041a1, type: 3}
+  backgroundClip:
+  - {fileID: 8300000, guid: 5f2b1768f83c1e14681ee43f2358af79, type: 3}
+  - {fileID: 8300000, guid: 4bf62b867785af043b8497ecae8b2b7b, type: 3}
+  - {fileID: 8300000, guid: edaee2b1b7dc96e46802acdb7bc93bac, type: 3}
+  - {fileID: 8300000, guid: 5bc1cadde67270549ba146bfa7e1dce2, type: 3}
 --- !u!1 &616187060
 GameObject:
   m_ObjectHideFlags: 0
@@ -10472,7 +10489,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 199081147454446092, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: orthographic size
-      value: 13.8386135
+      value: 13.037423
       objectReference: {fileID: 0}
     - target: {fileID: 199081147454446092, guid: f08d327e9fb42f94d97ba9d1d226d418, type: 3}
       propertyPath: m_CullingMask.m_Bits
@@ -12251,7 +12268,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.49999428}
+  m_AnchoredPosition: {x: 0, y: -0.49999237}
   m_SizeDelta: {x: -20, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8839593422107194163
@@ -12330,7 +12347,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.49999428}
+  m_AnchoredPosition: {x: 0, y: -0.49999237}
   m_SizeDelta: {x: -20, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8839593422248494504
@@ -13865,7 +13882,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8839593422781233825}
   m_HandleRect: {fileID: 8839593422781233826}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 4
   m_OnValueChanged:
@@ -14233,18 +14250,18 @@ PrefabInstance:
     - target: {fileID: 9213859822949923263, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}
       propertyPath: foundPlayerClips.Array.data[0]
       value: 
-      objectReference: {fileID: 8300000, guid: f545967d365f04de1bacd59a3855f766, type: 3}
+      objectReference: {fileID: 8300000, guid: 98e302a3d92e31046a2dbc87ce20d5db, type: 3}
     - target: {fileID: 9213859822949923263, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}
       propertyPath: foundPlayerClips.Array.data[1]
       value: 
-      objectReference: {fileID: 8300000, guid: 7cfe312c358c844cfa92b64d46e2c0db, type: 3}
+      objectReference: {fileID: 8300000, guid: 02067abd111d25b4cb8105f5bed8012e, type: 3}
     - target: {fileID: 9213859822949923263, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}
       propertyPath: foundPlayerClips.Array.data[2]
       value: 
-      objectReference: {fileID: 8300000, guid: 6040051e24b364a0d84d421db05b9e05, type: 3}
+      objectReference: {fileID: 8300000, guid: 08229e9c3c6bc334d9bf43bd43fd5a02, type: 3}
     - target: {fileID: 9213859822949923263, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}
       propertyPath: foundPlayerClips.Array.data[3]
       value: 
-      objectReference: {fileID: 8300000, guid: b99d215ede5314c24b823991907585d3, type: 3}
+      objectReference: {fileID: 8300000, guid: 46085340128460f4081952817afb1bce, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07913c081304ab44d944e5e3c95f5739, type: 3}

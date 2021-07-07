@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
     public AudioClip elevatorRing;
     public AudioClip[] elevatorDoor;
     public AudioClip[] levelVoice;
-    
+
     private AudioSource _audioSource;
 
     private UpperHandle _upperHandle;
@@ -145,8 +145,8 @@ public class GameManager : MonoBehaviour
         //await _speechOut.Speak("Welcome to Duel Panto");
         //await Task.Delay(1000);
         //RegisterWallColliders();
-        
-        NextLevel(startLevel);      
+
+        NextLevel(startLevel);
     }
 
     async Task IntroduceLevel()
@@ -182,7 +182,7 @@ public class GameManager : MonoBehaviour
                     c.CreateObstacle();
                     c.Enable();
                     Debug.Log("registered collider: " + c);
-                }      
+                }
             }
         }
     }
@@ -233,22 +233,24 @@ public class GameManager : MonoBehaviour
         if (introduceGame && currLevel == 0)
         {
             player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[0], 0.8f);
-            await Task.Delay((int) levelVoice[0].length*1000);
-            await Task.Delay((int) 3*1000);
+            await Task.Delay((int)levelVoice[0].length * 1000);
+            await Task.Delay((int)3 * 1000);
 
             player.GetComponent<PlayerSoundEffect>().startBackgroundMusic();
             player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[1], 0.8f);
-            await Task.Delay((int) levelVoice[1].length*1000);
-            await Task.Delay((int) 1*1000);
-        }else{
-             player.GetComponent<PlayerSoundEffect>().startBackgroundMusic();
+            await Task.Delay((int)levelVoice[1].length * 1000);
+            await Task.Delay((int)1 * 1000);
+        }
+        else
+        {
+            player.GetComponent<PlayerSoundEffect>().startBackgroundMusic();
         }
 
         allEnemiesdefeated = enemies.Count > 0 ? false : true;
         _upperHandle.Free();
         switchedToGoal = false;
         gameRunning = true;
-       
+
         _levelStartTime = Time.time;
     }
 
@@ -269,7 +271,8 @@ public class GameManager : MonoBehaviour
             o.SetActive(false);
             Debug.Log("disabling " + o.ToString());
         }
-        
+
+        //player.transform.position = goal.transform.position;
         switch (level)
         {
             case 0:
@@ -375,7 +378,7 @@ public class GameManager : MonoBehaviour
             if (oldEnemy != closestEnemy)
             {
                 //_speechOut.Speak("switching enemy");
-                _audioSource.PlayOneShot(switchingEnemy);
+                //_audioSource.PlayOneShot(switchingEnemy);
                 oldEnemy = closestEnemy;
             }
             //await _lowerHandle.
@@ -514,9 +517,9 @@ public class GameManager : MonoBehaviour
         _audioSource.PlayOneShot(playerDied);
         yield return new WaitForSeconds(playerDied.length);
         player.GetComponent<PlayerSoundEffect>().stopBackgroundMusic();
-        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorRing,0.4f);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorRing, 0.4f);
         yield return new WaitForSeconds(elevatorRing.length);
-        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1],0.4f);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1], 0.4f);
         yield return new WaitForSeconds(elevatorDoor[1].length);
         player.SetActive(false);
         ResetRound();
@@ -532,27 +535,29 @@ public class GameManager : MonoBehaviour
     private IEnumerator playerReachedGoal()
     {
         currLevel += 1;
-        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[0],0.4f);
-        yield return new WaitForSeconds(elevatorDoor[0].length/2f);
-        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorMusic,0.05f);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[0], 0.4f);
+        yield return new WaitForSeconds(elevatorDoor[0].length / 2f);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorMusic, 0.05f);
         yield return new WaitForSeconds(1);
-        if (introduceGame){
-            player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[currLevel+1], 1f);
-            yield return new WaitForSeconds(levelVoice[currLevel+1].length);
+        if (introduceGame)
+        {
+            player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[currLevel + 1], 1f);
+            yield return new WaitForSeconds(levelVoice[currLevel + 1].length);
             yield return new WaitForSeconds(1);
         }
-        
 
-        
-        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorRing,0.4f);
+
+
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorRing, 0.4f);
         yield return new WaitForSeconds(elevatorRing.length);
-        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1],0.4f);
-        yield return new WaitForSeconds(elevatorDoor[1].length-1);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1], 0.4f);
+        yield return new WaitForSeconds(elevatorDoor[1].length - 1);
         NextLevel((currLevel));
     }
 
-    
-    private IEnumerator playIntro(){
+
+    private IEnumerator playIntro()
+    {
         player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[0], 1f);
         yield return new WaitForSeconds(levelVoice[0].length);
         yield return new WaitForSeconds(3);
