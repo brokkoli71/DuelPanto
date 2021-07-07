@@ -159,7 +159,6 @@ public class GameManager : MonoBehaviour
         if(player)
         player.SetActive(true);
         _upperHandle.Free();
-        // TODO maybe this fucks the colliders? v
         player.GetComponent<PlayerLogic>().ResetPlayer();
         player.GetComponent<PlayerSoundEffect>().ResetMusic();
 
