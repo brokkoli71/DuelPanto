@@ -311,34 +311,6 @@ public class GameManager : MonoBehaviour
         }
         await ResetRound();
     }
-    async private void playLevelDescription()
-    {
-        switch (currLevel)
-        {
-            case 0:
-                await _speechOut.Speak("Follow the sound to the goal.");
-                //return levelVoice[currLevel+1];
-                break;
-            case 1:
-                await _speechOut.Speak("Explore the obstacles");
-                break;
-            case 2:
-                await _speechOut.Speak("Watch out there are enemies!");
-                await _speechOut.Speak("The IT-Handle shows the nearest enemy");
-                await _speechOut.Speak("Also you can hear them");
-                await _speechOut.Speak("Shot them!");
-                break;
-            case 3:
-                break;
-
-            case 4:
-                break;
-
-            default:
-                await _speechOut.Speak("You completed all levels!");
-                break;
-        }
-    }
     private void SpawnsEnemies(Transform[] spawns)
     {
 
@@ -533,8 +505,8 @@ public class GameManager : MonoBehaviour
     }
     public async void OnVictory(GameObject player)
     {
+        _upperHandle.Freeze();
         StartCoroutine(playerReachedGoal());
-      
         setEnemies(false);
         gameRunning = false;
     }
@@ -555,7 +527,6 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(elevatorRing.length);
         player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1],0.4f);
         yield return new WaitForSeconds(elevatorDoor[1].length);
-        player.SetActive(false);
         NextLevel((currLevel));
     }
 
