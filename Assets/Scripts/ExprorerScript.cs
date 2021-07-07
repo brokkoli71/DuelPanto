@@ -81,7 +81,7 @@ public class ExprorerScript : MonoBehaviour
                     {
                         print("asd BOUND");
                         state = BOUND;
-                        lowerHandle.Freeze();
+                        //lowerHandle.Freeze();
                         //lowerHandle.SwitchTo(player);
                         disableColider();
                     }
