@@ -213,9 +213,8 @@ public class GameManager : MonoBehaviour
         player.GetComponent<PlayerLogic>().ResetPlayer();
         player.GetComponent<PlayerSoundEffect>().ResetMusic();
 
-        if (introduceGame)
+        if (introduceGame && currLevel == 0)
         {
-            introduceGame = false;
             player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[0], 0.8f);
             await Task.Delay((int) levelVoice[0].length*1000);
             await Task.Delay((int) 3*1000);
@@ -518,15 +517,18 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(elevatorDoor[0].length/2f);
         player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorMusic,0.05f);
         yield return new WaitForSeconds(1);
-         
-        player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[currLevel+1], 1f);
-        //playLevelDescription();
-        yield return new WaitForSeconds(levelVoice[currLevel+1].length);
-        yield return new WaitForSeconds(1);
+        if (introduceGame){
+            player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[currLevel+1], 1f);
+            yield return new WaitForSeconds(levelVoice[currLevel+1].length);
+            yield return new WaitForSeconds(1);
+        }
+        
+
+        
         player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorRing,0.4f);
         yield return new WaitForSeconds(elevatorRing.length);
         player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1],0.4f);
-        yield return new WaitForSeconds(elevatorDoor[1].length);
+        yield return new WaitForSeconds(elevatorDoor[1].length-1);
         NextLevel((currLevel));
     }
 
