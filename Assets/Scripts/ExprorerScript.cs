@@ -48,6 +48,14 @@ public class ExprorerScript : MonoBehaviour
         {
             print("asd fehler");
         }
+
+        if (Input.GetKey(KeyCode.Y))
+        {
+            state = HOME;
+            lowerHandle.Free();
+            upperHandle.Free();
+            return;
+        }
         if (System.DateTime.Now.Millisecond - lastStateChange.Millisecond > 100)//nur alle 100 ms
         {
             switch (state)
@@ -88,6 +96,7 @@ public class ExprorerScript : MonoBehaviour
                     break;
             }
         }
+        
     }
 
 
