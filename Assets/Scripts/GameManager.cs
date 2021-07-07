@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
     {
         //await _speechOut.Speak("Spawning player");
         player.transform.position = playerSpawn.position;
-        await _upperHandle.SwitchTo(player, 5f);
+        if (currLevel == 0) await _upperHandle.SwitchTo(player, 5f);
         _lowerHandle.Free();
 
         //await _speechOut.Speak("Spawning enemy");
@@ -156,8 +156,7 @@ public class GameManager : MonoBehaviour
             defeatedEnemies = 0;
         }
 
-        if(player)
-        player.SetActive(true);
+        if(player) player.SetActive(true);
         _upperHandle.Free();
         player.GetComponent<PlayerLogic>().ResetPlayer();
         player.GetComponent<PlayerSoundEffect>().ResetMusic();
@@ -417,8 +416,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-
-
             setEnemies(false);
             gameRunning = false;
             if (playerLives <= 1)
@@ -428,12 +425,9 @@ public class GameManager : MonoBehaviour
             }
             else playerLives--;
 
-
             StartCoroutine(playerGotFinished());
         }
     }
-
-
 
     private IEnumerator playerGotFinished()
     {
@@ -444,8 +438,9 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(elevatorRing.length);
         player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1],0.4f);
         yield return new WaitForSeconds(elevatorDoor[1].length);
-        //player.SetActive(false);
         _upperHandle.Freeze();
+        GameObject.Find("ObstacleActivater").GetComponent<ActivateObstaclesSphere>().TriggerExitAll();
+        player.SetActive(false);
         ResetRound();
     }
     public async void OnVictory(GameObject player)

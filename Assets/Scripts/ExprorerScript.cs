@@ -39,7 +39,7 @@ public class ExprorerScript : MonoBehaviour
     void Update()
     {
         bool isHome = Math.Abs(Vector3.Distance(player.transform.position, explorer.transform.position )) < activateDistance;
-        print("asd " + Vector3.Distance(explorer.transform.position, player.transform.position) + " " + explorer.transform.position + " " + player.transform.position);
+        //print("asd " + Vector3.Distance(explorer.transform.position, player.transform.position) + " " + explorer.transform.position + " " + player.transform.position);
         try
         {
             meMoving = !GameObject.Find("Player").GetComponent<PlayerLogic>().isPitched;
