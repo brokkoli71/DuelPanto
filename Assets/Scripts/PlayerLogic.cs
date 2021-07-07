@@ -83,11 +83,6 @@ public class PlayerLogic : MonoBehaviour
 
     void Update()
     {
-        if (gameObject.activeSelf && !soundEffects.isBackgroundMusicActive())
-        {
-            soundEffects.startBackgroundMusic();
-        }
-
         // Simply connects the player to the upper handles position
         transform.position = upperHandle.HandlePosition(transform.position);
         transform.rotation = Quaternion.AngleAxis(upperHandle.GetRotation(), Vector3.up);
@@ -96,11 +91,10 @@ public class PlayerLogic : MonoBehaviour
     {
         if (other.CompareTag("Goal"))
         {
-            if (panto.GetComponent<GameManager>().allEnemiesdefeated || panto.GetComponent<GameManager>().enemies.Count == 0)
+            if (panto.GetComponent<GameManager>().allEnemiesdefeated && !goalReached)
             {
                 goalReached = true;
                 soundEffects.stopBackgroundMusic();
-                soundEffects.playFinisherClip();
                 notifyFinished.Invoke(gameObject);
             }
         }

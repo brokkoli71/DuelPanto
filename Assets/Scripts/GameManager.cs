@@ -42,6 +42,12 @@ public class GameManager : MonoBehaviour
     public AudioClip switchingEnemy;
     public AudioClip playerDied;
     public AudioClip enenmiesDefeated;
+
+    public AudioClip elevatorMusic;
+    public AudioClip elevatorRing;
+    public AudioClip[] elevatorDoor;
+    public AudioClip[] levelVoice;
+    
     private AudioSource _audioSource;
 
     private UpperHandle _upperHandle;
@@ -56,7 +62,6 @@ public class GameManager : MonoBehaviour
     private float _levelStartTime = 0;
     public bool gameRunning = false;
     public bool playWithEnemy = true;
-    public bool allEnemiesDefeated = false;
     private bool switchedToGoal = false;
 
     private bool enemyChecking = true;
@@ -140,16 +145,8 @@ public class GameManager : MonoBehaviour
         //await _speechOut.Speak("Welcome to Duel Panto");
         //await Task.Delay(1000);
         //RegisterWallColliders();
-
-        if (introduceGame)
-        {
-            await IntroduceLevel();
-        }
-
-        //await _speechOut.Speak("Introduction finished, game starts.");
-
-        //await ResetRound();
-        NextLevel(startLevel);
+        
+        NextLevel(startLevel);      
     }
 
     async Task IntroduceLevel()
@@ -158,7 +155,6 @@ public class GameManager : MonoBehaviour
         await _speechOut.Speak("Please put a keyboard on the floor.");
         await _speechOut.Speak("If you press SPACE, you can shoot.");
         await _speechOut.Speak("We recommend you to use your toe for this");
-
         await _speechOut.Speak("Thats all! We wish you good luck.");
     }
 
@@ -224,19 +220,35 @@ public class GameManager : MonoBehaviour
         if (playWithEnemy && enemies.Count > 0)
         {
             resetEnemies();
-            allEnemiesdefeated = false;
             setEnemies(true);
             oldEnemy = enemies[0];
             defeatedEnemies = 0;
         }
 
-        _upperHandle.Free();
 
         player.SetActive(true);
-        gameRunning = true;
         player.GetComponent<PlayerLogic>().ResetPlayer();
         player.GetComponent<PlayerSoundEffect>().ResetMusic();
 
+        if (introduceGame && currLevel == 0)
+        {
+            player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[0], 0.8f);
+            await Task.Delay((int) levelVoice[0].length*1000);
+            await Task.Delay((int) 3*1000);
+
+            player.GetComponent<PlayerSoundEffect>().startBackgroundMusic();
+            player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[1], 0.8f);
+            await Task.Delay((int) levelVoice[1].length*1000);
+            await Task.Delay((int) 1*1000);
+        }else{
+             player.GetComponent<PlayerSoundEffect>().startBackgroundMusic();
+        }
+
+        allEnemiesdefeated = enemies.Count > 0 ? false : true;
+        _upperHandle.Free();
+        switchedToGoal = false;
+        gameRunning = true;
+       
         _levelStartTime = Time.time;
     }
 
@@ -247,7 +259,7 @@ public class GameManager : MonoBehaviour
         // max level reached --> gameOver
         if (level > 4)
         {
-            await _speechOut.Speak("You completed all levels!");
+
             await GameOver();
         }
 
@@ -261,14 +273,12 @@ public class GameManager : MonoBehaviour
         switch (level)
         {
             case 0:
-                _speechOut.Speak("Follow the sound to the goal.");
                 activateTags(new string[] { "Wall", "level1", "level2", "level3" });
                 RegisterCollidersByTag(new string[] { "level1", "level2", "level3" });
                 goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
                 break;
 
             case 1:
-                _speechOut.Speak("Explore the obstacles");
                 activateTags(new string[] { "Wall", "level1", "level2" });
                 Thread.Sleep(200);
                 RegisterCollidersByTag(new string[] { "level1", "level2" });
@@ -278,8 +288,6 @@ public class GameManager : MonoBehaviour
                 break;
 
             case 2:
-                await _speechOut.Speak("Watch out there are enemies! You can hear them");
-                await _speechOut.Speak("Shoot them!");
                 activateTags(new string[] { "Wall", "level1", "level2" });
 
                 RegisterCollidersByTag(new string[] { "level2" });
@@ -320,10 +328,9 @@ public class GameManager : MonoBehaviour
         currLevel = level;
         await ResetRound();
     }
-
     private void SpawnsEnemies(Transform[] spawns)
     {
-        ;
+
         for (int i = 0; i < spawns.Length; i++)
         {
             if (i > (enemies.Count - 1))
@@ -374,9 +381,9 @@ public class GameManager : MonoBehaviour
             //await _lowerHandle.
             //(closestEnemy, 5f);
         }
-        else if (allEnemiesDefeated && !switchedToGoal || enemies.Count == 0 && !switchedToGoal)
+        else if (allEnemiesdefeated && !switchedToGoal)
         {
-            //await _lowerHandle.SwitchTo(goal);
+            await _lowerHandle.SwitchTo(goal);
             switchedToGoal = true;
         }
     }
@@ -467,49 +474,91 @@ public class GameManager : MonoBehaviour
             AudioSource.PlayClipAtPoint(enemyDyingClips[(int)UnityEngine.Random.Range(0, enemyDyingClips.Length - 1)],
                 defeatedEnemie.transform.position);
 
+
             defeatedEnemie.SetActive(false);
 
             if (enemies.Count == defeatedEnemies)
             {
-                //_speechOut.Speak("you eliminated all enemies! No follow the sound to the goal!");
-                _audioSource.PlayOneShot(enenmiesDefeated);
                 allEnemiesdefeated = true;
+                //_audioSource.PlayOneShot(enenmiesDefeated);
 
-                //await _lowerHandle.SwitchTo(goal);
-                switchedToGoal = true;
+                if (!switchedToGoal)
+                {
+                    await _lowerHandle.SwitchTo(goal);
+                    switchedToGoal = true;
+                }
             }
         }
         else
         {
+
+
+            setEnemies(false);
+            gameRunning = false;
             if (playerLives <= 1)
             {
-                setEnemies(false);
-                gameRunning = false;
                 player.SetActive(false);
                 await GameOver();
             }
             else playerLives--;
+
+
             StartCoroutine(playerGotFinished());
         }
     }
 
+
+
     private IEnumerator playerGotFinished()
     {
-        setEnemies(false);
-        gameRunning = false;
         _audioSource.PlayOneShot(playerDied);
         yield return new WaitForSeconds(playerDied.length);
+        player.GetComponent<PlayerSoundEffect>().stopBackgroundMusic();
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorRing,0.4f);
+        yield return new WaitForSeconds(elevatorRing.length);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1],0.4f);
+        yield return new WaitForSeconds(elevatorDoor[1].length);
         player.SetActive(false);
         ResetRound();
     }
-
     public async void OnVictory(GameObject player)
     {
-        player.SetActive(false);
+        _upperHandle.Freeze();
+        StartCoroutine(playerReachedGoal());
         setEnemies(false);
         gameRunning = false;
-        level++;
-        NextLevel((currLevel + 1));
+    }
+
+    private IEnumerator playerReachedGoal()
+    {
+        currLevel += 1;
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[0],0.4f);
+        yield return new WaitForSeconds(elevatorDoor[0].length/2f);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorMusic,0.05f);
+        yield return new WaitForSeconds(1);
+        if (introduceGame){
+            player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[currLevel+1], 1f);
+            yield return new WaitForSeconds(levelVoice[currLevel+1].length);
+            yield return new WaitForSeconds(1);
+        }
+        
+
+        
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorRing,0.4f);
+        yield return new WaitForSeconds(elevatorRing.length);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1],0.4f);
+        yield return new WaitForSeconds(elevatorDoor[1].length-1);
+        NextLevel((currLevel));
+    }
+
+    
+    private IEnumerator playIntro(){
+        player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[0], 1f);
+        yield return new WaitForSeconds(levelVoice[0].length);
+        yield return new WaitForSeconds(3);
+        player.GetComponent<PlayerSoundEffect>().playerAudio(levelVoice[1], 1f);
+        yield return new WaitForSeconds(levelVoice[1].length);
+        NextLevel(startLevel);
     }
 
     /// <summary>
@@ -518,8 +567,6 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     async Task GameOver()
     {
-        await _speechOut.Speak("Congratulations.");
-        await _speechOut.Speak("Thanks for playing DuelPanto. Say quit when you're done.");
         await _speechIn.Listen(new Dictionary<string, KeyCode>() { { "quit", KeyCode.Escape } });
 
         Application.Quit();
