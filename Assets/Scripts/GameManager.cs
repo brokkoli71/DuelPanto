@@ -77,7 +77,6 @@ public class GameManager : MonoBehaviour
         enemies = new List<GameObject>();
 
         // enemies will now be spawned in NextLevel(int level)
-
         _speechIn = new SpeechIn(onRecognized, _commands.Keys.ToArray());
         _speechOut = new SpeechOut();
 
@@ -104,6 +103,8 @@ public class GameManager : MonoBehaviour
             GameObject o = allGOs[i];
             if (o.name.Contains("Obstacle"))
             {
+                // knock all obstacles out at the start to activate them level by level
+                o.SetActive(false);
                 obstacleList.Add(o);
                 print("object: " + o + ", Tag: " + o.tag);
             }
@@ -111,16 +112,13 @@ public class GameManager : MonoBehaviour
         }
         obstacles = obstacleList.ToArray();
         
-        print("obstacles.length : " + obstacles.Length);
+        print("obstacles.length: " + obstacles.Length);
 
         Introduction();
     }
 
     async void Introduction()
-    {
-        //await _speechOut.Speak("Welcome to Duel Panto");
-        //await Task.Delay(1000);
-        
+    {   
         NextLevel(startLevel);      
     }
 
@@ -130,9 +128,9 @@ public class GameManager : MonoBehaviour
         {
             await _speechOut.Speak("Welcome to Superhot!");
             await _speechOut.Speak("Please put a keyboard on the floor.");
-            await _speechOut.Speak("If you press SPACE, you can shoot.");
+            await _speechOut.Speak("By pressing SPACE, you can shoot.");
             await _speechOut.Speak("We recommend you to use your toe for this");
-            await _speechOut.Speak("Thats all! We wish you good luck.");
+            await _speechOut.Speak("Thats it! We wish you good luck.");
         }
     }
 
@@ -185,72 +183,43 @@ public class GameManager : MonoBehaviour
 
     private async void NextLevel(int level)
     {
-        print("currLevel when entering NextLevel(): " + currLevel);
-        print("level NextLevel() call: " + level);
-        // max level reached --> gameOver
-        if (level > 4)
-        {
-            await GameOver();
-        }
-
-        // reset all obstacles; reactivate for each level
-        foreach (GameObject o in obstacles)
-        {
-            o.SetActive(false);
-            Debug.Log("disabling " + o.ToString());
-        }
         playerSpawn.position = goal.transform.position;
 
         switch (level)
         {
             case 0:
-                //playLevelDescription();
                 activateObstaclesByTag(new string[] { "Wall" });
                 goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
                 break;
 
             case 1:
-                activateObstaclesByTag(new string[] { "Wall", "level1", "level2", "level3" });
-
-                // adding level-colliders
-                //RegisterCollidersByTag(new string[] { "level1" });
-                //RegisterCollidersByTag(new string[] { "level2" });
-                //RegisterCollidersByTag(new string[] { "level3" });
+                activateObstaclesByTag(new string[] { "level1", "level2", "level3" });
                 goal.transform.position = new Vector3(0.0f, 0.0f, -3.0f);
-
                 break;
 
             case 2:
-                activateObstaclesByTag(new string[] { "Wall", "level1", "level2", "level3" });
-
-
                 SpawnsEnemies(enemySpawnLvl2);
                 goal.transform.position = new Vector3(2.0f, 0.0f, -14.0f);
-
                 break;
 
             case 3:
-                //spawnEnemy(enemySpawn[1].position, enemySpawn[1].rotation);
-                activateObstaclesByTag(new string[] { "Wall", "level1", "level2", "level3" });
-
-
                 SpawnsEnemies(enemySpawnLvl3);
-
                 goal.transform.position = new Vector3(2.0f, 0.0f, -5.0f);
                 break;
 
             case 4:
-                activateObstaclesByTag(new string[] { "Wall", "level1", "level2", "level3", "level4" });
-                //RegisterCollidersByTag(new string[] { "level4" });
-
-                
+                activateObstaclesByTag(new string[] { "level4" });
                 SpawnsEnemies(enemySpawnLvl4);
-
                 goal.transform.position = new Vector3(6.0f, 0.0f, -8.0f);
+                break;
 
+            case 5:
+                await GameOver();
                 break;
 
             default:
+                await _speechOut.Speak("somehow you managed to get passt our level structure. Good job, I guess?");
+                await GameOver();
                 break;
 
         }
