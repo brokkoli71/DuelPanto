@@ -408,7 +408,6 @@ public class GameManager : MonoBehaviour
         player.GetComponent<PlayerSoundEffect>().playerAudio(elevatorDoor[1],0.4f);
         yield return new WaitForSeconds(elevatorDoor[1].length);
         _upperHandle.Freeze();
-        GameObject.Find("ObstacleActivater").GetComponent<ActivateObstaclesSphere>().TriggerExitAll();
         player.SetActive(false);
         ResetRound();
     }
